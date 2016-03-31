@@ -51,8 +51,13 @@
 		919AFCF01CACF33D00030475 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919AFCEF1CACF33D00030475 /* SoraTests.swift */; };
 		919AFD171CACF80900030475 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919AFD161CACF80900030475 /* Connection.swift */; };
 		919AFD1F1CACFC2000030475 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */; };
-		919AFD201CACFC2000030475 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFD1D1CACFC2000030475 /* SocketRocket.framework */; };
 		919AFD211CACFC2000030475 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFD1E1CACFC2000030475 /* Result.framework */; };
+		91D114CA1CAD015C003AD8B1 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114C91CAD015C003AD8B1 /* libicucore.tbd */; };
+		91D114CC1CAD016D003AD8B1 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114CB1CAD016D003AD8B1 /* CFNetwork.framework */; };
+		91D114CE1CAD0173003AD8B1 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114CD1CAD0173003AD8B1 /* Security.framework */; };
+		91D114D01CAD018E003AD8B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114CF1CAD018E003AD8B1 /* Foundation.framework */; };
+		91D114D71CAD03E9003AD8B1 /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 91D114D51CAD03E9003AD8B1 /* SRWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		91D114D81CAD03E9003AD8B1 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D114D61CAD03E9003AD8B1 /* SRWebSocket.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,8 +111,13 @@
 		919AFD161CACF80900030475 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		919AFD191CACF8F600030475 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
-		919AFD1D1CACFC2000030475 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		919AFD1E1CACFC2000030475 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
+		91D114C91CAD015C003AD8B1 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		91D114CB1CAD016D003AD8B1 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		91D114CD1CAD0173003AD8B1 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		91D114CF1CAD018E003AD8B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		91D114D51CAD03E9003AD8B1 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
+		91D114D61CAD03E9003AD8B1 /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,8 +125,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D114D01CAD018E003AD8B1 /* Foundation.framework in Frameworks */,
+				91D114CA1CAD015C003AD8B1 /* libicucore.tbd in Frameworks */,
+				91D114CE1CAD0173003AD8B1 /* Security.framework in Frameworks */,
+				91D114CC1CAD016D003AD8B1 /* CFNetwork.framework in Frameworks */,
 				919AFD1F1CACFC2000030475 /* SwiftyJSON.framework in Frameworks */,
-				919AFD201CACFC2000030475 /* SocketRocket.framework in Frameworks */,
 				919AFD211CACFC2000030475 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -135,6 +148,7 @@
 		919AFCD61CACF33C00030475 = {
 			isa = PBXGroup;
 			children = (
+				91D114D41CAD03CA003AD8B1 /* SocketRocket */,
 				919AFCE21CACF33C00030475 /* Sora */,
 				919AFCEE1CACF33D00030475 /* SoraTests */,
 				919AFCFB1CACF39E00030475 /* Misc */,
@@ -185,11 +199,23 @@
 		919AFD1B1CACFBF700030475 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				91D114C91CAD015C003AD8B1 /* libicucore.tbd */,
+				91D114CF1CAD018E003AD8B1 /* Foundation.framework */,
+				91D114CD1CAD0173003AD8B1 /* Security.framework */,
+				91D114CB1CAD016D003AD8B1 /* CFNetwork.framework */,
 				919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */,
-				919AFD1D1CACFC2000030475 /* SocketRocket.framework */,
 				919AFD1E1CACFC2000030475 /* Result.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		91D114D41CAD03CA003AD8B1 /* SocketRocket */ = {
+			isa = PBXGroup;
+			children = (
+				91D114D51CAD03E9003AD8B1 /* SRWebSocket.h */,
+				91D114D61CAD03E9003AD8B1 /* SRWebSocket.m */,
+			);
+			path = SocketRocket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				919AFCE41CACF33C00030475 /* Sora.h in Headers */,
+				91D114D71CAD03E9003AD8B1 /* SRWebSocket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +241,7 @@
 				919AFCDC1CACF33C00030475 /* Frameworks */,
 				919AFCDD1CACF33C00030475 /* Headers */,
 				919AFCDE1CACF33C00030475 /* Resources */,
+				91D114D11CAD031E003AD8B1 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -337,6 +365,21 @@
 			shellPath = /bin/sh;
 			shellScript = "make depend";
 		};
+		91D114D11CAD031E003AD8B1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -344,6 +387,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D114D81CAD03E9003AD8B1 /* SRWebSocket.m in Sources */,
 				919AFD171CACF80900030475 /* Connection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -602,6 +646,7 @@
 				919AFCF61CACF33D00030475 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		919AFCF71CACF33D00030475 /* Build configuration list for PBXNativeTarget "SoraTests" */ = {
 			isa = XCConfigurationList;
@@ -610,6 +655,7 @@
 				919AFCF91CACF33D00030475 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		919AFD001CACF63000030475 /* Build configuration list for PBXAggregateTarget "All" */ = {
 			isa = XCConfigurationList;
@@ -618,6 +664,7 @@
 				919AFD021CACF63000030475 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		919AFD041CACF64700030475 /* Build configuration list for PBXAggregateTarget "Document" */ = {
 			isa = XCConfigurationList;
@@ -626,6 +673,7 @@
 				919AFD061CACF64700030475 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		919AFD081CACF66C00030475 /* Build configuration list for PBXAggregateTarget "Dependencies" */ = {
 			isa = XCConfigurationList;
@@ -634,6 +682,7 @@
 				919AFD0A1CACF66C00030475 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
