@@ -13,9 +13,20 @@ class SoraTests: XCTestCase {
         super.tearDown()
     }
     
+    var connection: Connection?
+    
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        print("test example")
+        let url = NSURL(string: "ws://127.0.0.1:5000/signaling")
+        print("url = ", url)
+        var conn = Sora.Connection(URL: url!)
+        conn.connect(Sora.Request(role: .Downstream, channelId: "test"),
+                     handle: { (offer) in print(offer) })
+        self.connection = conn
+        print("end connect")
     }
     
     func testPerformanceExample() {
