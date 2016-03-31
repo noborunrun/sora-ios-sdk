@@ -6,10 +6,51 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		919AFCFF1CACF63000030475 /* All */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 919AFD001CACF63000030475 /* Build configuration list for PBXAggregateTarget "All" */;
+			buildPhases = (
+			);
+			dependencies = (
+				919AFD0C1CACF67D00030475 /* PBXTargetDependency */,
+				919AFD0E1CACF68100030475 /* PBXTargetDependency */,
+				919AFD121CACF69600030475 /* PBXTargetDependency */,
+				919AFD101CACF68400030475 /* PBXTargetDependency */,
+			);
+			name = All;
+			productName = All;
+		};
+		919AFD031CACF64700030475 /* Document */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 919AFD041CACF64700030475 /* Build configuration list for PBXAggregateTarget "Document" */;
+			buildPhases = (
+				919AFD131CACF6DD00030475 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Document;
+			productName = Document;
+		};
+		919AFD071CACF66C00030475 /* Dependencies */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 919AFD081CACF66C00030475 /* Build configuration list for PBXAggregateTarget "Dependencies" */;
+			buildPhases = (
+				919AFD181CACF84A00030475 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Dependencies;
+			productName = Dependencies;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		919AFCE41CACF33C00030475 /* Sora.h in Headers */ = {isa = PBXBuildFile; fileRef = 919AFCE31CACF33C00030475 /* Sora.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		919AFCEB1CACF33D00030475 /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFCE01CACF33C00030475 /* Sora.framework */; };
 		919AFCF01CACF33D00030475 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919AFCEF1CACF33D00030475 /* SoraTests.swift */; };
+		919AFD171CACF80900030475 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919AFD161CACF80900030475 /* Connection.swift */; };
+		919AFD1A1CACF8F600030475 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 919AFD191CACF8F600030475 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -20,6 +61,34 @@
 			remoteGlobalIDString = 919AFCDF1CACF33C00030475;
 			remoteInfo = Sora;
 		};
+		919AFD0B1CACF67D00030475 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 919AFD071CACF66C00030475;
+			remoteInfo = Dependencies;
+		};
+		919AFD0D1CACF68100030475 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 919AFCDF1CACF33C00030475;
+			remoteInfo = Sora;
+		};
+		919AFD0F1CACF68400030475 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 919AFD031CACF64700030475;
+			remoteInfo = Document;
+		};
+		919AFD111CACF69600030475 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 919AFCE91CACF33D00030475;
+			remoteInfo = SoraTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +98,11 @@
 		919AFCEA1CACF33D00030475 /* SoraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		919AFCEF1CACF33D00030475 /* SoraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoraTests.swift; sourceTree = "<group>"; };
 		919AFCF11CACF33D00030475 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		919AFCFC1CACF5FC00030475 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		919AFCFD1CACF5FC00030475 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		919AFCFE1CACF5FC00030475 /* .jazzy.yaml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .jazzy.yaml; sourceTree = "<group>"; };
+		919AFD161CACF80900030475 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		919AFD191CACF8F600030475 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +129,7 @@
 			children = (
 				919AFCE21CACF33C00030475 /* Sora */,
 				919AFCEE1CACF33D00030475 /* SoraTests */,
+				919AFCFB1CACF39E00030475 /* Misc */,
 				919AFCE11CACF33C00030475 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -73,6 +148,7 @@
 			children = (
 				919AFCE31CACF33C00030475 /* Sora.h */,
 				919AFCE51CACF33C00030475 /* Info.plist */,
+				919AFD161CACF80900030475 /* Connection.swift */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
@@ -84,6 +160,17 @@
 				919AFCF11CACF33D00030475 /* Info.plist */,
 			);
 			path = SoraTests;
+			sourceTree = "<group>";
+		};
+		919AFCFB1CACF39E00030475 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				919AFD191CACF8F600030475 /* README.md */,
+				919AFCFC1CACF5FC00030475 /* Cartfile */,
+				919AFCFD1CACF5FC00030475 /* Makefile */,
+				919AFCFE1CACF5FC00030475 /* .jazzy.yaml */,
+			);
+			name = Misc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,6 +239,15 @@
 					919AFCE91CACF33D00030475 = {
 						CreatedOnToolsVersion = 7.3;
 					};
+					919AFCFF1CACF63000030475 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+					919AFD031CACF64700030475 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+					919AFD071CACF66C00030475 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 				};
 			};
 			buildConfigurationList = 919AFCDA1CACF33C00030475 /* Build configuration list for PBXProject "Sora" */;
@@ -168,6 +264,9 @@
 			targets = (
 				919AFCDF1CACF33C00030475 /* Sora */,
 				919AFCE91CACF33D00030475 /* SoraTests */,
+				919AFCFF1CACF63000030475 /* All */,
+				919AFD031CACF64700030475 /* Document */,
+				919AFD071CACF66C00030475 /* Dependencies */,
 			);
 		};
 /* End PBXProject section */
@@ -189,11 +288,45 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		919AFD131CACF6DD00030475 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/doc",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make doc";
+		};
+		919AFD181CACF84A00030475 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Carthage/Build/iOS/Result.framework",
+				"$(DERIVED_FILE_DIR)/Carthage/Build/iOS/SwiftyJSON.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make depend";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		919AFCDB1CACF33C00030475 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				919AFD1A1CACF8F600030475 /* README.md in Sources */,
+				919AFD171CACF80900030475 /* Connection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +345,26 @@
 			isa = PBXTargetDependency;
 			target = 919AFCDF1CACF33C00030475 /* Sora */;
 			targetProxy = 919AFCEC1CACF33D00030475 /* PBXContainerItemProxy */;
+		};
+		919AFD0C1CACF67D00030475 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 919AFD071CACF66C00030475 /* Dependencies */;
+			targetProxy = 919AFD0B1CACF67D00030475 /* PBXContainerItemProxy */;
+		};
+		919AFD0E1CACF68100030475 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 919AFCDF1CACF33C00030475 /* Sora */;
+			targetProxy = 919AFD0D1CACF68100030475 /* PBXContainerItemProxy */;
+		};
+		919AFD101CACF68400030475 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 919AFD031CACF64700030475 /* Document */;
+			targetProxy = 919AFD0F1CACF68400030475 /* PBXContainerItemProxy */;
+		};
+		919AFD121CACF69600030475 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 919AFCE91CACF33D00030475 /* SoraTests */;
+			targetProxy = 919AFD111CACF69600030475 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -310,6 +463,7 @@
 		919AFCF51CACF33D00030475 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -320,12 +474,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.Sora;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		919AFCF61CACF33D00030475 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -359,6 +515,48 @@
 			};
 			name = Release;
 		};
+		919AFD011CACF63000030475 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		919AFD021CACF63000030475 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		919AFD051CACF64700030475 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		919AFD061CACF64700030475 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		919AFD091CACF66C00030475 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		919AFD0A1CACF66C00030475 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -384,6 +582,30 @@
 			buildConfigurations = (
 				919AFCF81CACF33D00030475 /* Debug */,
 				919AFCF91CACF33D00030475 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		919AFD001CACF63000030475 /* Build configuration list for PBXAggregateTarget "All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				919AFD011CACF63000030475 /* Debug */,
+				919AFD021CACF63000030475 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		919AFD041CACF64700030475 /* Build configuration list for PBXAggregateTarget "Document" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				919AFD051CACF64700030475 /* Debug */,
+				919AFD061CACF64700030475 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		919AFD081CACF66C00030475 /* Build configuration list for PBXAggregateTarget "Dependencies" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				919AFD091CACF66C00030475 /* Debug */,
+				919AFD0A1CACF66C00030475 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
