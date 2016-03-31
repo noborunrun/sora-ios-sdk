@@ -50,7 +50,9 @@
 		919AFCEB1CACF33D00030475 /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFCE01CACF33C00030475 /* Sora.framework */; };
 		919AFCF01CACF33D00030475 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919AFCEF1CACF33D00030475 /* SoraTests.swift */; };
 		919AFD171CACF80900030475 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919AFD161CACF80900030475 /* Connection.swift */; };
-		919AFD1A1CACF8F600030475 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 919AFD191CACF8F600030475 /* README.md */; };
+		919AFD1F1CACFC2000030475 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */; };
+		919AFD201CACFC2000030475 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFD1D1CACFC2000030475 /* SocketRocket.framework */; };
+		919AFD211CACFC2000030475 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFD1E1CACFC2000030475 /* Result.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +105,9 @@
 		919AFCFE1CACF5FC00030475 /* .jazzy.yaml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .jazzy.yaml; sourceTree = "<group>"; };
 		919AFD161CACF80900030475 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		919AFD191CACF8F600030475 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
+		919AFD1D1CACFC2000030475 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
+		919AFD1E1CACFC2000030475 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +115,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				919AFD1F1CACFC2000030475 /* SwiftyJSON.framework in Frameworks */,
+				919AFD201CACFC2000030475 /* SocketRocket.framework in Frameworks */,
+				919AFD211CACFC2000030475 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +138,7 @@
 				919AFCE21CACF33C00030475 /* Sora */,
 				919AFCEE1CACF33D00030475 /* SoraTests */,
 				919AFCFB1CACF39E00030475 /* Misc */,
+				919AFD1B1CACFBF700030475 /* Frameworks */,
 				919AFCE11CACF33C00030475 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -171,6 +180,16 @@
 				919AFCFE1CACF5FC00030475 /* .jazzy.yaml */,
 			);
 			name = Misc;
+			sourceTree = "<group>";
+		};
+		919AFD1B1CACFBF700030475 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */,
+				919AFD1D1CACFC2000030475 /* SocketRocket.framework */,
+				919AFD1E1CACFC2000030475 /* Result.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -325,7 +344,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				919AFD1A1CACF8F600030475 /* README.md in Sources */,
 				919AFD171CACF80900030475 /* Connection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,6 +486,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Sora/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -486,6 +508,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Sora/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
