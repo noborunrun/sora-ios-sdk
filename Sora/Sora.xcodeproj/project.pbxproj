@@ -58,6 +58,7 @@
 		91D114D01CAD018E003AD8B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114CF1CAD018E003AD8B1 /* Foundation.framework */; };
 		91D114D71CAD03E9003AD8B1 /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 91D114D51CAD03E9003AD8B1 /* SRWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91D114D81CAD03E9003AD8B1 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D114D61CAD03E9003AD8B1 /* SRWebSocket.m */; };
+		91D114DA1CAD24BC003AD8B1 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 91D114D91CAD24BC003AD8B1 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,7 +110,6 @@
 		919AFCFD1CACF5FC00030475 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		919AFCFE1CACF5FC00030475 /* .jazzy.yaml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .jazzy.yaml; sourceTree = "<group>"; };
 		919AFD161CACF80900030475 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
-		919AFD191CACF8F600030475 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
 		919AFD1E1CACFC2000030475 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		91D114C91CAD015C003AD8B1 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
@@ -118,6 +118,7 @@
 		91D114CF1CAD018E003AD8B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		91D114D51CAD03E9003AD8B1 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
 		91D114D61CAD03E9003AD8B1 /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
+		91D114D91CAD24BC003AD8B1 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,7 +189,7 @@
 		919AFCFB1CACF39E00030475 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				919AFD191CACF8F600030475 /* README.md */,
+				91D114D91CAD24BC003AD8B1 /* README.md */,
 				919AFCFC1CACF5FC00030475 /* Cartfile */,
 				919AFCFD1CACF5FC00030475 /* Makefile */,
 				919AFCFE1CACF5FC00030475 /* .jazzy.yaml */,
@@ -387,6 +388,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D114DA1CAD24BC003AD8B1 /* README.md in Sources */,
 				91D114D81CAD03E9003AD8B1 /* SRWebSocket.m in Sources */,
 				919AFD171CACF80900030475 /* Connection.swift in Sources */,
 			);
