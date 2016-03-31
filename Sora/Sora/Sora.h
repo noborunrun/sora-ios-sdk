@@ -1,11 +1,3 @@
-//
-//  Sora.h
-//  Sora
-//
-//  Created by 鈴木鉄也 on 2016/03/31.
-//  Copyright © 2016年 Shiguredo Inc. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 
 //! Project version number for Sora.
