@@ -6,376 +6,108 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		919AFCFF1CACF63000030475 /* All */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 919AFD001CACF63000030475 /* Build configuration list for PBXAggregateTarget "All" */;
-			buildPhases = (
-			);
-			dependencies = (
-				919AFD0C1CACF67D00030475 /* PBXTargetDependency */,
-				919AFD0E1CACF68100030475 /* PBXTargetDependency */,
-				919AFD121CACF69600030475 /* PBXTargetDependency */,
-				919AFD101CACF68400030475 /* PBXTargetDependency */,
-			);
-			name = All;
-			productName = All;
-		};
-		919AFD031CACF64700030475 /* Document */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 919AFD041CACF64700030475 /* Build configuration list for PBXAggregateTarget "Document" */;
-			buildPhases = (
-				919AFD131CACF6DD00030475 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = Document;
-			productName = Document;
-		};
-		919AFD071CACF66C00030475 /* Dependencies */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 919AFD081CACF66C00030475 /* Build configuration list for PBXAggregateTarget "Dependencies" */;
-			buildPhases = (
-				919AFD181CACF84A00030475 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = Dependencies;
-			productName = Dependencies;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
-		9118336B1CBE27520081A199 /* RTCAudioSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118334B1CBE27520081A199 /* RTCAudioSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118336C1CBE27520081A199 /* RTCAudioTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118334C1CBE27520081A199 /* RTCAudioTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118336D1CBE27520081A199 /* RTCAVFoundationVideoSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118334D1CBE27520081A199 /* RTCAVFoundationVideoSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118336E1CBE27520081A199 /* RTCDataChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118334E1CBE27520081A199 /* RTCDataChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118336F1CBE27520081A199 /* RTCEAGLVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118334F1CBE27520081A199 /* RTCEAGLVideoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833701CBE27520081A199 /* RTCFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833501CBE27520081A199 /* RTCFileLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833711CBE27520081A199 /* RTCI420Frame.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833511CBE27520081A199 /* RTCI420Frame.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833721CBE27520081A199 /* RTCICECandidate.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833521CBE27520081A199 /* RTCICECandidate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833731CBE27520081A199 /* RTCICEServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833531CBE27520081A199 /* RTCICEServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833741CBE27520081A199 /* RTCLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833541CBE27520081A199 /* RTCLogging.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833751CBE27520081A199 /* RTCMediaConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833551CBE27520081A199 /* RTCMediaConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833761CBE27520081A199 /* RTCMediaSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833561CBE27520081A199 /* RTCMediaSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833771CBE27520081A199 /* RTCMediaStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833571CBE27520081A199 /* RTCMediaStream.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833781CBE27520081A199 /* RTCMediaStreamTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833581CBE27520081A199 /* RTCMediaStreamTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833791CBE27520081A199 /* RTCNSGLVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833591CBE27520081A199 /* RTCNSGLVideoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118337A1CBE27520081A199 /* RTCOpenGLVideoRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118335A1CBE27520081A199 /* RTCOpenGLVideoRenderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118337B1CBE27520081A199 /* RTCPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118335B1CBE27520081A199 /* RTCPair.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118337C1CBE27520081A199 /* RTCPeerConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118335C1CBE27520081A199 /* RTCPeerConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118337D1CBE27520081A199 /* RTCPeerConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118335D1CBE27520081A199 /* RTCPeerConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118337E1CBE27520081A199 /* RTCPeerConnectionFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118335E1CBE27520081A199 /* RTCPeerConnectionFactory.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118337F1CBE27520081A199 /* RTCPeerConnectionInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 9118335F1CBE27520081A199 /* RTCPeerConnectionInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833801CBE27530081A199 /* RTCSessionDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833601CBE27520081A199 /* RTCSessionDescription.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833811CBE27530081A199 /* RTCSessionDescriptionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833611CBE27520081A199 /* RTCSessionDescriptionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833821CBE27530081A199 /* RTCStatsDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833621CBE27520081A199 /* RTCStatsDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833831CBE27530081A199 /* RTCStatsReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833631CBE27520081A199 /* RTCStatsReport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833841CBE27530081A199 /* RTCTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833641CBE27520081A199 /* RTCTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833851CBE27530081A199 /* RTCVideoCapturer.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833651CBE27520081A199 /* RTCVideoCapturer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833861CBE27530081A199 /* RTCVideoRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833661CBE27520081A199 /* RTCVideoRenderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833871CBE27530081A199 /* RTCVideoSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833671CBE27520081A199 /* RTCVideoSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		911833881CBE27530081A199 /* RTCVideoTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 911833681CBE27520081A199 /* RTCVideoTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9118338A1CBE27530081A199 /* libWebRTC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9118336A1CBE27520081A199 /* libWebRTC.a */; };
-		919AFCE41CACF33C00030475 /* Sora.h in Headers */ = {isa = PBXBuildFile; fileRef = 919AFCE31CACF33C00030475 /* Sora.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		919AFCEB1CACF33D00030475 /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFCE01CACF33C00030475 /* Sora.framework */; };
-		919AFCF01CACF33D00030475 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919AFCEF1CACF33D00030475 /* SoraTests.swift */; };
-		919AFD171CACF80900030475 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919AFD161CACF80900030475 /* Connection.swift */; };
-		919AFD1F1CACFC2000030475 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */; };
-		919AFD211CACFC2000030475 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919AFD1E1CACFC2000030475 /* Result.framework */; };
-		91D114CA1CAD015C003AD8B1 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114C91CAD015C003AD8B1 /* libicucore.tbd */; };
-		91D114CC1CAD016D003AD8B1 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114CB1CAD016D003AD8B1 /* CFNetwork.framework */; };
-		91D114CE1CAD0173003AD8B1 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114CD1CAD0173003AD8B1 /* Security.framework */; };
-		91D114D01CAD018E003AD8B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D114CF1CAD018E003AD8B1 /* Foundation.framework */; };
-		91D114D71CAD03E9003AD8B1 /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 91D114D51CAD03E9003AD8B1 /* SRWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		91D114D81CAD03E9003AD8B1 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D114D61CAD03E9003AD8B1 /* SRWebSocket.m */; };
+		9126998F1CC7531E008352EF /* Sora.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126998E1CC7531E008352EF /* Sora.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		912699961CC7531E008352EF /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9126998B1CC7531E008352EF /* Sora.framework */; };
+		9126999B1CC7531E008352EF /* SoraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126999A1CC7531E008352EF /* SoraTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		919AFCEC1CACF33D00030475 /* PBXContainerItemProxy */ = {
+		912699971CC7531E008352EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
+			containerPortal = 912699821CC7531E008352EF /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 919AFCDF1CACF33C00030475;
+			remoteGlobalIDString = 9126998A1CC7531E008352EF;
 			remoteInfo = Sora;
-		};
-		919AFD0B1CACF67D00030475 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 919AFD071CACF66C00030475;
-			remoteInfo = Dependencies;
-		};
-		919AFD0D1CACF68100030475 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 919AFCDF1CACF33C00030475;
-			remoteInfo = Sora;
-		};
-		919AFD0F1CACF68400030475 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 919AFD031CACF64700030475;
-			remoteInfo = Document;
-		};
-		919AFD111CACF69600030475 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 919AFCD71CACF33C00030475 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 919AFCE91CACF33D00030475;
-			remoteInfo = SoraTests;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9118334B1CBE27520081A199 /* RTCAudioSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAudioSource.h; sourceTree = "<group>"; };
-		9118334C1CBE27520081A199 /* RTCAudioTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAudioTrack.h; sourceTree = "<group>"; };
-		9118334D1CBE27520081A199 /* RTCAVFoundationVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAVFoundationVideoSource.h; sourceTree = "<group>"; };
-		9118334E1CBE27520081A199 /* RTCDataChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCDataChannel.h; sourceTree = "<group>"; };
-		9118334F1CBE27520081A199 /* RTCEAGLVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCEAGLVideoView.h; sourceTree = "<group>"; };
-		911833501CBE27520081A199 /* RTCFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCFileLogger.h; sourceTree = "<group>"; };
-		911833511CBE27520081A199 /* RTCI420Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCI420Frame.h; sourceTree = "<group>"; };
-		911833521CBE27520081A199 /* RTCICECandidate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCICECandidate.h; sourceTree = "<group>"; };
-		911833531CBE27520081A199 /* RTCICEServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCICEServer.h; sourceTree = "<group>"; };
-		911833541CBE27520081A199 /* RTCLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCLogging.h; sourceTree = "<group>"; };
-		911833551CBE27520081A199 /* RTCMediaConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCMediaConstraints.h; sourceTree = "<group>"; };
-		911833561CBE27520081A199 /* RTCMediaSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCMediaSource.h; sourceTree = "<group>"; };
-		911833571CBE27520081A199 /* RTCMediaStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCMediaStream.h; sourceTree = "<group>"; };
-		911833581CBE27520081A199 /* RTCMediaStreamTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCMediaStreamTrack.h; sourceTree = "<group>"; };
-		911833591CBE27520081A199 /* RTCNSGLVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCNSGLVideoView.h; sourceTree = "<group>"; };
-		9118335A1CBE27520081A199 /* RTCOpenGLVideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCOpenGLVideoRenderer.h; sourceTree = "<group>"; };
-		9118335B1CBE27520081A199 /* RTCPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPair.h; sourceTree = "<group>"; };
-		9118335C1CBE27520081A199 /* RTCPeerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPeerConnection.h; sourceTree = "<group>"; };
-		9118335D1CBE27520081A199 /* RTCPeerConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPeerConnectionDelegate.h; sourceTree = "<group>"; };
-		9118335E1CBE27520081A199 /* RTCPeerConnectionFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPeerConnectionFactory.h; sourceTree = "<group>"; };
-		9118335F1CBE27520081A199 /* RTCPeerConnectionInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPeerConnectionInterface.h; sourceTree = "<group>"; };
-		911833601CBE27520081A199 /* RTCSessionDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCSessionDescription.h; sourceTree = "<group>"; };
-		911833611CBE27520081A199 /* RTCSessionDescriptionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCSessionDescriptionDelegate.h; sourceTree = "<group>"; };
-		911833621CBE27520081A199 /* RTCStatsDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCStatsDelegate.h; sourceTree = "<group>"; };
-		911833631CBE27520081A199 /* RTCStatsReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCStatsReport.h; sourceTree = "<group>"; };
-		911833641CBE27520081A199 /* RTCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCTypes.h; sourceTree = "<group>"; };
-		911833651CBE27520081A199 /* RTCVideoCapturer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCVideoCapturer.h; sourceTree = "<group>"; };
-		911833661CBE27520081A199 /* RTCVideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCVideoRenderer.h; sourceTree = "<group>"; };
-		911833671CBE27520081A199 /* RTCVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCVideoSource.h; sourceTree = "<group>"; };
-		911833681CBE27520081A199 /* RTCVideoTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCVideoTrack.h; sourceTree = "<group>"; };
-		911833691CBE27520081A199 /* libWebRTC-LATEST-Universal-Release.a.version.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "libWebRTC-LATEST-Universal-Release.a.version.txt"; sourceTree = "<group>"; };
-		9118336A1CBE27520081A199 /* libWebRTC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWebRTC.a; sourceTree = "<group>"; };
-		919AFCE01CACF33C00030475 /* Sora.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sora.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		919AFCE31CACF33C00030475 /* Sora.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sora.h; sourceTree = "<group>"; };
-		919AFCE51CACF33C00030475 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		919AFCEA1CACF33D00030475 /* SoraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		919AFCEF1CACF33D00030475 /* SoraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoraTests.swift; sourceTree = "<group>"; };
-		919AFCF11CACF33D00030475 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		919AFCFC1CACF5FC00030475 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
-		919AFCFD1CACF5FC00030475 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		919AFCFE1CACF5FC00030475 /* .jazzy.yaml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .jazzy.yaml; sourceTree = "<group>"; };
-		919AFD161CACF80900030475 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
-		919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
-		919AFD1E1CACFC2000030475 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
-		91D114C91CAD015C003AD8B1 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
-		91D114CB1CAD016D003AD8B1 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		91D114CD1CAD0173003AD8B1 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		91D114CF1CAD018E003AD8B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		91D114D51CAD03E9003AD8B1 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
-		91D114D61CAD03E9003AD8B1 /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
-		91D114D91CAD24BC003AD8B1 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		9126998B1CC7531E008352EF /* Sora.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sora.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9126998E1CC7531E008352EF /* Sora.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sora.h; sourceTree = "<group>"; };
+		912699901CC7531E008352EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		912699951CC7531E008352EF /* SoraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9126999A1CC7531E008352EF /* SoraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoraTests.m; sourceTree = "<group>"; };
+		9126999C1CC7531E008352EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		919AFCDC1CACF33C00030475 /* Frameworks */ = {
+		912699871CC7531E008352EF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9118338A1CBE27530081A199 /* libWebRTC.a in Frameworks */,
-				91D114D01CAD018E003AD8B1 /* Foundation.framework in Frameworks */,
-				91D114CA1CAD015C003AD8B1 /* libicucore.tbd in Frameworks */,
-				91D114CE1CAD0173003AD8B1 /* Security.framework in Frameworks */,
-				91D114CC1CAD016D003AD8B1 /* CFNetwork.framework in Frameworks */,
-				919AFD1F1CACFC2000030475 /* SwiftyJSON.framework in Frameworks */,
-				919AFD211CACFC2000030475 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		919AFCE71CACF33D00030475 /* Frameworks */ = {
+		912699921CC7531E008352EF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				919AFCEB1CACF33D00030475 /* Sora.framework in Frameworks */,
+				912699961CC7531E008352EF /* Sora.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9118334A1CBE25AC0081A199 /* WebRTC */ = {
+		912699811CC7531E008352EF = {
 			isa = PBXGroup;
 			children = (
-				9118334B1CBE27520081A199 /* RTCAudioSource.h */,
-				9118334C1CBE27520081A199 /* RTCAudioTrack.h */,
-				9118334D1CBE27520081A199 /* RTCAVFoundationVideoSource.h */,
-				9118334E1CBE27520081A199 /* RTCDataChannel.h */,
-				9118334F1CBE27520081A199 /* RTCEAGLVideoView.h */,
-				911833501CBE27520081A199 /* RTCFileLogger.h */,
-				911833511CBE27520081A199 /* RTCI420Frame.h */,
-				911833521CBE27520081A199 /* RTCICECandidate.h */,
-				911833531CBE27520081A199 /* RTCICEServer.h */,
-				911833541CBE27520081A199 /* RTCLogging.h */,
-				911833551CBE27520081A199 /* RTCMediaConstraints.h */,
-				911833561CBE27520081A199 /* RTCMediaSource.h */,
-				911833571CBE27520081A199 /* RTCMediaStream.h */,
-				911833581CBE27520081A199 /* RTCMediaStreamTrack.h */,
-				911833591CBE27520081A199 /* RTCNSGLVideoView.h */,
-				9118335A1CBE27520081A199 /* RTCOpenGLVideoRenderer.h */,
-				9118335B1CBE27520081A199 /* RTCPair.h */,
-				9118335C1CBE27520081A199 /* RTCPeerConnection.h */,
-				9118335D1CBE27520081A199 /* RTCPeerConnectionDelegate.h */,
-				9118335E1CBE27520081A199 /* RTCPeerConnectionFactory.h */,
-				9118335F1CBE27520081A199 /* RTCPeerConnectionInterface.h */,
-				911833601CBE27520081A199 /* RTCSessionDescription.h */,
-				911833611CBE27520081A199 /* RTCSessionDescriptionDelegate.h */,
-				911833621CBE27520081A199 /* RTCStatsDelegate.h */,
-				911833631CBE27520081A199 /* RTCStatsReport.h */,
-				911833641CBE27520081A199 /* RTCTypes.h */,
-				911833651CBE27520081A199 /* RTCVideoCapturer.h */,
-				911833661CBE27520081A199 /* RTCVideoRenderer.h */,
-				911833671CBE27520081A199 /* RTCVideoSource.h */,
-				911833681CBE27520081A199 /* RTCVideoTrack.h */,
-				911833691CBE27520081A199 /* libWebRTC-LATEST-Universal-Release.a.version.txt */,
-				9118336A1CBE27520081A199 /* libWebRTC.a */,
-			);
-			path = WebRTC;
-			sourceTree = "<group>";
-		};
-		919AFCD61CACF33C00030475 = {
-			isa = PBXGroup;
-			children = (
-				9118334A1CBE25AC0081A199 /* WebRTC */,
-				91D114D41CAD03CA003AD8B1 /* SocketRocket */,
-				919AFCE21CACF33C00030475 /* Sora */,
-				919AFCEE1CACF33D00030475 /* SoraTests */,
-				919AFCFB1CACF39E00030475 /* Misc */,
-				919AFD1B1CACFBF700030475 /* Frameworks */,
-				919AFCE11CACF33C00030475 /* Products */,
+				9126998D1CC7531E008352EF /* Sora */,
+				912699991CC7531E008352EF /* SoraTests */,
+				9126998C1CC7531E008352EF /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		919AFCE11CACF33C00030475 /* Products */ = {
+		9126998C1CC7531E008352EF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				919AFCE01CACF33C00030475 /* Sora.framework */,
-				919AFCEA1CACF33D00030475 /* SoraTests.xctest */,
+				9126998B1CC7531E008352EF /* Sora.framework */,
+				912699951CC7531E008352EF /* SoraTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		919AFCE21CACF33C00030475 /* Sora */ = {
+		9126998D1CC7531E008352EF /* Sora */ = {
 			isa = PBXGroup;
 			children = (
-				919AFCE31CACF33C00030475 /* Sora.h */,
-				919AFCE51CACF33C00030475 /* Info.plist */,
-				919AFD161CACF80900030475 /* Connection.swift */,
+				9126998E1CC7531E008352EF /* Sora.h */,
+				912699901CC7531E008352EF /* Info.plist */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
 		};
-		919AFCEE1CACF33D00030475 /* SoraTests */ = {
+		912699991CC7531E008352EF /* SoraTests */ = {
 			isa = PBXGroup;
 			children = (
-				919AFCEF1CACF33D00030475 /* SoraTests.swift */,
-				919AFCF11CACF33D00030475 /* Info.plist */,
+				9126999A1CC7531E008352EF /* SoraTests.m */,
+				9126999C1CC7531E008352EF /* Info.plist */,
 			);
 			path = SoraTests;
-			sourceTree = "<group>";
-		};
-		919AFCFB1CACF39E00030475 /* Misc */ = {
-			isa = PBXGroup;
-			children = (
-				91D114D91CAD24BC003AD8B1 /* README.md */,
-				919AFCFC1CACF5FC00030475 /* Cartfile */,
-				919AFCFD1CACF5FC00030475 /* Makefile */,
-				919AFCFE1CACF5FC00030475 /* .jazzy.yaml */,
-			);
-			name = Misc;
-			sourceTree = "<group>";
-		};
-		919AFD1B1CACFBF700030475 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				91D114C91CAD015C003AD8B1 /* libicucore.tbd */,
-				91D114CF1CAD018E003AD8B1 /* Foundation.framework */,
-				91D114CD1CAD0173003AD8B1 /* Security.framework */,
-				91D114CB1CAD016D003AD8B1 /* CFNetwork.framework */,
-				919AFD1C1CACFC2000030475 /* SwiftyJSON.framework */,
-				919AFD1E1CACFC2000030475 /* Result.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		91D114D41CAD03CA003AD8B1 /* SocketRocket */ = {
-			isa = PBXGroup;
-			children = (
-				91D114D51CAD03E9003AD8B1 /* SRWebSocket.h */,
-				91D114D61CAD03E9003AD8B1 /* SRWebSocket.m */,
-			);
-			path = SocketRocket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		919AFCDD1CACF33C00030475 /* Headers */ = {
+		912699881CC7531E008352EF /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				911833731CBE27520081A199 /* RTCICEServer.h in Headers */,
-				9118336B1CBE27520081A199 /* RTCAudioSource.h in Headers */,
-				911833741CBE27520081A199 /* RTCLogging.h in Headers */,
-				9118336C1CBE27520081A199 /* RTCAudioTrack.h in Headers */,
-				9118336F1CBE27520081A199 /* RTCEAGLVideoView.h in Headers */,
-				911833781CBE27520081A199 /* RTCMediaStreamTrack.h in Headers */,
-				911833801CBE27530081A199 /* RTCSessionDescription.h in Headers */,
-				911833851CBE27530081A199 /* RTCVideoCapturer.h in Headers */,
-				9118336E1CBE27520081A199 /* RTCDataChannel.h in Headers */,
-				911833761CBE27520081A199 /* RTCMediaSource.h in Headers */,
-				911833771CBE27520081A199 /* RTCMediaStream.h in Headers */,
-				9118337E1CBE27520081A199 /* RTCPeerConnectionFactory.h in Headers */,
-				911833821CBE27530081A199 /* RTCStatsDelegate.h in Headers */,
-				911833721CBE27520081A199 /* RTCICECandidate.h in Headers */,
-				9118337D1CBE27520081A199 /* RTCPeerConnectionDelegate.h in Headers */,
-				911833841CBE27530081A199 /* RTCTypes.h in Headers */,
-				919AFCE41CACF33C00030475 /* Sora.h in Headers */,
-				911833751CBE27520081A199 /* RTCMediaConstraints.h in Headers */,
-				911833831CBE27530081A199 /* RTCStatsReport.h in Headers */,
-				9118337A1CBE27520081A199 /* RTCOpenGLVideoRenderer.h in Headers */,
-				9118336D1CBE27520081A199 /* RTCAVFoundationVideoSource.h in Headers */,
-				9118337C1CBE27520081A199 /* RTCPeerConnection.h in Headers */,
-				911833791CBE27520081A199 /* RTCNSGLVideoView.h in Headers */,
-				9118337B1CBE27520081A199 /* RTCPair.h in Headers */,
-				911833701CBE27520081A199 /* RTCFileLogger.h in Headers */,
-				911833861CBE27530081A199 /* RTCVideoRenderer.h in Headers */,
-				911833881CBE27530081A199 /* RTCVideoTrack.h in Headers */,
-				91D114D71CAD03E9003AD8B1 /* SRWebSocket.h in Headers */,
-				911833811CBE27530081A199 /* RTCSessionDescriptionDelegate.h in Headers */,
-				911833711CBE27520081A199 /* RTCI420Frame.h in Headers */,
-				911833871CBE27530081A199 /* RTCVideoSource.h in Headers */,
-				9118337F1CBE27520081A199 /* RTCPeerConnectionInterface.h in Headers */,
+				9126998F1CC7531E008352EF /* Sora.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		919AFCDF1CACF33C00030475 /* Sora */ = {
+		9126998A1CC7531E008352EF /* Sora */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 919AFCF41CACF33D00030475 /* Build configuration list for PBXNativeTarget "Sora" */;
+			buildConfigurationList = 9126999F1CC7531E008352EF /* Build configuration list for PBXNativeTarget "Sora" */;
 			buildPhases = (
-				919AFCDB1CACF33C00030475 /* Sources */,
-				919AFCDC1CACF33C00030475 /* Frameworks */,
-				919AFCDD1CACF33C00030475 /* Headers */,
-				919AFCDE1CACF33C00030475 /* Resources */,
-				91D114D11CAD031E003AD8B1 /* ShellScript */,
+				912699861CC7531E008352EF /* Sources */,
+				912699871CC7531E008352EF /* Frameworks */,
+				912699881CC7531E008352EF /* Headers */,
+				912699891CC7531E008352EF /* Resources */,
 			);
 			buildRules = (
 			);
@@ -383,84 +115,71 @@
 			);
 			name = Sora;
 			productName = Sora;
-			productReference = 919AFCE01CACF33C00030475 /* Sora.framework */;
+			productReference = 9126998B1CC7531E008352EF /* Sora.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		919AFCE91CACF33D00030475 /* SoraTests */ = {
+		912699941CC7531E008352EF /* SoraTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 919AFCF71CACF33D00030475 /* Build configuration list for PBXNativeTarget "SoraTests" */;
+			buildConfigurationList = 912699A21CC7531E008352EF /* Build configuration list for PBXNativeTarget "SoraTests" */;
 			buildPhases = (
-				919AFCE61CACF33D00030475 /* Sources */,
-				919AFCE71CACF33D00030475 /* Frameworks */,
-				919AFCE81CACF33D00030475 /* Resources */,
+				912699911CC7531E008352EF /* Sources */,
+				912699921CC7531E008352EF /* Frameworks */,
+				912699931CC7531E008352EF /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				919AFCED1CACF33D00030475 /* PBXTargetDependency */,
+				912699981CC7531E008352EF /* PBXTargetDependency */,
 			);
 			name = SoraTests;
 			productName = SoraTests;
-			productReference = 919AFCEA1CACF33D00030475 /* SoraTests.xctest */;
+			productReference = 912699951CC7531E008352EF /* SoraTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		919AFCD71CACF33C00030475 /* Project object */ = {
+		912699821CC7531E008352EF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Shiguredo Inc.";
 				TargetAttributes = {
-					919AFCDF1CACF33C00030475 = {
+					9126998A1CC7531E008352EF = {
 						CreatedOnToolsVersion = 7.3;
 					};
-					919AFCE91CACF33D00030475 = {
-						CreatedOnToolsVersion = 7.3;
-					};
-					919AFCFF1CACF63000030475 = {
-						CreatedOnToolsVersion = 7.3;
-					};
-					919AFD031CACF64700030475 = {
-						CreatedOnToolsVersion = 7.3;
-					};
-					919AFD071CACF66C00030475 = {
+					912699941CC7531E008352EF = {
 						CreatedOnToolsVersion = 7.3;
 					};
 				};
 			};
-			buildConfigurationList = 919AFCDA1CACF33C00030475 /* Build configuration list for PBXProject "Sora" */;
+			buildConfigurationList = 912699851CC7531E008352EF /* Build configuration list for PBXProject "Sora" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 919AFCD61CACF33C00030475;
-			productRefGroup = 919AFCE11CACF33C00030475 /* Products */;
+			mainGroup = 912699811CC7531E008352EF;
+			productRefGroup = 9126998C1CC7531E008352EF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				919AFCDF1CACF33C00030475 /* Sora */,
-				919AFCE91CACF33D00030475 /* SoraTests */,
-				919AFCFF1CACF63000030475 /* All */,
-				919AFD031CACF64700030475 /* Document */,
-				919AFD071CACF66C00030475 /* Dependencies */,
+				9126998A1CC7531E008352EF /* Sora */,
+				912699941CC7531E008352EF /* SoraTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		919AFCDE1CACF33C00030475 /* Resources */ = {
+		912699891CC7531E008352EF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		919AFCE81CACF33D00030475 /* Resources */ = {
+		912699931CC7531E008352EF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -469,103 +188,34 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		919AFD131CACF6DD00030475 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/doc",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make doc";
-		};
-		919AFD181CACF84A00030475 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Carthage/Build/iOS/Result.framework",
-				"$(DERIVED_FILE_DIR)/Carthage/Build/iOS/SwiftyJSON.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make depend";
-		};
-		91D114D11CAD031E003AD8B1 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		919AFCDB1CACF33C00030475 /* Sources */ = {
+		912699861CC7531E008352EF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91D114D81CAD03E9003AD8B1 /* SRWebSocket.m in Sources */,
-				919AFD171CACF80900030475 /* Connection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		919AFCE61CACF33D00030475 /* Sources */ = {
+		912699911CC7531E008352EF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				919AFCF01CACF33D00030475 /* SoraTests.swift in Sources */,
+				9126999B1CC7531E008352EF /* SoraTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		919AFCED1CACF33D00030475 /* PBXTargetDependency */ = {
+		912699981CC7531E008352EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 919AFCDF1CACF33C00030475 /* Sora */;
-			targetProxy = 919AFCEC1CACF33D00030475 /* PBXContainerItemProxy */;
-		};
-		919AFD0C1CACF67D00030475 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 919AFD071CACF66C00030475 /* Dependencies */;
-			targetProxy = 919AFD0B1CACF67D00030475 /* PBXContainerItemProxy */;
-		};
-		919AFD0E1CACF68100030475 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 919AFCDF1CACF33C00030475 /* Sora */;
-			targetProxy = 919AFD0D1CACF68100030475 /* PBXContainerItemProxy */;
-		};
-		919AFD101CACF68400030475 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 919AFD031CACF64700030475 /* Document */;
-			targetProxy = 919AFD0F1CACF68400030475 /* PBXContainerItemProxy */;
-		};
-		919AFD121CACF69600030475 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 919AFCE91CACF33D00030475 /* SoraTests */;
-			targetProxy = 919AFD111CACF69600030475 /* PBXContainerItemProxy */;
+			target = 9126998A1CC7531E008352EF /* Sora */;
+			targetProxy = 912699971CC7531E008352EF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		919AFCF21CACF33D00030475 /* Debug */ = {
+		9126999D1CC7531E008352EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -607,14 +257,13 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		919AFCF31CACF33D00030475 /* Release */ = {
+		9126999E1CC7531E008352EF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -656,58 +305,39 @@
 			};
 			name = Release;
 		};
-		919AFCF51CACF33D00030475 /* Debug */ = {
+		912699A01CC7531E008352EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = Sora/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WebRTC",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.Sora;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		919AFCF61CACF33D00030475 /* Release */ = {
+		912699A11CC7531E008352EF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = Sora/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WebRTC",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.Sora;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
-		919AFCF81CACF33D00030475 /* Debug */ = {
+		912699A31CC7531E008352EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = SoraTests/Info.plist;
@@ -717,54 +347,12 @@
 			};
 			name = Debug;
 		};
-		919AFCF91CACF33D00030475 /* Release */ = {
+		912699A41CC7531E008352EF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = SoraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		919AFD011CACF63000030475 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		919AFD021CACF63000030475 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		919AFD051CACF64700030475 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		919AFD061CACF64700030475 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		919AFD091CACF66C00030475 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		919AFD0A1CACF66C00030475 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -772,61 +360,32 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		919AFCDA1CACF33C00030475 /* Build configuration list for PBXProject "Sora" */ = {
+		912699851CC7531E008352EF /* Build configuration list for PBXProject "Sora" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				919AFCF21CACF33D00030475 /* Debug */,
-				919AFCF31CACF33D00030475 /* Release */,
+				9126999D1CC7531E008352EF /* Debug */,
+				9126999E1CC7531E008352EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		919AFCF41CACF33D00030475 /* Build configuration list for PBXNativeTarget "Sora" */ = {
+		9126999F1CC7531E008352EF /* Build configuration list for PBXNativeTarget "Sora" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				919AFCF51CACF33D00030475 /* Debug */,
-				919AFCF61CACF33D00030475 /* Release */,
+				912699A01CC7531E008352EF /* Debug */,
+				912699A11CC7531E008352EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
-		919AFCF71CACF33D00030475 /* Build configuration list for PBXNativeTarget "SoraTests" */ = {
+		912699A21CC7531E008352EF /* Build configuration list for PBXNativeTarget "SoraTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				919AFCF81CACF33D00030475 /* Debug */,
-				919AFCF91CACF33D00030475 /* Release */,
+				912699A31CC7531E008352EF /* Debug */,
+				912699A41CC7531E008352EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		919AFD001CACF63000030475 /* Build configuration list for PBXAggregateTarget "All" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				919AFD011CACF63000030475 /* Debug */,
-				919AFD021CACF63000030475 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		919AFD041CACF64700030475 /* Build configuration list for PBXAggregateTarget "Document" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				919AFD051CACF64700030475 /* Debug */,
-				919AFD061CACF64700030475 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		919AFD081CACF66C00030475 /* Build configuration list for PBXAggregateTarget "Dependencies" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				919AFD091CACF66C00030475 /* Debug */,
-				919AFD0A1CACF66C00030475 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 919AFCD71CACF33C00030475 /* Project object */;
+	rootObject = 912699821CC7531E008352EF /* Project object */;
 }
