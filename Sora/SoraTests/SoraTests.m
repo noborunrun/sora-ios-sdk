@@ -1,11 +1,3 @@
-//
-//  SoraTests.m
-//  SoraTests
-//
-//  Created by 鈴木鉄也 on 2016/04/20.
-//  Copyright © 2016年 Shiguredo Inc. All rights reserved.
-//
-
 #import <XCTest/XCTest.h>
 
 @interface SoraTests : XCTestCase

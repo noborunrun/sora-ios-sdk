@@ -1,11 +1,3 @@
-//
-//  Sora.h
-//  Sora
-//
-//  Created by 鈴木鉄也 on 2016/04/20.
-//  Copyright © 2016年 Shiguredo Inc. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 
 //! Project version number for Sora.
@@ -16,4 +8,6 @@ FOUNDATION_EXPORT const unsigned char SoraVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Sora/PublicHeader.h>
 
-
+#import <Sora/SoraConnection.h>
+#import <Sora/SoraOffer.h>
+#import <Sora/SoraRequest.h>
