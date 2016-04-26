@@ -46,11 +46,9 @@
 		912699EA1CC7542C008352EF /* libWebRTC-LATEST-Universal-Release.a.version.txt in Resources */ = {isa = PBXBuildFile; fileRef = 912699CA1CC7542C008352EF /* libWebRTC-LATEST-Universal-Release.a.version.txt */; };
 		912834431CCE04B2009DFA2E /* SoraOffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 912834411CCE04B2009DFA2E /* SoraOffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		912834441CCE04B2009DFA2E /* SoraOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 912834421CCE04B2009DFA2E /* SoraOffer.m */; };
-		9129DDF51CCA10F800016F0F /* jazzy.yaml in Resources */ = {isa = PBXBuildFile; fileRef = 9129DDF41CCA10F800016F0F /* jazzy.yaml */; };
 		9129DDF81CCA740900016F0F /* SoraConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9129DDF61CCA740900016F0F /* SoraConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9129DDF91CCA740900016F0F /* SoraConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9129DDF71CCA740900016F0F /* SoraConnection.m */; };
-		9154FBD51CCA101300458C1E /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 9154FBD31CCA101300458C1E /* Cartfile */; };
-		9154FBD61CCA101300458C1E /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 9154FBD41CCA101300458C1E /* Makefile */; };
+		914102B51CCF57BA002885BF /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 914102B41CCF57BA002885BF /* libicucore.tbd */; };
 		91C9F9111CCCFCAA00036375 /* SoraRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C9F90F1CCCFCAA00036375 /* SoraRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91C9F9121CCCFCAA00036375 /* SoraRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C9F9101CCCFCAA00036375 /* SoraRequest.m */; };
 /* End PBXBuildFile section */
@@ -111,6 +109,7 @@
 		9129DDF41CCA10F800016F0F /* jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = jazzy.yaml; sourceTree = "<group>"; };
 		9129DDF61CCA740900016F0F /* SoraConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraConnection.h; sourceTree = "<group>"; };
 		9129DDF71CCA740900016F0F /* SoraConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraConnection.m; sourceTree = "<group>"; };
+		914102B41CCF57BA002885BF /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		9154FBD31CCA101300458C1E /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		9154FBD41CCA101300458C1E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		91C9F90F1CCCFCAA00036375 /* SoraRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraRequest.h; sourceTree = "<group>"; };
@@ -130,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				914102B51CCF57BA002885BF /* libicucore.tbd in Frameworks */,
 				912699961CC7531E008352EF /* Sora.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,6 +232,7 @@
 		912699EB1CC75440008352EF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				914102B41CCF57BA002885BF /* libicucore.tbd */,
 				912699AB1CC7542C008352EF /* libWebRTC.a */,
 				912699CA1CC7542C008352EF /* libWebRTC-LATEST-Universal-Release.a.version.txt */,
 			);
@@ -373,8 +374,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9129DDF51CCA10F800016F0F /* jazzy.yaml in Resources */,
-				9154FBD51CCA101300458C1E /* Cartfile in Resources */,
 				912699EA1CC7542C008352EF /* libWebRTC-LATEST-Universal-Release.a.version.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,7 +393,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9129DDF91CCA740900016F0F /* SoraConnection.m in Sources */,
-				9154FBD61CCA101300458C1E /* Makefile in Sources */,
 				91C9F9121CCCFCAA00036375 /* SoraRequest.m in Sources */,
 				912834441CCE04B2009DFA2E /* SoraOffer.m in Sources */,
 				912699AA1CC7541A008352EF /* SRWebSocket.m in Sources */,

@@ -1,5 +1,10 @@
 #import <Foundation/Foundation.h>
 
+#import "SRWebSocket.h"
+#import "SoraRequest.h"
+
+@protocol SoraConnectionDelegate;
+
 typedef NS_ENUM(NSUInteger, SoraConnectionState) {
     SoraConnectionStateConnecting,
     SoraConnectionStateOpen,
@@ -17,12 +22,16 @@ extern NSString * __nonnull const SoraErrorDomain;
 /// SoraErrorCodeWebSocketError
 extern NSString * __nonnull const SoraWebSocketErrorKey;
 
-@interface SoraConnection : NSObject
+@interface SoraConnection : NSObject <SRWebSocketDelegate>
 
 @property(nonatomic, readonly, nonnull) NSURL *URL;
 @property(nonatomic, readonly) SoraConnectionState state;
+@property(nonatomic, readwrite, nullable) id<SoraConnectionDelegate> delegate;
 
 - (nullable instancetype)initWithURL:(nonnull NSURL *)URL;
+
+- (void)open:(nonnull SoraRequest *)request;
+- (void)close;
 
 @end
 

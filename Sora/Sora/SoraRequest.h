@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, SoraRole) {
-    Upstream,
-    Downstream
+    SoraRoleUpstream,
+    SoraRoleDownstream
 };
 
 typedef NS_ENUM(NSUInteger, SoraCodecType) {
