@@ -21,4 +21,6 @@ typedef NS_ENUM(NSUInteger, SoraCodecType) {
 - (nullable instancetype)initWithRole:(SoraRole)role
                             channelId:(nonnull NSString *)channelId;
 
+- (nonnull id)JSONObject;
+
 @end

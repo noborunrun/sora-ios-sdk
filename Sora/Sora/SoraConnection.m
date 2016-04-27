@@ -10,6 +10,7 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
 @property(nonatomic, readwrite, nonnull) NSURL *URL;
 @property(nonatomic, readwrite) SoraConnectionState state;
 @property(nonatomic, readwrite, nullable) SRWebSocket *webSocket;
+@property(nonatomic, readwrite, nullable) SoraRequest *request;
 
 @end
 
@@ -28,6 +29,7 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
 - (void)open:(nonnull SoraRequest *)request
 {
     self.state = SoraConnectionStateConnecting;
+    self.request = request;
     self.webSocket = [[SRWebSocket alloc] initWithURL: self.URL];
     self.webSocket.delegate = self;
     NSLog(@"open WebSocket");
@@ -51,6 +53,21 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
 {
     NSLog(@"WebSocket open");
     self.state = SoraConnectionStateOpen;
+    id obj = [self.request JSONObject];
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject: obj
+                                                   options: 0
+                                                     error: &error];
+    if (error != nil) {
+        if ([self.delegate respondsToSelector:
+             @selector(connection:didFailWithError:)]) {
+            [self.delegate connection: self didFailWithError: error];
+        }
+    } else {
+        NSLog(@"send offer %@", [obj description]);
+        [webSocket send: [[NSString alloc] initWithData: data
+                                               encoding: NSUTF8StringEncoding]];
+    }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error
@@ -64,7 +81,7 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
            reason:(NSString *)reason
          wasClean:(BOOL)wasClean
 {
-    NSLog(@"WebSocket close");
+    NSLog(@"WebSocket close: %@", reason);
     self.state = SoraConnectionStateClosed;
 }
 
