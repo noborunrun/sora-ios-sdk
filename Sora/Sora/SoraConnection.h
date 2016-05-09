@@ -22,11 +22,11 @@ extern NSString * __nonnull const SoraErrorDomain;
 /// SoraErrorCodeWebSocketError
 extern NSString * __nonnull const SoraWebSocketErrorKey;
 
-@interface SoraConnection : NSObject <SRWebSocketDelegate>
+@interface SoraConnection : NSObject
 
 @property(nonatomic, readonly, nonnull) NSURL *URL;
 @property(nonatomic, readonly) SoraConnectionState state;
-@property(nonatomic, readwrite, nullable) id<SoraConnectionDelegate> delegate;
+@property(nonatomic, weak, readwrite, nullable) id<SoraConnectionDelegate> delegate;
 
 - (nullable instancetype)initWithURL:(nonnull NSURL *)URL;
 

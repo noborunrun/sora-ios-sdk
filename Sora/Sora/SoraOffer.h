@@ -3,9 +3,10 @@
 @interface SoraOffer : NSObject
 
 @property(nonatomic, readonly, nonnull) NSString *clientId;
-@property(nonatomic, readonly, nonnull) NSString *SDPMessage;
+@property(nonatomic, readonly, nonnull) NSString *SDP;
 
 - (nullable instancetype)initWithClientId:(nonnull NSString *)clientId
-                               SDPMessage:(nonnull NSString *)SDPMessage;
+                                      SDP:(nonnull NSString *)SDP;
+- (nullable instancetype)initWithJSONObject:(nonnull id)JSONObject;
 
 @end
