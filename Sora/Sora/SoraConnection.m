@@ -1,8 +1,10 @@
 #import "SRWebSocket.h"
 #import "SoraConnection.h"
+#import "SoraOffer.h"
 
 NSString * const SoraErrorDomain = @"SoraErrorDomain";
 
+NSString * const SoraOfferErrorMessageKey = @"SoraOfferErrorMessageKey";
 NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
 
 @class SoraConnectingContext;
@@ -95,6 +97,11 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
                                      userInfo: nil];
     }
     
+    if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveMessage:)]) {
+        [self.conn.delegate connection: self.conn
+                     didReceiveMessage: message];
+    }
+    
     NSError *error = nil;
     id JSON = [NSJSONSerialization JSONObjectWithData: data
                                               options: 0
@@ -104,7 +111,18 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
     }
     NSLog(@"received message: %@", [JSON description]);
     
-    // TODO: create an offer object
+    SoraOffer *offer = [[SoraOffer alloc] initWithJSONObject: JSON];
+    if (offer == nil) {
+        error = [[NSError alloc] initWithDomain: SoraErrorDomain
+                                           code: SoraErrorCodeOfferError
+                                       userInfo: @{SoraOfferErrorMessageKey: message}];
+    }
+    NSLog(@"offer object = %@", [offer description]);
+    if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveOffer:)]) {
+        [self.conn.delegate connection: self.conn
+                       didReceiveOffer: offer];
+    }
+    
     self.conn.state = SoraConnectionStateOpen;
     self.waitsResponse = false;
 }

@@ -32,10 +32,16 @@ static NSString * const TypeKey = @"type";
     NSDictionary *dict = (NSDictionary *)JSONObject;
     NSString *cliendId = dict[ClientIdKey];
     NSString *SDP = dict[SDPKey];
-    if (![dict[TypeKey] isEqualToString: @"offer"] || cliendId != nil || SDP != nil)
+    if (![dict[TypeKey] isEqualToString: @"offer"] || cliendId == nil || SDP == nil)
         return nil;
     
     return [self initWithClientId: cliendId SDP: SDP];
+}
+
+- (NSString *)description
+{
+    return [[NSString alloc] initWithFormat: @"<SoraOffer: %p cliendId=\"%@\" sdp=\"%lu bytes\">",
+            self, self.clientId, (unsigned long)[self.SDP length]];
 }
 
 @end
