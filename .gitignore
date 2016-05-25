@@ -65,5 +65,6 @@ Sora/Carthage/Checkouts
 fastlane/report.xml
 fastlane/screenshots
 
-*.sw*
+*.swp
 doc
+project.xcworkspace
