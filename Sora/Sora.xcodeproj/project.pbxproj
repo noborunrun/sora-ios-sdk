@@ -49,6 +49,27 @@
 		9129DDF81CCA740900016F0F /* SoraConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9129DDF61CCA740900016F0F /* SoraConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9129DDF91CCA740900016F0F /* SoraConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9129DDF71CCA740900016F0F /* SoraConnection.m */; };
 		914102B51CCF57BA002885BF /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 914102B41CCF57BA002885BF /* libicucore.tbd */; };
+		9159AB711D17BE0C00024E5C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB701D17BE0C00024E5C /* AudioToolbox.framework */; };
+		9159AB731D17BE1300024E5C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB721D17BE1300024E5C /* AVFoundation.framework */; };
+		9159AB751D17BE1900024E5C /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB741D17BE1900024E5C /* AVKit.framework */; };
+		9159AB771D17BE1E00024E5C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB761D17BE1E00024E5C /* CFNetwork.framework */; };
+		9159AB791D17BE2600024E5C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB781D17BE2600024E5C /* Security.framework */; };
+		9159AB7B1D17BE3100024E5C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7A1D17BE3100024E5C /* CoreAudio.framework */; };
+		9159AB7D1D17BE3700024E5C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7C1D17BE3700024E5C /* CoreMedia.framework */; };
+		9159AB7F1D17BE3E00024E5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7E1D17BE3E00024E5C /* Foundation.framework */; };
+		9159AB811D17BE4600024E5C /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB801D17BE4600024E5C /* MediaToolbox.framework */; };
+		9159AB831D17BE4C00024E5C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB821D17BE4C00024E5C /* VideoToolbox.framework */; };
+		9159AB851D17BEAE00024E5C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB701D17BE0C00024E5C /* AudioToolbox.framework */; };
+		9159AB861D17BEAE00024E5C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB721D17BE1300024E5C /* AVFoundation.framework */; };
+		9159AB871D17BEAE00024E5C /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB741D17BE1900024E5C /* AVKit.framework */; };
+		9159AB881D17BEAE00024E5C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB761D17BE1E00024E5C /* CFNetwork.framework */; };
+		9159AB891D17BEAE00024E5C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7A1D17BE3100024E5C /* CoreAudio.framework */; };
+		9159AB8A1D17BEAE00024E5C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7C1D17BE3700024E5C /* CoreMedia.framework */; };
+		9159AB8B1D17BEAE00024E5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7E1D17BE3E00024E5C /* Foundation.framework */; };
+		9159AB8C1D17BEAE00024E5C /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB801D17BE4600024E5C /* MediaToolbox.framework */; };
+		9159AB8D1D17BEAE00024E5C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB781D17BE2600024E5C /* Security.framework */; };
+		9159AB8E1D17BEAE00024E5C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB821D17BE4C00024E5C /* VideoToolbox.framework */; };
+		9159AB911D17BEDE00024E5C /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB8F1D17BED700024E5C /* libstdc++.tbd */; };
 		91C9F9111CCCFCAA00036375 /* SoraRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C9F90F1CCCFCAA00036375 /* SoraRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91C9F9121CCCFCAA00036375 /* SoraRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C9F9101CCCFCAA00036375 /* SoraRequest.m */; };
 /* End PBXBuildFile section */
@@ -112,6 +133,17 @@
 		914102B41CCF57BA002885BF /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		9154FBD31CCA101300458C1E /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		9154FBD41CCA101300458C1E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		9159AB701D17BE0C00024E5C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		9159AB721D17BE1300024E5C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		9159AB741D17BE1900024E5C /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		9159AB761D17BE1E00024E5C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		9159AB781D17BE2600024E5C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		9159AB7A1D17BE3100024E5C /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		9159AB7C1D17BE3700024E5C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		9159AB7E1D17BE3E00024E5C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9159AB801D17BE4600024E5C /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
+		9159AB821D17BE4C00024E5C /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		9159AB8F1D17BED700024E5C /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		91C9F90F1CCCFCAA00036375 /* SoraRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraRequest.h; sourceTree = "<group>"; };
 		91C9F9101CCCFCAA00036375 /* SoraRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraRequest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -121,6 +153,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9159AB831D17BE4C00024E5C /* VideoToolbox.framework in Frameworks */,
+				9159AB811D17BE4600024E5C /* MediaToolbox.framework in Frameworks */,
+				9159AB7F1D17BE3E00024E5C /* Foundation.framework in Frameworks */,
+				9159AB7D1D17BE3700024E5C /* CoreMedia.framework in Frameworks */,
+				9159AB7B1D17BE3100024E5C /* CoreAudio.framework in Frameworks */,
+				9159AB791D17BE2600024E5C /* Security.framework in Frameworks */,
+				9159AB771D17BE1E00024E5C /* CFNetwork.framework in Frameworks */,
+				9159AB751D17BE1900024E5C /* AVKit.framework in Frameworks */,
+				9159AB731D17BE1300024E5C /* AVFoundation.framework in Frameworks */,
+				9159AB711D17BE0C00024E5C /* AudioToolbox.framework in Frameworks */,
 				912699CB1CC7542C008352EF /* libWebRTC.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -129,8 +171,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9159AB8A1D17BEAE00024E5C /* CoreMedia.framework in Frameworks */,
+				9159AB8B1D17BEAE00024E5C /* Foundation.framework in Frameworks */,
+				9159AB891D17BEAE00024E5C /* CoreAudio.framework in Frameworks */,
+				9159AB8D1D17BEAE00024E5C /* Security.framework in Frameworks */,
+				9159AB881D17BEAE00024E5C /* CFNetwork.framework in Frameworks */,
+				9159AB861D17BEAE00024E5C /* AVFoundation.framework in Frameworks */,
 				914102B51CCF57BA002885BF /* libicucore.tbd in Frameworks */,
+				9159AB871D17BEAE00024E5C /* AVKit.framework in Frameworks */,
+				9159AB8E1D17BEAE00024E5C /* VideoToolbox.framework in Frameworks */,
+				9159AB8C1D17BEAE00024E5C /* MediaToolbox.framework in Frameworks */,
 				912699961CC7531E008352EF /* Sora.framework in Frameworks */,
+				9159AB911D17BEDE00024E5C /* libstdc++.tbd in Frameworks */,
+				9159AB851D17BEAE00024E5C /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,8 +285,19 @@
 		912699EB1CC75440008352EF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				914102B41CCF57BA002885BF /* libicucore.tbd */,
+				9159AB8F1D17BED700024E5C /* libstdc++.tbd */,
 				912699AB1CC7542C008352EF /* libWebRTC.a */,
+				9159AB701D17BE0C00024E5C /* AudioToolbox.framework */,
+				9159AB721D17BE1300024E5C /* AVFoundation.framework */,
+				9159AB741D17BE1900024E5C /* AVKit.framework */,
+				9159AB761D17BE1E00024E5C /* CFNetwork.framework */,
+				9159AB7A1D17BE3100024E5C /* CoreAudio.framework */,
+				9159AB7C1D17BE3700024E5C /* CoreMedia.framework */,
+				9159AB7E1D17BE3E00024E5C /* Foundation.framework */,
+				9159AB801D17BE4600024E5C /* MediaToolbox.framework */,
+				9159AB781D17BE2600024E5C /* Security.framework */,
+				9159AB821D17BE4C00024E5C /* VideoToolbox.framework */,
+				914102B41CCF57BA002885BF /* libicucore.tbd */,
 				912699CA1CC7542C008352EF /* libWebRTC-LATEST-Universal-Release.a.version.txt */,
 			);
 			name = Frameworks;
@@ -555,6 +619,10 @@
 			buildSettings = {
 				INFOPLIST_FILE = SoraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/WebRTC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -565,6 +633,10 @@
 			buildSettings = {
 				INFOPLIST_FILE = SoraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/WebRTC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
