@@ -13,41 +13,64 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
 
 @property(nonatomic, readwrite, nonnull) NSURL *URL;
 @property(nonatomic, readwrite) SoraConnectionState state;
+@property(nonatomic, readwrite, nonnull) RTCPeerConnectionFactory *peerConnectionFactory;
+@property(nonatomic, readwrite, nonnull) RTCPeerConnection *peerConnection;
+@property(nonatomic, readwrite, nonnull) RTCFileLogger *fileLogger;
+
 @property(nonatomic, readwrite, nullable) SRWebSocket *webSocket;
 @property(nonatomic, readwrite, nullable) SoraConnectingContext *context;
 
 @end
 
-@interface SoraConnectingContext : NSObject <SRWebSocketDelegate>
+@interface SoraConnectingContext : NSObject <SRWebSocketDelegate, RTCPeerConnectionDelegate>
 
 @property(nonatomic, weak, readwrite, nullable) SoraConnection *conn;
-@property(nonatomic, readwrite, nonnull) SoraRequest *request;
+@property(nonatomic, readwrite, nullable) SoraRequest *request;
 @property(nonatomic, readwrite) bool waitsResponse;
 
-- (nullable instancetype)initWithConnection:(nullable SoraConnection *)conn
-                                    request:(nonnull SoraRequest *)request;
+- (nullable instancetype)initWithConnection:(nullable SoraConnection *)conn;
 
 @end
 
 @implementation SoraConnection
 
 - (nullable instancetype)initWithURL:(nonnull NSURL *)URL
+                       configuration:(nullable RTCConfiguration *)config
+                         constraints:(nullable RTCMediaConstraints *)constraints
 {
     self = [super init];
     if (self != nil) {
+        [RTCPeerConnectionFactory initializeSSL];
         self.URL = URL;
         self.state = SoraConnectionStateClosed;
+        self.peerConnectionFactory = [[RTCPeerConnectionFactory alloc] init];
+        self.context = [[SoraConnectingContext alloc] initWithConnection: self];
+        if (config == nil) {
+            config = [[self class] defaultPeerConnectionConfiguration];
+        }
+        if (constraints == nil) {
+            constraints = [[self class] defaultPeerConnectionConstraints];
+        }
+        self.peerConnection = [self.peerConnectionFactory
+                               peerConnectionWithConfiguration: config
+                               constraints: constraints
+                               delegate: self.context];
+        self.fileLogger = [[RTCFileLogger alloc] init];
+        [self.fileLogger start];
     }
     return self;
+}
+
+- (nullable instancetype)initWithURL:(nonnull NSURL *)URL
+{
+    return [self initWithURL: URL configuration: nil constraints: nil];
 }
 
 - (void)open:(nonnull SoraRequest *)request
 {
     self.state = SoraConnectionStateConnecting;
+    self.context.request = request;
     self.webSocket = [[SRWebSocket alloc] initWithURL: self.URL];
-    self.context = [[SoraConnectingContext alloc]
-                    initWithConnection: self
-                    request: request];
     self.webSocket.delegate = self.context;
     NSLog(@"open WebSocket");
     [self.webSocket open];
@@ -58,17 +81,25 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
     [self.webSocket close];
 }
 
++ (nonnull RTCConfiguration *)defaultPeerConnectionConfiguration
+{
+    return [[RTCConfiguration alloc] init];
+}
+
++ (nonnull RTCMediaConstraints *)defaultPeerConnectionConstraints
+{
+    return [[RTCMediaConstraints alloc] init];
+}
+
 @end
 
 @implementation SoraConnectingContext
 
 - (nullable instancetype)initWithConnection:(nullable SoraConnection *)conn
-                                    request:(nonnull SoraRequest *)request
 {
     self = [self init];
     if (self != nil) {
         self.conn = conn;
-        self.request = request;
         self.waitsResponse = false;
     }
     return self;
@@ -129,6 +160,8 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket
 {
+    NSAssert(self.request != nil, @"request is required");
+    
     NSLog(@"WebSocket opened");
     id obj = [self.request JSONObject];
     NSError *error = nil;

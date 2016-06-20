@@ -1,5 +1,10 @@
 #import <Foundation/Foundation.h>
 
+#import "RTCPeerConnection.h"
+#import "RTCPeerConnectionInterface.h"
+#import "RTCPeerConnectionFactory.h"
+#import "RTCMediaConstraints.h"
+#import "RTCFileLogger.h"
 #import "SRWebSocket.h"
 #import "SoraOffer.h"
 #import "SoraRequest.h"
@@ -32,11 +37,21 @@ extern NSString * __nonnull const SoraWebSocketErrorKey;
 @property(nonatomic, readonly, nonnull) NSURL *URL;
 @property(nonatomic, readonly) SoraConnectionState state;
 @property(nonatomic, weak, readwrite, nullable) id<SoraConnectionDelegate> delegate;
+@property(nonatomic, readonly, nonnull) RTCPeerConnectionFactory *peerConnectionFactory;
+@property(nonatomic, readonly, nonnull) RTCPeerConnection *peerConnection;
+@property(nonatomic, readonly, nonnull) RTCFileLogger *fileLogger;
 
+
+- (nullable instancetype)initWithURL:(nonnull NSURL *)URL
+                       configuration:(nullable RTCConfiguration *)config
+                         constraints:(nullable RTCMediaConstraints *)constraints;
 - (nullable instancetype)initWithURL:(nonnull NSURL *)URL;
 
 - (void)open:(nonnull SoraRequest *)request;
 - (void)close;
+
++ (nonnull RTCConfiguration *)defaultPeerConnectionConfiguration;
++ (nonnull RTCMediaConstraints *)defaultPeerConnectionConstraints;
 
 @end
 
