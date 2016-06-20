@@ -39,7 +39,7 @@ static NSString * const VideoKey = @"video";
         default:
             @throw [NSException
                     exceptionWithName: NSGenericException
-                    reason: [NSString stringWithFormat: @"unknown role %lu", self.role]
+                    reason: [NSString stringWithFormat: @"unknown role %lu", (unsigned long)self.role]
                     userInfo: nil];
     }
     
@@ -57,7 +57,7 @@ static NSString * const VideoKey = @"video";
         default:
             @throw [NSException
                     exceptionWithName: NSGenericException
-                    reason: [NSString stringWithFormat: @"unknown codec type %lu", self.codecType]
+                    reason: [NSString stringWithFormat: @"unknown codec type %lu", (unsigned long)self.codecType]
                     userInfo: nil];
     }
     dict[VideoKey] = videoDict;
