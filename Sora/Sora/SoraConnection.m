@@ -1,3 +1,6 @@
+#import "RTCICEServer.h"
+#import "RTCSessionDescription.h"
+#import "RTCSessionDescriptionDelegate.h"
 #import "SRWebSocket.h"
 #import "SoraConnection.h"
 #import "SoraOffer.h"
@@ -22,7 +25,7 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
 
 @end
 
-@interface SoraConnectingContext : NSObject <SRWebSocketDelegate, RTCPeerConnectionDelegate>
+@interface SoraConnectingContext : NSObject <SRWebSocketDelegate, RTCPeerConnectionDelegate, RTCSessionDescriptionDelegate>
 
 @property(nonatomic, weak, readwrite, nullable) SoraConnection *conn;
 @property(nonatomic, readwrite, nullable) SoraRequest *request;
@@ -105,6 +108,8 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
     return self;
 }
 
+#pragma mark WebSocket Delegate
+
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message
 {
     NSLog(@"WebSocket receive %@", [message description]);
@@ -113,18 +118,16 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
         return;
     }
     
-    NSData *data;
-    if ([message isKindOfClass: [NSData class]])
-        data = message;
-    else if ([message isKindOfClass: [NSString class]]) {
-        data = [(NSString *)message dataUsingEncoding: NSUTF8StringEncoding];
-        if (data == nil)
-            @throw [NSException exceptionWithName: NSGenericException
-                                           reason: @"cannot convert received message to UTF-8 bytes"
-                                         userInfo: nil];
-    } else {
+    if (![message isKindOfClass: [NSString class]]) {
         @throw [NSException exceptionWithName: NSGenericException
-                                       reason: @"received message is not kind of NSData or NSString"
+                                       reason: @"received message (NSData) must be NSString"
+                                     userInfo: nil];
+    }
+
+    NSData *data = [(NSString *)message dataUsingEncoding: NSUTF8StringEncoding];
+    if (data == nil) {
+        @throw [NSException exceptionWithName: NSGenericException
+                                       reason: @"cannot convert received message to UTF-8 bytes"
                                      userInfo: nil];
     }
     
@@ -150,10 +153,22 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
     }
     NSLog(@"offer object = %@", [offer description]);
     if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveOffer:)]) {
-        [self.conn.delegate connection: self.conn
-                       didReceiveOffer: offer];
+        [self.conn.delegate connection: self.conn didReceiveOffer: offer];
     }
     
+    // state
+    NSLog(@"send answer");
+    message = offer.SDP;
+    RTCSessionDescription *sdp = [[RTCSessionDescription alloc]
+                                  initWithType: @"offer"
+                                  sdp: message];
+    NSLog(@"SDP = %@", [sdp description]);
+    [self.conn.peerConnection setRemoteDescriptionWithDelegate: self
+                                            sessionDescription: sdp];
+    [self.conn.peerConnection createAnswerWithDelegate: self
+                                           constraints: nil];
+    
+    // TODO
     self.conn.state = SoraConnectionStateOpen;
     self.waitsResponse = false;
 }
@@ -199,5 +214,70 @@ NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
 }
 
 //- (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload;
+
+#pragma mark Session Description Delegate
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didCreateSessionDescription:(RTCSessionDescription *)sdp
+                 error:(NSError *)error
+{
+    NSLog(@"create SDP");
+    if (error != nil) {
+        NSLog(@"error: %@: %@", error.domain, [error.userInfo description]);
+    } else
+        NSLog(@"%@", sdp.description);
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection
+didSetSessionDescriptionWithError:(NSError *)error
+{
+    NSLog(@"set SDP");
+    if (error != nil) {
+        NSLog(@"error: %@: %@", error.domain, [error.userInfo description]);
+    }
+}
+
+#pragma mark Peer Connection Delegate
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection signalingStateChanged:(RTCSignalingState)stateChanged
+{
+    NSLog(@"peerConnection:signalingStateChanged:");
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection addedStream:(RTCMediaStream *)stream
+{
+    NSLog(@"peerConnection:addedStream:");
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection removedStream:(RTCMediaStream *)stream
+{
+    NSLog(@"peerConnection:removedStream:");
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection gotICECandidate:(RTCICECandidate *)candidate
+{
+    NSLog(@"peerConnection:gotICECandidate:");
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection iceConnectionChanged:(RTCICEConnectionState)newState
+{
+    NSLog(@"peerConnection:iceConnectionChanged:");
+
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection iceGatheringChanged:(RTCICEGatheringState)newState
+{
+    NSLog(@"peerConnection:iceGatheringChanged:");
+}
+
+- (void)peerConnectionOnRenegotiationNeeded:(RTCPeerConnection *)peerConnection
+{
+    NSLog(@"peerConnectionOnRenegotiationNeeded");
+}
+
+- (void)peerConnection:(RTCPeerConnection *)peerConnection didOpenDataChannel:(RTCDataChannel *)dataChannel
+{
+    NSLog(@"peerConnection:didOpenDataChannel:");
+}
 
 @end
