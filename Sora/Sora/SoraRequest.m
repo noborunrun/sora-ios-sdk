@@ -16,7 +16,7 @@ static NSString * const VideoKey = @"video";
         self.role = role;
         self.channelId = channelId;
         self.accessToken = nil;
-        self.codecType = SoraCodecTypeVP9;
+        self.codecType = SoraCodecTypeVP8;
     }
     return self;
 }
