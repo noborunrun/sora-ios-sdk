@@ -31,7 +31,6 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
     SoraConnectingContextStateConnecting,
     SoraConnectingContextStateSettingOffer,
     SoraConnectingContextStateCreatingAnswer,
-    SoraConnectingContextStateDidCreateAnswer,
     SoraConnectingContextStateSendingAnswer,
 };
 
@@ -140,9 +139,6 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
         case SoraConnectingContextStateSettingOffer:
             return @"SettingOffer";
             
-        case SoraConnectingContextStateDidCreateAnswer:
-            return @"DidCreateAnswer";
-            
         default:
             NSAssert(NO, @"error");
             break;
@@ -233,10 +229,6 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
                                                     sessionDescription: sdp];
             [self.conn.peerConnection createAnswerWithDelegate: self
                                                    constraints: nil];
-            
-            // TODO: send answer
-            self.state = SoraConnectingContextStateSendingAnswer;
-            [self.conn.webSocket send: self.answer.description];
             break;
         }
         case SoraConnectingContextStateSendingAnswer: {
@@ -244,7 +236,8 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
             break;
         }
         default:
-            NSAssert(NO, @"invalid state");
+            // discard
+            break;
     }
 }
 
@@ -273,17 +266,27 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
 didCreateSessionDescription:(RTCSessionDescription *)sdp
                  error:(NSError *)error
 {
-    NSLog(@"create SDP");
+    NSLog(@"create SDP (%@)", [self stateDescription]);
     if (error != nil) {
         NSLog(@"error: %@: %@", error.domain, [error.userInfo description]);
     } else
         NSLog(@"%@", sdp.description);
     switch (self.state) {
-        case SoraConnectingContextStateCreatingAnswer:
+        case SoraConnectingContextStateCreatingAnswer: {
             self.answer = sdp;
-            self.state = SoraConnectingContextStateDidCreateAnswer;
+            self.state = SoraConnectingContextStateSendingAnswer;
+            NSLog(@"state sending answer");
+            [self.conn.peerConnection setLocalDescriptionWithDelegate: self
+                                                   sessionDescription: self.answer];
+            id json = @{@"type":@"answer", @"sdp":self.answer.description};
+            NSError *err = nil;
+            NSData *data = [NSJSONSerialization dataWithJSONObject: json
+                                                            options: 0
+                                                              error: &err];
+            NSString *msg = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+            [self.conn.webSocket send: msg];
             break;
-            
+        }
         default:
             NSAssert(NO, @"invalid state");
             break;
@@ -293,12 +296,19 @@ didCreateSessionDescription:(RTCSessionDescription *)sdp
 - (void)peerConnection:(RTCPeerConnection *)peerConnection
 didSetSessionDescriptionWithError:(NSError *)error
 {
-    NSLog(@"set SDP");
+    NSLog(@"set SDP (%@)", [self stateDescription]);
     if (error != nil) {
         NSLog(@"error: %@: %@", error.domain, [error.userInfo description]);
     }
+    // TODO: error handling
     switch (self.state) {
+        case SoraConnectingContextStateCreatingAnswer:
+            break;
+            
         case SoraConnectingContextStateSettingOffer:
+            break;
+            
+        case SoraConnectingContextStateSendingAnswer:
             break;
             
         default:
