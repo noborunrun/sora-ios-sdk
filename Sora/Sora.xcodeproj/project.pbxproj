@@ -623,6 +623,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WebRTC",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -637,6 +638,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WebRTC",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
