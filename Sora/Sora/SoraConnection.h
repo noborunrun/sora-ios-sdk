@@ -6,8 +6,8 @@
 #import "RTCMediaConstraints.h"
 #import "RTCFileLogger.h"
 #import "SRWebSocket.h"
-#import "SoraOffer.h"
-#import "SoraRequest.h"
+#import "SoraOfferResponse.h"
+#import "SoraConnectRequest.h"
 
 @protocol SoraConnectionDelegate;
 
@@ -47,7 +47,7 @@ extern NSString * __nonnull const SoraWebSocketErrorKey;
                          constraints:(nullable RTCMediaConstraints *)constraints;
 - (nullable instancetype)initWithURL:(nonnull NSURL *)URL;
 
-- (void)open:(nonnull SoraRequest *)request;
+- (void)open:(nonnull SoraConnectRequest *)request;
 - (void)close;
 
 + (nonnull RTCConfiguration *)defaultPeerConnectionConfiguration;
@@ -61,7 +61,8 @@ extern NSString * __nonnull const SoraWebSocketErrorKey;
 
 - (void)connectionDidOpen:(nonnull SoraConnection *)connection;
 - (void)connection:(nonnull SoraConnection *)connection didReceiveMessage:(nonnull id)message;
-- (void)connection:(nonnull SoraConnection *)connection didReceiveOffer:(nonnull SoraOffer *)offer;
+- (void)connection:(nonnull SoraConnection *)connection
+   didReceiveOffer:(nonnull SoraOfferResponse *)offer;
 - (void)connection:(nonnull SoraConnection *)connection
   didFailWithError:(nonnull NSError *)error;
 - (void)connection:(nonnull SoraConnection *)connection;
