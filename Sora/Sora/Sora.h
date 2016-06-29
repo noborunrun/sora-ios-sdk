@@ -8,9 +8,23 @@ FOUNDATION_EXPORT const unsigned char SoraVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Sora/PublicHeader.h>
 
+#import <Sora/SoraAnswerRequest.h>
+#import <Sora/SoraArchiveFailedResponse.h>
+#import <Sora/SoraArchiveFinishedResponse.h>
+#import <Sora/SoraCandidateRequest.h>
+#import <Sora/SoraConnectRequest.h>
 #import <Sora/SoraConnection.h>
-#import <Sora/SoraOffer.h>
-#import <Sora/SoraRequest.h>
+#import <Sora/SoraError.h>
+#import <Sora/SoreErrorResponse.h>
+#import <Sora/SoraFailureResponse.h>
+#import <Sora/SoraMessage.h>
+#import <Sora/SoraOfferResponse.h>
+#import <Sora/SoraSignalingConnectedResponse.h>
+#import <Sora/SoraSignalingDisconnectedResponse.h>
+#import <Sora/SoraSignalingFailedResponse.h>
+#import <Sora/SoraSignalingResponse.h>
+#import <Sora/SoraSignalingUpdatedResponse.h>
+#import <Sora/SoraStreamingMessage.h>
 
 #import <Sora/SRWebSocket.h>
 

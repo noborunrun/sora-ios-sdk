@@ -3,12 +3,8 @@
 #import "RTCSessionDescriptionDelegate.h"
 #import "SRWebSocket.h"
 #import "SoraConnection.h"
-#import "SoraOffer.h"
-
-NSString * const SoraErrorDomain = @"SoraErrorDomain";
-
-NSString * const SoraOfferErrorMessageKey = @"SoraOfferErrorMessageKey";
-NSString * const SoraWebSocketErrorKey = @"SoraErrorCodeWebSocketError";
+#import "SoraOfferResponse.h"
+#import "SoraError.h"
 
 @class SoraConnectingContext;
 
@@ -37,9 +33,9 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
 @interface SoraConnectingContext : NSObject <SRWebSocketDelegate, RTCPeerConnectionDelegate, RTCSessionDescriptionDelegate>
 
 @property(nonatomic, weak, readwrite, nullable) SoraConnection *conn;
-@property(nonatomic, readwrite, nullable) SoraRequest *request;
+@property(nonatomic, readwrite, nullable) SoraConnectRequest *connectRequest;
 @property(nonatomic, readwrite) SoraConnectingContextState state;
-@property(nonatomic, readwrite) RTCSessionDescription *answer;
+@property(nonatomic, readwrite) SoraAnswerRequest *answerRequest;
 
 - (nullable instancetype)initWithConnection:(nullable SoraConnection *)conn;
 - (nonnull NSString *)stateDescription;
@@ -80,10 +76,10 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
     return [self initWithURL: URL configuration: nil constraints: nil];
 }
 
-- (void)open:(nonnull SoraRequest *)request
+- (void)open:(nonnull SoraConnectRequest *)connectRequest
 {
     self.state = SoraConnectionStateConnecting;
-    self.context.request = request;
+    self.context.connectRequest = connectRequest;
     self.webSocket = [[SRWebSocket alloc] initWithURL: self.URL];
     self.webSocket.delegate = self.context;
     NSLog(@"open WebSocket");
@@ -147,14 +143,13 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
 
 #pragma mark WebSocket Delegate
 
-
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket
 {
-    NSAssert(self.request != nil, @"request is required");
+    NSAssert(self.connectRequest != nil, @"request is required");
     
     self.state = SoraConnectingContextStateOpen;
     NSLog(@"WebSocket opened");
-    id obj = [self.request JSONObject];
+    id obj = [self.connectRequest JSONObject];
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject: obj
                                                    options: 0
@@ -176,57 +171,58 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message
 {
+    NSError *error = nil;
+    
+    NSLog(@"WebSocket receive %@", [message description]);
+    if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveMessage:)]) {
+        [self.conn.delegate connection: self.conn didReceiveMessage: message];
+    }
+    
+    if (![message isKindOfClass: [NSString class]]) {
+        error = [[SoraError alloc] initWithCode: SoraErrorCodeBinaryMessageError
+                                       userInfo: @{SoraErrorKeyData:message}];
+        [self.conn.delegate connection: self.conn didFailWithError: error];
+        return;
+    }
+    
+    NSData *data = [(NSString *)message dataUsingEncoding: NSUTF8StringEncoding];
+    if (data == nil) {
+        error = [SoraError stringEncodingError: message];
+        [self.conn.delegate connection: self.conn didFailWithError: error];
+        return;
+    }
+    
+    id JSON = [NSJSONSerialization JSONObjectWithData: data
+                                              options: 0
+                                                error: &error];
+    if (JSON == nil) {
+        if (error != nil) {
+            [self.conn.delegate connection: self.conn didFailWithError: error];
+            return;
+        }
+    }
+    NSLog(@"received message: %@", [JSON description]);
+    
     switch (self.state) {
         case SoraConnectingContextStateConnecting: {
-            NSLog(@"WebSocket receive %@", [message description]);
-            if (![message isKindOfClass: [NSString class]]) {
-                @throw [NSException exceptionWithName: NSGenericException
-                                               reason: @"received message (NSData) must be NSString"
-                                             userInfo: nil];
-            }
-            
-            NSData *data = [(NSString *)message dataUsingEncoding: NSUTF8StringEncoding];
-            if (data == nil) {
-                @throw [NSException exceptionWithName: NSGenericException
-                                               reason: @"cannot convert received message to UTF-8 bytes"
-                                             userInfo: nil];
-            }
-            
-            if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveMessage:)]) {
-                [self.conn.delegate connection: self.conn
-                             didReceiveMessage: message];
-            }
-            
-            NSError *error = nil;
-            id JSON = [NSJSONSerialization JSONObjectWithData: data
-                                                      options: 0
-                                                        error: &error];
-            if (error != nil) {
-                @throw error;
-            }
-            NSLog(@"received message: %@", [JSON description]);
-            
-            SoraOffer *offer = [[SoraOffer alloc] initWithJSONObject: JSON];
+            NSLog(@"SoraConnectingContextStateConnecting");
+            SoraOfferResponse *offer = [[SoraOfferResponse alloc] initWithString: message
+                                                                           error: &error];
             if (offer == nil) {
-                error = [[NSError alloc] initWithDomain: SoraErrorDomain
-                                                   code: SoraErrorCodeOfferError
-                                               userInfo: @{SoraOfferErrorMessageKey: message}];
+                NSLog(@"offer error = %@", [error description]);
+                [self.conn.delegate connection: self.conn didFailWithError: error];
+                return;
             }
             NSLog(@"offer object = %@", [offer description]);
-            if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveOffer:)]) {
-                [self.conn.delegate connection: self.conn didReceiveOffer: offer];
+            if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveOfferResponse:)]) {
+                [self.conn.delegate connection: self.conn didReceiveOfferResponse: offer];
             }
             
             // state
             NSLog(@"send answer");
             self.state = SoraConnectingContextStateCreatingAnswer;
-            message = offer.SDP;
-            RTCSessionDescription *sdp = [[RTCSessionDescription alloc]
-                                          initWithType: @"offer"
-                                          sdp: message];
-            NSLog(@"SDP = %@", [sdp description]);
             [self.conn.peerConnection setRemoteDescriptionWithDelegate: self
-                                                    sessionDescription: sdp];
+                                                    sessionDescription: [offer sessionDescription]];
             [self.conn.peerConnection createAnswerWithDelegate: self
                                                    constraints: nil];
             break;
@@ -237,6 +233,8 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
         }
         default:
             // discard
+            if ([self.conn.delegate respondsToSelector: @selector(connection:didDiscardMessage:)])
+                [self.conn.delegate connection: self.conn didDiscardMessage: message];
             break;
     }
 }
@@ -273,17 +271,23 @@ didCreateSessionDescription:(RTCSessionDescription *)sdp
         NSLog(@"%@", sdp.description);
     switch (self.state) {
         case SoraConnectingContextStateCreatingAnswer: {
-            self.answer = sdp;
             self.state = SoraConnectingContextStateSendingAnswer;
-            NSLog(@"state sending answer");
+            self.answerRequest = [[SoraAnswerRequest alloc] initWithSDP: sdp.description];
+            if ([self.conn.delegate respondsToSelector: @selector(connection:willSendAnswerRequest:)]) {
+                SoraAnswerRequest *new = [self.conn.delegate connection: self.conn
+                                                  willSendAnswerRequest: self.answerRequest];
+                if (new != nil)
+                    self.answerRequest = new;
+            }
+
             [self.conn.peerConnection setLocalDescriptionWithDelegate: self
-                                                   sessionDescription: self.answer];
-            id json = @{@"type":@"answer", @"sdp":self.answer.description};
-            NSError *err = nil;
-            NSData *data = [NSJSONSerialization dataWithJSONObject: json
-                                                            options: 0
-                                                              error: &err];
-            NSString *msg = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+                                                   sessionDescription: [self.answerRequest sessionDescription]];
+            NSError *error;
+            NSString *msg = [self.answerRequest messageToSend: &error];
+            NSLog(@"send msg = %@", msg);
+            if (msg == nil) {
+                [self.conn.delegate connection: self.conn didFailWithError: error];
+            }
             [self.conn.webSocket send: msg];
             break;
         }

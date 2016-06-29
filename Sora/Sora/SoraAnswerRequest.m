@@ -22,4 +22,12 @@
                                                    sdp: self.SDP];
 }
 
+#pragma mark SoraJSONEncoding
+
+- (void)encodeIntoJSONObject:(nonnull NSMutableDictionary *)dict
+{
+    [super encodeIntoJSONObject: dict];
+    dict[SoraMessageJSONKeySDP] = self.SDP;
+}
+
 @end

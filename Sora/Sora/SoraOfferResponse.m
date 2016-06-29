@@ -18,20 +18,6 @@ static NSString * const TypeKey = @"type";
     return self;
 }
 
-- (nullable instancetype)initWithJSONObject:(nonnull id)JSONObject
-{
-    if (![JSONObject isKindOfClass: [NSDictionary class]])
-        return nil;
-    
-    NSDictionary *dict = (NSDictionary *)JSONObject;
-    NSString *cliendId = dict[ClientIdKey];
-    NSString *SDP = dict[SDPKey];
-    if (![dict[TypeKey] isEqualToString: @"offer"] || cliendId == nil || SDP == nil)
-        return nil;
-    
-    return [self initWithClientId: cliendId SDP: SDP];
-}
-
 - (SoraMessageType)messageType
 {
     return SoraMessageTypeOffer;
@@ -63,6 +49,7 @@ static NSString * const TypeKey = @"type";
 
 - (void)encodeIntoJSONObject:(nonnull NSMutableDictionary *)dict
 {
+    [super encodeIntoJSONObject: dict];
     dict[SoraMessageJSONKeyClientId] = self.clientId;
     dict[SoraMessageJSONKeySDP] = self.SDP;
 }

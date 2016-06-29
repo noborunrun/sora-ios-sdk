@@ -1,4 +1,5 @@
 #import "SoraMessage.h"
+#import "SoraError.h"
 
 NSString * const __nonnull SoraMessageTypeNameConnect = @"connect";
 NSString * const __nonnull SoraMessageTypeNameOffer = @"offer";
@@ -69,6 +70,31 @@ NSString * const __nonnull SoraSessionDescriptionTypePrAnswer = @"pranswer";
     return self;
 }
 
+- (nullable instancetype)initWithString:(nonnull NSString *)JSONString
+                                  error:(NSError * _Nullable *_Nullable)error
+{
+    NSData *data = [JSONString dataUsingEncoding: NSUTF8StringEncoding];
+    if (data == nil) {
+        if (error != nil)
+            *error = [SoraError stringEncodingError: JSONString];
+        return nil;
+    }
+
+    id JSON = [NSJSONSerialization JSONObjectWithData: data
+                                              options: 0
+                                                error: error];
+    if (JSON == nil)
+        return nil;
+    if (![JSON isKindOfClass: [NSDictionary class]]) {
+        if (error != nil)
+            *error = [[SoraError alloc] initWithCode: SoraErrorCodeInvalidJSONObjectError
+                                            userInfo: @{SoraErrorKeyJSONObject:JSON}];
+        return nil;
+    }
+    
+    return [self initWithJSONObject: JSON error: error];
+}
+
 - (SoraMessageType)messageType
 {
     [self doesNotRecognizeSelector: @selector(messageType)];
@@ -112,6 +138,17 @@ NSString * const __nonnull SoraSessionDescriptionTypePrAnswer = @"pranswer";
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity: 8];
     [self encodeIntoJSONObject: dict];
     return dict;
+}
+
+- (nullable NSString *)messageToSend:(NSError * _Nullable *_Nullable)error
+{
+    NSDictionary *JSON = [self JSONObject];
+    NSData *data = [NSJSONSerialization dataWithJSONObject: JSON
+                                                   options: 0
+                                                     error: error];
+    if (data == nil)
+        return nil;
+    return [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
 }
 
 #pragma mark SoraJSONEncoding

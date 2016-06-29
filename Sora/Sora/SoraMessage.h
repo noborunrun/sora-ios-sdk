@@ -100,9 +100,12 @@ extern NSString * const __nonnull SoraSessionDescriptionTypePrAnswer;
 - (nullable instancetype)init;
 - (nullable instancetype)initWithJSONObject:(nonnull NSDictionary *)dict
                                       error:(NSError * _Nullable *_Nullable)error;
+- (nullable instancetype)initWithString:(nonnull NSString *)JSONString
+                                  error:(NSError * _Nullable *_Nullable)error;
 
 - (SoraMessageType)messageType;
 - (nonnull NSString *)messageTypeDescription;
 - (nonnull NSDictionary *)JSONObject;
+- (nullable NSString *)messageToSend:(NSError * _Nullable *_Nullable)error;
 
 @end

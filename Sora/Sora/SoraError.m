@@ -2,7 +2,12 @@
 
 NSString * const __nonnull SoraErrorDomain = @"SoraErrorDomain";
 
+NSString * const __nonnull SoraErrorKeyString = @"String";
+NSString * const __nonnull SoraErrorKeyData = @"Data";
+NSString * const __nonnull SoraErrorKeyJSONObject = @"JSONObject";
 NSString * const __nonnull SoraErrorKeyJSONKey = @"JSONKey";
+NSString * const __nonnull SoraErrorKeyJSONError = @"JSONError";
+NSString * __nonnull const SoraErrorKeyWebSocketError = @"WebSocketError";
 
 @implementation SoraError
 
@@ -12,6 +17,12 @@ NSString * const __nonnull SoraErrorKeyJSONKey = @"JSONKey";
     return [super initWithDomain: SoraErrorDomain
                             code: code
                         userInfo: dict];
+}
+
++ (nullable instancetype)stringEncodingError:(nonnull NSString *)string
+{
+    return [[self alloc] initWithCode: SoraErrorCodeStringEncodingError
+                             userInfo: @{SoraErrorKeyString:string}];
 }
 
 + (nullable instancetype)JSONKeyNotFoundError:(nonnull NSString *)JSONKey

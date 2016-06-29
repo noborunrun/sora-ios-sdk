@@ -52,6 +52,7 @@ static NSString * const VideoKey = @"video";
 
 - (void)encodeIntoJSONObject:(nonnull NSMutableDictionary *)dict
 {
+    [super encodeIntoJSONObject: dict];
     dict[ChannelIdKey] = self.channelId;
     if (self.accessToken != nil)
         dict[SoraMessageJSONKeyAccessToken] = self.accessToken;

@@ -74,7 +74,7 @@
 		912ED11D1D2243B200C6462D /* SoraSignalingUpdatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED11B1D2243B200C6462D /* SoraSignalingUpdatedResponse.m */; };
 		912ED1201D2243C300C6462D /* SoraSignalingDisconnectedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED11E1D2243C300C6462D /* SoraSignalingDisconnectedResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		912ED1211D2243C300C6462D /* SoraSignalingDisconnectedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED11F1D2243C300C6462D /* SoraSignalingDisconnectedResponse.m */; };
-		912ED1251D22D5E200C6462D /* SoraError.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED1241D22D5E200C6462D /* SoraError.h */; };
+		912ED1251D22D5E200C6462D /* SoraError.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED1241D22D5E200C6462D /* SoraError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		912ED1271D22D66A00C6462D /* SoraError.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED1261D22D66A00C6462D /* SoraError.m */; };
 		914102B51CCF57BA002885BF /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 914102B41CCF57BA002885BF /* libicucore.tbd */; };
 		9159AB711D17BE0C00024E5C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB701D17BE0C00024E5C /* AudioToolbox.framework */; };
