@@ -74,11 +74,20 @@ extern NSString * const __nonnull SoraMessageJSONKeyCreatedAt;
 extern NSString * const __nonnull SoraMessageJSONKeyFilePath;
 extern NSString * const __nonnull SoraMessageJSONKeyFileName;
 extern NSString * const __nonnull SoraMessageJSONKeySize;
+extern NSString * const __nonnull SoraMessageJSONKeyConfig;
+extern NSString * const __nonnull SoraMessageJSONKeyICEServers;
+extern NSString * const __nonnull SoraMessageJSONKeyCredential;
+extern NSString * const __nonnull SoraMessageJSONKeyURLs;
+extern NSString * const __nonnull SoraMessageJSONKeyUserName;
+extern NSString * const __nonnull SoraMessageJSONKeyICETransportPolicy;
+extern NSString * const __nonnull SoraMessageJSONKeyICETransports;
+
 extern NSString * const __nonnull SoraMessageJSONValueUpstream;
 extern NSString * const __nonnull SoraMessageJSONValueDownstream;
 extern NSString * const __nonnull SoraMessageJSONValueVP8;
 extern NSString * const __nonnull SoraMessageJSONValueVP9;
 extern NSString * const __nonnull SoraMessageJSONValueOPUS;
+extern NSString * const __nonnull SoraMessageJSONValueRelay;
 
 extern NSString * const __nonnull SoraSessionDescriptionTypeOffer;
 extern NSString * const __nonnull SoraSessionDescriptionTypeAnswer;

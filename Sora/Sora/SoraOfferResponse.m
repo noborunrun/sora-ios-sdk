@@ -14,6 +14,7 @@ static NSString * const TypeKey = @"type";
     if (self != nil) {
         self.clientId = clientId;
         self.SDP = SDP;
+        self.config = nil;
     }
     return self;
 }
@@ -44,6 +45,15 @@ static NSString * const TypeKey = @"type";
             *error = [SoraError JSONKeyNotFoundError: SoraMessageJSONKeySDP];
         return NO;
     }
+    
+    id config = dict[SoraMessageJSONKeyConfig];
+    if (config == nil || ![config isKindOfClass: [NSDictionary class]]) {
+        if (error != nil)
+            *error = [SoraError JSONKeyNotFoundError: SoraMessageJSONKeyConfig];
+        return NO;
+    }
+    self.config = (NSDictionary *)config;
+    
     return YES;
 }
 
@@ -52,6 +62,8 @@ static NSString * const TypeKey = @"type";
     [super encodeIntoJSONObject: dict];
     dict[SoraMessageJSONKeyClientId] = self.clientId;
     dict[SoraMessageJSONKeySDP] = self.SDP;
+    if (self.config != nil)
+        dict[SoraMessageJSONKeyConfig] = self.config;
 }
 
 @end

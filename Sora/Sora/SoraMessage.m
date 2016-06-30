@@ -37,11 +37,20 @@ NSString * const __nonnull SoraMessageJSONKeyCreatedAt = @"created_at";
 NSString * const __nonnull SoraMessageJSONKeyFilePath = @"filepath";
 NSString * const __nonnull SoraMessageJSONKeyFileName = @"filename";
 NSString * const __nonnull SoraMessageJSONKeySize = @"size";
+NSString * const __nonnull SoraMessageJSONKeyConfig = @"config";
+NSString * const __nonnull SoraMessageJSONKeyICEServers = @"iceServers";
+NSString * const __nonnull SoraMessageJSONKeyCredential = @"credential";
+NSString * const __nonnull SoraMessageJSONKeyURLs = @"urls";
+NSString * const __nonnull SoraMessageJSONKeyUserName = @"username";
+NSString * const __nonnull SoraMessageJSONKeyICETransportPolicy = @"iceTransportPolicy";
+NSString * const __nonnull SoraMessageJSONKeyICETransports = @"iceTransports";
+
 NSString * const __nonnull SoraMessageJSONValueUpstream = @"upstream";
 NSString * const __nonnull SoraMessageJSONValueDownstream = @"downstream";
 NSString * const __nonnull SoraMessageJSONValueVP8 = @"VP8";
 NSString * const __nonnull SoraMessageJSONValueVP9 = @"VP9";
 NSString * const __nonnull SoraMessageJSONValueOPUS = @"OPUS";
+NSString * const __nonnull SoraMessageJSONValueRelay = @"relay";
 
 NSString * const __nonnull SoraSessionDescriptionTypeOffer = @"offer";
 NSString * const __nonnull SoraSessionDescriptionTypeAnswer = @"answer";

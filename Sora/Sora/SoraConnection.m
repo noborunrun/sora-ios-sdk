@@ -214,6 +214,38 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
                 return;
             }
             NSLog(@"offer object = %@", [offer description]);
+            
+            // set config
+            if (offer.config != nil) {
+                RTCConfiguration *config = [[self.conn class] defaultPeerConnectionConfiguration];
+                
+                NSString *value;
+                if ((value = offer.config[SoraMessageJSONKeyICETransportPolicy]) != nil) {
+                    if ([value isEqualToString: SoraMessageJSONValueRelay])
+                        config.iceTransportsType = kRTCIceTransportsTypeRelay;
+                }
+
+                NSArray *serverConfigs = offer.config[SoraMessageJSONKeyICEServers];
+                if (serverConfigs != nil) {
+                    NSMutableArray *servers = [[NSMutableArray alloc] init];
+                    for (NSDictionary *serverConfig in serverConfigs) {
+                        NSString *user = serverConfig[SoraMessageJSONKeyUserName];
+                        NSString *cred = serverConfig[SoraMessageJSONKeyCredential];
+                        for (NSString *s in serverConfig[SoraMessageJSONKeyURLs]) {
+                            NSURL *URL = [[NSURL alloc] initWithString: s];
+                            RTCICEServer *server = [[RTCICEServer alloc] initWithURI: URL
+                                                                            username: user
+                                                                            password: cred];
+                            NSLog(@"ICE server = %@", [server description]);
+                            [servers addObject: server];
+                        }
+                    }
+                    config.iceServers = servers;
+                }
+
+                [self.conn.peerConnection setConfiguration: config];
+            }
+            
             if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveOfferResponse:)]) {
                 [self.conn.delegate connection: self.conn didReceiveOfferResponse: offer];
             }
