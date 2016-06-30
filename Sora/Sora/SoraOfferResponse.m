@@ -45,15 +45,7 @@ static NSString * const TypeKey = @"type";
             *error = [SoraError JSONKeyNotFoundError: SoraMessageJSONKeySDP];
         return NO;
     }
-    
-    id config = dict[SoraMessageJSONKeyConfig];
-    if (config == nil || ![config isKindOfClass: [NSDictionary class]]) {
-        if (error != nil)
-            *error = [SoraError JSONKeyNotFoundError: SoraMessageJSONKeyConfig];
-        return NO;
-    }
-    self.config = (NSDictionary *)config;
-    
+    self.config = (NSDictionary *)dict[SoraMessageJSONKeyConfig];
     return YES;
 }
 
