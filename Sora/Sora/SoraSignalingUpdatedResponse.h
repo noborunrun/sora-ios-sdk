@@ -1,4 +1,4 @@
-#import "SoraSignalingResponse.h"
+#import <Sora/SoraSignalingResponse.h>
 
 @interface SoraSignalingUpdatedResponse : SoraSignalingResponse
 

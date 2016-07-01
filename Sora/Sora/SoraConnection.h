@@ -1,16 +1,16 @@
 #import <Foundation/Foundation.h>
 
-#import "RTCPeerConnection.h"
-#import "RTCPeerConnectionInterface.h"
-#import "RTCPeerConnectionFactory.h"
-#import "RTCMediaConstraints.h"
-#import "RTCFileLogger.h"
-#import "SRWebSocket.h"
-#import "SoraError.h"
-#import "SoraOfferResponse.h"
-#import "SoraConnectRequest.h"
-#import "SoreErrorResponse.h"
-#import "SoraAnswerRequest.h"
+#import <Sora/RTCPeerConnection.h>
+#import <Sora/RTCPeerConnectionInterface.h>
+#import <Sora/RTCPeerConnectionFactory.h>
+#import <Sora/RTCMediaConstraints.h>
+#import <Sora/RTCFileLogger.h>
+#import <Sora/SRWebSocket.h>
+#import <Sora/SoraError.h>
+#import <Sora/SoraOfferResponse.h>
+#import <Sora/SoraConnectRequest.h>
+#import <Sora/SoreErrorResponse.h>
+#import <Sora/SoraAnswerRequest.h>
 
 @protocol SoraConnectionDelegate;
 

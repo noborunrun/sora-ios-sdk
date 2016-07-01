@@ -1,4 +1,4 @@
-#import "SoraFailureResponse.h"
+#import <Sora/SoraFailureResponse.h>
 
 @interface SoraSignalingFailedResponse : SoraFailureResponse
 
