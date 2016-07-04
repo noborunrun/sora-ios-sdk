@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -19,18 +20,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ty7-tC-V6D" userLabel="Channel ID">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ty7-tC-V6D" userLabel="Channel ID">
                                 <rect key="frame" x="130" y="449" width="255" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                     <rect key="frame" x="125" y="431" width="260" height="30"/>
                                 </variation>
+                                <connections>
+                                    <action selector="channelIdEditingDidEndOnExit:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="B1N-83-QiI"/>
+                                </connections>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Channel ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eat-rc-BN1">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Channel ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eat-rc-BN1">
                                 <rect key="frame" x="0.0" y="431" width="160" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                     <rect key="frame" x="20" y="434" width="97" height="27"/>
@@ -48,15 +52,15 @@
                                     <action selector="switchVideoView:" destination="BYZ-38-t0r" eventType="touchDown" id="hMP-qS-SsC"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pcB-T0-LIG">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pcB-T0-LIG">
                                 <rect key="frame" x="114" y="518" width="92" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Connect"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="154" y="491" width="92" height="30"/>
+                                    <rect key="frame" x="154" y="498" width="92" height="30"/>
                                 </variation>
                                 <connections>
-                                    <action selector="connectOrDisconnect:" destination="BYZ-38-t0r" eventType="touchDown" id="xpq-bx-hXv"/>
+                                    <action selector="connectOrDisconnect:" destination="BYZ-38-t0r" eventType="touchDown" id="9Db-lq-mbF"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ukT-e1-tB1" userLabel="Remote View" customClass="RTCEAGLVideoView">
@@ -76,38 +80,49 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Dk-EV-LCT">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Dk-EV-LCT">
                                 <rect key="frame" x="20" y="20" width="33" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WzS-b9-hyU" userLabel="URL">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WzS-b9-hyU" userLabel="URL">
                                 <rect key="frame" x="130" y="411" width="190" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                     <rect key="frame" x="125" y="390" width="260" height="30"/>
                                 </variation>
+                                <connections>
+                                    <action selector="URLFieldEditingDidEndOnExit:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="ZhC-nE-kbb"/>
+                                </connections>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ueg-hc-Lsg">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Ueg-hc-Lsg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="22i-Xn-MNS"/>
                             <constraint firstItem="Eat-rc-BN1" firstAttribute="top" secondItem="9Dk-EV-LCT" secondAttribute="bottom" constant="19" id="3Dl-RN-qFn"/>
                             <constraint firstItem="WzS-b9-hyU" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="105" id="3wj-GY-ScP"/>
                             <constraint firstItem="9Dk-EV-LCT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="7vu-Y8-P4L"/>
+                            <constraint firstItem="Ueg-hc-Lsg" firstAttribute="top" secondItem="ty7-tC-V6D" secondAttribute="bottom" constant="8" id="C5P-tp-Psy"/>
                             <constraint firstItem="ty7-tC-V6D" firstAttribute="top" secondItem="WzS-b9-hyU" secondAttribute="bottom" constant="11" id="Fc7-qV-3BW"/>
-                            <constraint firstItem="pcB-T0-LIG" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="491" id="HEp-Nd-aPg"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Ueg-hc-Lsg" secondAttribute="trailing" constant="5" id="HnW-K7-Agz"/>
+                            <constraint firstItem="pcB-T0-LIG" firstAttribute="top" secondItem="Ueg-hc-Lsg" secondAttribute="bottom" constant="8" id="Il5-bu-2Sx"/>
                             <constraint firstItem="ukT-e1-tB1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Kf2-7b-o0L"/>
                             <constraint firstItem="9Dk-EV-LCT" firstAttribute="top" secondItem="ukT-e1-tB1" secondAttribute="bottom" constant="28" id="P2f-4x-iwd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="WzS-b9-hyU" secondAttribute="trailing" constant="5" id="Pwh-fc-qJc"/>
+                            <constraint firstItem="Ueg-hc-Lsg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="QbC-vM-DPq"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ukT-e1-tB1" secondAttribute="trailing" id="SOm-uM-zWV">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-20"/>
                             </constraint>
                             <constraint firstItem="WzS-b9-hyU" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="390" id="V5V-OG-ZEi"/>
-                            <constraint firstItem="pcB-T0-LIG" firstAttribute="top" secondItem="ty7-tC-V6D" secondAttribute="bottom" constant="30" id="VG6-nQ-qMZ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ty7-tC-V6D" secondAttribute="trailing" constant="5" id="ZAX-1x-OFx"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="pcB-T0-LIG" secondAttribute="bottom" constant="279" id="cU2-Eb-cZi"/>
                             <constraint firstItem="Eat-rc-BN1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="dyz-Cb-RO7"/>
                             <constraint firstItem="WzS-b9-hyU" firstAttribute="top" secondItem="ukT-e1-tB1" secondAttribute="bottom" constant="24" id="eSY-76-hwT"/>
                             <constraint firstItem="Isf-th-HUZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="erL-8o-uH3"/>
@@ -124,27 +139,30 @@
                             <mask key="subviews">
                                 <exclude reference="ukT-e1-tB1"/>
                                 <exclude reference="9Dk-EV-LCT"/>
+                                <exclude reference="Ueg-hc-Lsg"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="22i-Xn-MNS"/>
+                                <exclude reference="C5P-tp-Psy"/>
+                                <exclude reference="HnW-K7-Agz"/>
+                                <exclude reference="QbC-vM-DPq"/>
+                                <exclude reference="7vu-Y8-P4L"/>
+                                <exclude reference="P2f-4x-iwd"/>
                                 <exclude reference="Kf2-7b-o0L"/>
                                 <exclude reference="SOm-uM-zWV"/>
                                 <exclude reference="mbF-IK-T5Z"/>
                                 <exclude reference="xor-9K-Ewt"/>
-                                <exclude reference="7vu-Y8-P4L"/>
-                                <exclude reference="P2f-4x-iwd"/>
+                                <exclude reference="3Dl-RN-qFn"/>
+                                <exclude reference="dyz-Cb-RO7"/>
                                 <exclude reference="3wj-GY-ScP"/>
                                 <exclude reference="Pwh-fc-qJc"/>
                                 <exclude reference="V5V-OG-ZEi"/>
                                 <exclude reference="eSY-76-hwT"/>
                                 <exclude reference="gsC-ku-hws"/>
-                                <exclude reference="3Dl-RN-qFn"/>
-                                <exclude reference="dyz-Cb-RO7"/>
                                 <exclude reference="Fc7-qV-3BW"/>
                                 <exclude reference="ZAX-1x-OFx"/>
                                 <exclude reference="s3I-o5-Tn2"/>
-                                <exclude reference="HEp-Nd-aPg"/>
-                                <exclude reference="VG6-nQ-qMZ"/>
-                                <exclude reference="cU2-Eb-cZi"/>
+                                <exclude reference="Il5-bu-2Sx"/>
                                 <exclude reference="gbC-0k-9pJ"/>
                             </mask>
                         </variation>
@@ -152,27 +170,30 @@
                             <mask key="subviews">
                                 <include reference="ukT-e1-tB1"/>
                                 <include reference="9Dk-EV-LCT"/>
+                                <include reference="Ueg-hc-Lsg"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="22i-Xn-MNS"/>
+                                <include reference="C5P-tp-Psy"/>
+                                <include reference="HnW-K7-Agz"/>
+                                <include reference="QbC-vM-DPq"/>
+                                <include reference="7vu-Y8-P4L"/>
+                                <include reference="P2f-4x-iwd"/>
                                 <include reference="Kf2-7b-o0L"/>
                                 <include reference="SOm-uM-zWV"/>
                                 <include reference="mbF-IK-T5Z"/>
                                 <include reference="xor-9K-Ewt"/>
-                                <include reference="7vu-Y8-P4L"/>
-                                <include reference="P2f-4x-iwd"/>
+                                <include reference="3Dl-RN-qFn"/>
+                                <include reference="dyz-Cb-RO7"/>
                                 <include reference="3wj-GY-ScP"/>
                                 <include reference="Pwh-fc-qJc"/>
                                 <include reference="V5V-OG-ZEi"/>
                                 <include reference="eSY-76-hwT"/>
                                 <include reference="gsC-ku-hws"/>
-                                <include reference="3Dl-RN-qFn"/>
-                                <include reference="dyz-Cb-RO7"/>
                                 <include reference="Fc7-qV-3BW"/>
                                 <include reference="ZAX-1x-OFx"/>
                                 <include reference="s3I-o5-Tn2"/>
-                                <include reference="HEp-Nd-aPg"/>
-                                <include reference="VG6-nQ-qMZ"/>
-                                <include reference="cU2-Eb-cZi"/>
+                                <include reference="Il5-bu-2Sx"/>
                                 <include reference="gbC-0k-9pJ"/>
                             </mask>
                         </variation>
@@ -180,7 +201,8 @@
                     <connections>
                         <outlet property="ChannelIdField" destination="ty7-tC-V6D" id="iby-4p-Ud9"/>
                         <outlet property="URLField" destination="WzS-b9-hyU" id="DKn-Wv-LCa"/>
-                        <outlet property="connectButton" destination="pcB-T0-LIG" id="1Op-US-xpt"/>
+                        <outlet property="connectButton" destination="pcB-T0-LIG" id="F69-4m-h99"/>
+                        <outlet property="messageLabel" destination="Ueg-hc-Lsg" id="g8E-ad-JBz"/>
                         <outlet property="remoteView" destination="ukT-e1-tB1" id="W8p-Nr-jng"/>
                     </connections>
                 </viewController>
