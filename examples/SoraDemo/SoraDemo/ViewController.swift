@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var connectButton: UIButton!
     var connection: SoraConnection!
-
+    var port: String!
     var state: State
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -32,6 +32,15 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.messageLabel.text = nil
         self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
+        
+        let numBar = UIToolbar(frame: CGRectMake(0, 0, 320, 50))
+        numBar.barStyle = UIBarStyle.Default
+        numBar.items = [
+            UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(cancelPortField)),
+        UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil),
+        UIBarButtonItem(title: "Apply", style: UIBarButtonItemStyle.Done, target: self, action: #selector(applyPortField))]
+        numBar.sizeToFit()
+        self.portField.inputAccessoryView = numBar
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,6 +96,16 @@ class ViewController: UIViewController {
     
     @IBAction func URLFieldEditingDidEndOnExit(sender: AnyObject) {
         NSLog("URLFieldEditingDidEndOnExit")
+    }
+    
+    func cancelPortField() {
+        self.portField.resignFirstResponder()
+        self.portField.text = ""
+    }
+    
+    func applyPortField() {
+        self.port = self.portField.text!
+        self.portField.resignFirstResponder()
     }
     
     @IBAction func portFieldEditingDidEndOnExit(sender: AnyObject) {
