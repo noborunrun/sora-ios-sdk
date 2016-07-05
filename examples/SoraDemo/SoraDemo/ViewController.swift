@@ -8,6 +8,7 @@ class ViewController: UIViewController {
     }
     
     @IBOutlet weak var remoteView: RTCEAGLVideoView!
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var URLField: UITextField!
     @IBOutlet weak var portField: UITextField!
     @IBOutlet weak var ChannelIdField: UITextField!
@@ -16,6 +17,7 @@ class ViewController: UIViewController {
     var connection: SoraConnection!
     var port: String!
     var state: State
+    var touchedField: UITextField!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         self.state = .Closed
@@ -43,6 +45,30 @@ class ViewController: UIViewController {
         self.portField.inputAccessoryView = numBar
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(keyboardWillBeShown(_:)),
+                                                         name: UIKeyboardWillShowNotification,
+                                                         object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(keyboardWillBeHidden(_:)),
+                                                         name: UIKeyboardWillHideNotification,
+                                                         object: nil)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+                                                            name: UIKeyboardWillShowNotification,
+                                                            object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+                                                            name: UIKeyboardWillHideNotification,
+                                                            object: nil)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -114,6 +140,61 @@ class ViewController: UIViewController {
     
     @IBAction func channelIdEditingDidEndOnExit(sender: AnyObject) {
         NSLog("channelIdEditingDidEndOnExit")
+    }
+    
+    // MARK: - Keyboard
+    
+    @IBAction func URLFieldDidTouchDown(sender: AnyObject) {
+        print("URLFieldDidTouchDown")
+        self.touchedField = self.URLField
+    }
+    
+    @IBAction func portFieldDidTouchDown(sender: AnyObject) {
+        print("portFieldDidTouchDown")
+
+        self.touchedField = self.portField
+    }
+    
+    @IBAction func channelIdFieldDidTouchDown(sender: AnyObject) {
+        print("channelIdFieldDidTouchDown")
+
+        self.touchedField = self.ChannelIdField
+    }
+    
+    func keyboardWillBeShown(notification: NSNotification) {
+        print("keyboardWillBeShown")
+        if let userInfo = notification.userInfo {
+            if let keyboardFrame = userInfo[UIKeyboardFrameEndUserInfoKey]?.CGRectValue, animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey]?.doubleValue {
+                restoreScrollViewSize()
+                
+                let convertedKeyboardFrame = scrollView.convertRect(keyboardFrame, fromView: nil)
+                let offsetY: CGFloat = CGRectGetMaxY(self.touchedField.frame) - CGRectGetMinY(convertedKeyboardFrame)
+                if offsetY < 0 { return }
+                updateScrollViewSize(offsetY, duration: animationDuration)
+            }
+        }
+    }
+    
+    func keyboardWillBeHidden(notification: NSNotification) {
+        restoreScrollViewSize()
+    }
+    
+    func updateScrollViewSize(moveSize: CGFloat, duration: NSTimeInterval) {
+        UIView.beginAnimations("ResizeForKeyboard", context: nil)
+        UIView.setAnimationDuration(duration)
+        
+        let contentInsets = UIEdgeInsetsMake(0, 0, moveSize, 0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+        scrollView.contentOffset = CGPointMake(0, moveSize)
+        
+        UIView.commitAnimations()
+    }
+    
+    func restoreScrollViewSize() {
+        scrollView.contentInset = UIEdgeInsetsZero
+        scrollView.scrollIndicatorInsets = UIEdgeInsetsZero
+        scrollView.contentOffset = CGPointMake(0, 0)
     }
     
 }
