@@ -9,6 +9,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var remoteView: RTCEAGLVideoView!
     @IBOutlet weak var URLField: UITextField!
+    @IBOutlet weak var portField: UITextField!
     @IBOutlet weak var ChannelIdField: UITextField!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var connectButton: UIButton!
@@ -62,6 +63,11 @@ class ViewController: UIViewController {
             return
         }
         
+        if self.portField.text == "" {
+            self.messageLabel.text = "Error: Input port number"
+            return
+        }
+        
         if self.ChannelIdField.text == "" {
             self.messageLabel.text = "Error: Input channel ID"
             return
@@ -81,6 +87,10 @@ class ViewController: UIViewController {
     
     @IBAction func URLFieldEditingDidEndOnExit(sender: AnyObject) {
         NSLog("URLFieldEditingDidEndOnExit")
+    }
+    
+    @IBAction func portFieldEditingDidEndOnExit(sender: AnyObject) {
+        NSLog("portFieldEditingDidEndOnExit")
     }
     
     @IBAction func channelIdEditingDidEndOnExit(sender: AnyObject) {
