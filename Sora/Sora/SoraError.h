@@ -8,6 +8,7 @@ typedef NS_ENUM(NSUInteger, SoraErrorCode) {
     SoraErrorCodeUnknownTypeError,
     SoraErrorCodeOfferResponseError,
     SoraErrorCodeWebSocketError,
+    SoraErrorCodeICEConnectionError,
 };
 
 extern NSString * const __nonnull SoraErrorDomain;

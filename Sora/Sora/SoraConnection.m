@@ -399,7 +399,11 @@ didSetSessionDescriptionWithError:(NSError *)error
 - (void)peerConnection:(RTCPeerConnection *)peerConnection iceConnectionChanged:(RTCICEConnectionState)newState
 {
     NSLog(@"peerConnection:iceConnectionChanged: state %d", newState);
-
+    if (newState == RTCICEConnectionFailed) {
+        NSError *error = [[SoraError alloc] initWithCode: SoraErrorCodeICEConnectionError
+                                                userInfo: nil];
+        [self.conn.delegate connection: self.conn didFailWithError: error];
+    }
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection iceGatheringChanged:(RTCICEGatheringState)newState
