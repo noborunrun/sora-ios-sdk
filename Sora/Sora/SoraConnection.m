@@ -156,10 +156,7 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
                                                      error: &error];
     if (error != nil) {
         NSLog(@"JSON serialization failed: %@", [obj description]);
-        if ([self.conn.delegate respondsToSelector:
-             @selector(connection:didFailWithError:)]) {
-            [self.conn.delegate connection: self.conn didFailWithError: error];
-        }
+        [self.conn.delegate connection: self.conn didFailWithError: error];
     } else {
         NSString *msg = [[NSString alloc] initWithData: data
                                               encoding: NSUTF8StringEncoding];
