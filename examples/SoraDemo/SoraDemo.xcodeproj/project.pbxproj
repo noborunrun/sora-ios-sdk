@@ -316,6 +316,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b78a3b4c-a5e8-4f3a-b9c6-967aa1b6128c";
 				SWIFT_OBJC_BRIDGING_HEADER = "SoraDemo/SoraDemo-Bridging-Header.h";
 			};
 			name = Debug;
@@ -334,6 +335,7 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b78a3b4c-a5e8-4f3a-b9c6-967aa1b6128c";
 				SWIFT_OBJC_BRIDGING_HEADER = "SoraDemo/SoraDemo-Bridging-Header.h";
 			};
 			name = Release;

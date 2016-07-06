@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var ChannelIdField: UITextField!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var connectButton: UIButton!
+    @IBOutlet weak var connectingIndicator: UIActivityIndicatorView!
     var connection: SoraConnection!
     var port: String!
     var state: State
@@ -34,6 +35,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.messageLabel.text = nil
         self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
+        self.connectingIndicator.stopAnimating()
         
         let numBar = UIToolbar(frame: CGRectMake(0, 0, 320, 50))
         numBar.barStyle = UIBarStyle.Default
@@ -81,11 +83,14 @@ class ViewController: UIViewController {
             NSLog("disconnect")
             self.state = .Closed
             self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
+            self.connectingIndicator.stopAnimating()
         case .Closed:
             NSLog("try connect")
             self.state = .Connecting
-            self.connectButton.setTitle("Disconnect", forState: UIControlState.Normal)
-            self.tryConnect()
+            self.connectButton.enabled = false
+            self.connectButton.setTitle("Connecting...", forState: UIControlState.Normal)
+            self.connectingIndicator.startAnimating()
+            //self.tryConnect()
         }
     }
     

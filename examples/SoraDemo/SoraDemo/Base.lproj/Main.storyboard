@@ -88,6 +88,7 @@
                                                 </variation>
                                                 <connections>
                                                     <action selector="channelIdEditingDidEndOnExit:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="B1N-83-QiI"/>
+                                                    <action selector="channelIdFieldDidTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="93b-zt-1VD"/>
                                                 </connections>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Port" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BLq-jf-kA0">
@@ -96,7 +97,7 @@
                                                     <constraint firstAttribute="width" constant="92" id="gMn-Sp-X82"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
@@ -129,6 +130,7 @@
                                                     </mask>
                                                 </variation>
                                                 <connections>
+                                                    <action selector="portFieldDidTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="Rrd-dc-cN9"/>
                                                     <action selector="portFieldEditingDidEndOnExit:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="AdI-Sz-UZr"/>
                                                 </connections>
                                             </textField>
@@ -152,6 +154,7 @@
                                                     </mask>
                                                 </variation>
                                                 <connections>
+                                                    <action selector="URLFieldDidTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="5hA-ue-pBG"/>
                                                     <action selector="URLFieldEditingDidEndOnExit:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="ZhC-nE-kbb"/>
                                                 </connections>
                                             </textField>
@@ -190,6 +193,7 @@
                                                     </constraint>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <state key="normal" title="Connect"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
@@ -232,9 +236,34 @@
                                                     </mask>
                                                 </variation>
                                             </view>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="HjN-PI-akp">
+                                                <rect key="frame" x="-10" y="-10" width="20" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="20" id="Mrh-YY-Ipm">
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="32"/>
+                                                    </constraint>
+                                                    <constraint firstAttribute="height" constant="28" id="fiU-vc-JSi">
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="32"/>
+                                                    </constraint>
+                                                </constraints>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="Mrh-YY-Ipm"/>
+                                                        <exclude reference="fiU-vc-JSi"/>
+                                                    </mask>
+                                                </variation>
+                                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                    <rect key="frame" x="186" y="513" width="32" height="32"/>
+                                                    <mask key="constraints">
+                                                        <include reference="Mrh-YY-Ipm"/>
+                                                        <include reference="fiU-vc-JSi"/>
+                                                    </mask>
+                                                </variation>
+                                            </activityIndicatorView>
                                         </subviews>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="ty7-tC-V6D" secondAttribute="trailing" constant="16" id="4AM-Fh-qeU"/>
+                                            <constraint firstItem="HjN-PI-akp" firstAttribute="centerX" secondItem="Qmt-rv-MG3" secondAttribute="centerX" id="6KO-9c-52O"/>
                                             <constraint firstItem="WzS-b9-hyU" firstAttribute="leading" relation="lessThanOrEqual" secondItem="9Dk-EV-LCT" secondAttribute="trailing" constant="135" id="6fW-Nj-cA8">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="12"/>
                                             </constraint>
@@ -263,6 +292,7 @@
                                             <constraint firstItem="pcB-T0-LIG" firstAttribute="top" secondItem="Ueg-hc-Lsg" secondAttribute="bottom" constant="8" symbolic="YES" id="fiW-Ti-eW1"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="gjQ-Gg-Rod"/>
                                             <constraint firstItem="BLq-jf-kA0" firstAttribute="top" secondItem="9Dk-EV-LCT" secondAttribute="bottom" constant="17" id="igd-uq-flV"/>
+                                            <constraint firstItem="HjN-PI-akp" firstAttribute="top" secondItem="pcB-T0-LIG" secondAttribute="bottom" constant="8" id="nTi-xv-fWH"/>
                                             <constraint firstAttribute="trailing" secondItem="Q8f-vD-tA0" secondAttribute="trailing" constant="16" id="ogc-qL-446"/>
                                             <constraint firstItem="9Dk-EV-LCT" firstAttribute="top" secondItem="ukT-e1-tB1" secondAttribute="bottom" constant="25" id="p5c-SJ-82a"/>
                                             <constraint firstItem="Q8f-vD-tA0" firstAttribute="top" secondItem="WzS-b9-hyU" secondAttribute="bottom" constant="8" id="qsF-St-wXh"/>
@@ -284,6 +314,7 @@
                                                 <exclude reference="Ueg-hc-Lsg"/>
                                                 <exclude reference="pcB-T0-LIG"/>
                                                 <exclude reference="ukT-e1-tB1"/>
+                                                <exclude reference="HjN-PI-akp"/>
                                             </mask>
                                             <mask key="constraints">
                                                 <exclude reference="gjQ-Gg-Rod"/>
@@ -312,6 +343,8 @@
                                                 <exclude reference="MzL-sN-TiH"/>
                                                 <exclude reference="vKr-xH-ciT"/>
                                                 <exclude reference="fiW-Ti-eW1"/>
+                                                <exclude reference="6KO-9c-52O"/>
+                                                <exclude reference="nTi-xv-fWH"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact">
@@ -325,6 +358,7 @@
                                                 <include reference="Ueg-hc-Lsg"/>
                                                 <include reference="pcB-T0-LIG"/>
                                                 <include reference="ukT-e1-tB1"/>
+                                                <include reference="HjN-PI-akp"/>
                                             </mask>
                                             <mask key="constraints">
                                                 <include reference="gjQ-Gg-Rod"/>
@@ -353,6 +387,8 @@
                                                 <include reference="MzL-sN-TiH"/>
                                                 <include reference="vKr-xH-ciT"/>
                                                 <include reference="fiW-Ti-eW1"/>
+                                                <include reference="6KO-9c-52O"/>
+                                                <include reference="nTi-xv-fWH"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -420,10 +456,10 @@
                                 <exclude reference="XZy-bZ-t23"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="guB-Se-3oA"/>
                                 <exclude reference="9d6-6x-zg7"/>
                                 <exclude reference="Erz-1O-Wqw"/>
                                 <exclude reference="ztO-Xx-Djh"/>
-                                <exclude reference="guB-Se-3oA"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -431,10 +467,10 @@
                                 <include reference="XZy-bZ-t23"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="guB-Se-3oA"/>
                                 <include reference="9d6-6x-zg7"/>
                                 <include reference="Erz-1O-Wqw"/>
                                 <include reference="ztO-Xx-Djh"/>
-                                <include reference="guB-Se-3oA"/>
                             </mask>
                         </variation>
                     </view>
@@ -442,6 +478,7 @@
                         <outlet property="ChannelIdField" destination="ty7-tC-V6D" id="iby-4p-Ud9"/>
                         <outlet property="URLField" destination="WzS-b9-hyU" id="DKn-Wv-LCa"/>
                         <outlet property="connectButton" destination="pcB-T0-LIG" id="F69-4m-h99"/>
+                        <outlet property="connectingIndicator" destination="HjN-PI-akp" id="yPM-rU-fId"/>
                         <outlet property="messageLabel" destination="Ueg-hc-Lsg" id="g8E-ad-JBz"/>
                         <outlet property="portField" destination="Q8f-vD-tA0" id="Adl-8g-w7F"/>
                         <outlet property="remoteView" destination="ukT-e1-tB1" id="W8p-Nr-jng"/>
