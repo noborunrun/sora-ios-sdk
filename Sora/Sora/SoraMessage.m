@@ -6,6 +6,7 @@ NSString * const __nonnull SoraMessageTypeNameOffer = @"offer";
 NSString * const __nonnull SoraMessageTypeNameAnswer = @"answer";
 NSString * const __nonnull SoraMessageTypeNameCandidate = @"candidate";
 NSString * const __nonnull SoraMessageTypeNameError = @"error";
+NSString * const __nonnull SoraMessageTypeNamePing = @"ping";
 NSString * const __nonnull SoraMessageTypeNameSignalingConnected = @"signaling.connected";
 NSString * const __nonnull SoraMessageTypeNameSignalingUpdated = @"signaling.updated";
 NSString * const __nonnull SoraMessageTypeNameSignalingDisconnected = @"signaling.disconnected";

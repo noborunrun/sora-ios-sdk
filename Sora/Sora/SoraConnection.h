@@ -59,7 +59,9 @@ didReceiveErrorResponse:(nonnull SoreErrorResponse *)response;
 - (void)connection:(nonnull SoraConnection *)connection didReceiveMessage:(nonnull id)message;
 - (void)connection:(nonnull SoraConnection *)connection didDiscardMessage:(nonnull id)message;
 - (void)connection:(nonnull SoraConnection *)connection didReceiveOfferResponse:(nonnull SoraOfferResponse *)response;
+- (void)connection:(nonnull SoraConnection *)connection didReceivePing:(nonnull id)message;
 - (nullable SoraAnswerRequest *)connection:(nonnull SoraConnection *)connection
                      willSendAnswerRequest:(nonnull SoraAnswerRequest *)request;
+- (void)connection:(nonnull SoraConnection *)connection signalingStateChanged:(RTCSignalingState)stateChanged;
 
 @end

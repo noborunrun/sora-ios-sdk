@@ -198,10 +198,25 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
     if (JSON == nil) {
         if (error != nil) {
             [self.conn.delegate connection: self.conn didFailWithError: error];
-            return;
         }
+        return;
     }
     NSLog(@"received message: %@", [JSON description]);
+    
+    NSString *type = JSON[SoraMessageJSONKeyType];
+    if (type == nil || ![type isKindOfClass: [NSString class]]) {
+        if (error != nil) {
+            error = [SoraError JSONKeyNotFoundError: SoraMessageJSONKeyType];
+            [self.conn.delegate connection: self.conn didFailWithError: error];
+        }
+        return;
+    } else if ([type isEqualToString: SoraMessageTypeNamePing]) {
+        NSLog(@"receive ping");
+        if ([self.conn.delegate respondsToSelector: @selector(connection:didReceivePing:)]) {
+            [self.conn.delegate connection: self.conn didReceivePing: message];
+        }
+        return;
+    }
     
     switch (self.state) {
         case SoraConnectingContextStateConnecting: {
@@ -357,7 +372,13 @@ didSetSessionDescriptionWithError:(NSError *)error
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection signalingStateChanged:(RTCSignalingState)stateChanged
 {
-    NSLog(@"peerConnection:signalingStateChanged:");
+    NSLog(@"peerConnection:signalingStateChanged: state %d", stateChanged);
+    if ([self.conn.delegate respondsToSelector: @selector(connection:signalingStateChanged:)]) {
+        [self.conn.delegate connection: self.conn signalingStateChanged: stateChanged];
+    }
+    if (stateChanged == RTCSignalingClosed) {
+        [self.conn close];
+    }
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection addedStream:(RTCMediaStream *)stream
@@ -377,7 +398,7 @@ didSetSessionDescriptionWithError:(NSError *)error
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection iceConnectionChanged:(RTCICEConnectionState)newState
 {
-    NSLog(@"peerConnection:iceConnectionChanged:");
+    NSLog(@"peerConnection:iceConnectionChanged: state %d", newState);
 
 }
 
