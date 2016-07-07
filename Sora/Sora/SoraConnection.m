@@ -300,7 +300,13 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
     self.state = SoraConnectingContextStateClosed;
 }
 
-//- (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload;
+- (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload
+{
+    NSLog(@"WebSocket received pong");
+    if ([self.conn.delegate respondsToSelector: @selector(connection:didReceiveWebSocketPong:)]) {
+        [self.conn.delegate connection: self.conn didReceiveWebSocketPong: pongPayload];
+    }
+}
 
 #pragma mark Session Description Delegate
 
