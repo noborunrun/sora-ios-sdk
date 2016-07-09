@@ -61,6 +61,8 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
         if (constraints == nil) {
             constraints = [[self class] defaultPeerConnectionConstraints];
         }
+        [config setIceServers: [[self class] defaultICEServers]];
+        
         self.peerConnection = [self.peerConnectionFactory
                                peerConnectionWithConfiguration: config
                                constraints: constraints
@@ -94,6 +96,13 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
 + (nonnull RTCConfiguration *)defaultPeerConnectionConfiguration
 {
     return [[RTCConfiguration alloc] init];
+}
+
++ (nonnull NSArray *)defaultICEServers
+{
+    NSURL *stun = [[NSURL alloc] initWithString: @"stun:stun.l.google.com:19302"];
+    NSAssert(stun != nil, @"failed generating stun server URL object");
+    return @[[[RTCICEServer alloc] initWithURI: stun username: @"" password: @""]];
 }
 
 + (nonnull RTCMediaConstraints *)defaultPeerConnectionConstraints

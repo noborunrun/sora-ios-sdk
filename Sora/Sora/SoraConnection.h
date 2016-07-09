@@ -40,6 +40,7 @@ typedef NS_ENUM(NSUInteger, SoraConnectionState) {
 - (void)close;
 
 + (nonnull RTCConfiguration *)defaultPeerConnectionConfiguration;
++ (nonnull NSArray *)defaultICEServers;
 + (nonnull RTCMediaConstraints *)defaultPeerConnectionConstraints;
 
 @end
