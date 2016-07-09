@@ -1,3 +1,4 @@
+#import "RTCICECandidate.h"
 #import "RTCICEServer.h"
 #import "RTCSessionDescription.h"
 #import "RTCSessionDescriptionDelegate.h"
@@ -413,7 +414,8 @@ didSetSessionDescriptionWithError:(NSError *)error
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection gotICECandidate:(RTCICECandidate *)candidate
 {
-    NSLog(@"peerConnection:gotICECandidate:");
+    NSLog(@"peerConnection:gotICECandidate: %@", [candidate description]);
+    [peerConnection addICECandidate: candidate];
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection iceConnectionChanged:(RTCICEConnectionState)newState
