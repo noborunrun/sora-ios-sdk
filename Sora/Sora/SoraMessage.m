@@ -25,6 +25,7 @@ NSString * const __nonnull SoraMessageJSONKeyVideo = @"video";
 NSString * const __nonnull SoraMessageJSONKeyAudio = @"audio";
 NSString * const __nonnull SoraMessageJSONKeyCodecType = @"codec_type";
 NSString * const __nonnull SoraMessageJSONKeyCodecName = @"codec_name";
+NSString * const __nonnull SoraMessageJSONKeyCandidate = @"candidate";
 NSString * const __nonnull SoraMessageJSONKeyData = @"data";
 NSString * const __nonnull SoraMessageJSONKeyReason = @"reason";
 NSString * const __nonnull SoraMessageJSONKeyErrorReason = @"error_reason";

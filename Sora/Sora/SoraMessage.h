@@ -62,6 +62,7 @@ extern NSString * const __nonnull SoraMessageJSONKeyVideo;
 extern NSString * const __nonnull SoraMessageJSONKeyAudio;
 extern NSString * const __nonnull SoraMessageJSONKeyCodecType;
 extern NSString * const __nonnull SoraMessageJSONKeyCodecName;
+extern NSString * const __nonnull SoraMessageJSONKeyCandidate;
 extern NSString * const __nonnull SoraMessageJSONKeyData;
 extern NSString * const __nonnull SoraMessageJSONKeyReason;
 extern NSString * const __nonnull SoraMessageJSONKeyErrorReason;

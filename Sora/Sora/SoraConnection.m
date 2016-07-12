@@ -6,6 +6,7 @@
 #import "SoraConnection.h"
 #import "SoraOfferResponse.h"
 #import "SoraError.h"
+#import "SoraCandidateRequest.h"
 
 @class SoraConnectingContext;
 
@@ -428,6 +429,9 @@ didSetSessionDescriptionWithError:(NSError *)error
 {
     NSLog(@"peerConnection:gotICECandidate: %@", [candidate description]);
     [peerConnection addICECandidate: candidate];
+    
+    SoraCandidateRequest *request = [[SoraCandidateRequest alloc] initWithCandidate: candidate.sdp];
+    [self.conn sendMessage: request];
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection iceConnectionChanged:(RTCICEConnectionState)newState

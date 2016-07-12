@@ -16,4 +16,12 @@
     return SoraMessageTypeCandidate;
 }
 
+#pragma mark SoraJSONEncoding
+
+- (void)encodeIntoJSONObject:(nonnull NSMutableDictionary *)dict
+{
+    [super encodeIntoJSONObject: dict];
+    dict[SoraMessageJSONKeyCandidate] = self.candidate;
+}
+
 @end
