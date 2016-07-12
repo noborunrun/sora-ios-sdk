@@ -94,6 +94,18 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
     [self.webSocket close];
 }
 
+- (void)sendMessage:(nonnull SoraMessage *)message
+{
+    NSError *error;
+    NSString *msg = [message messageToSend: &error];
+    if (msg == nil) {
+        [self.delegate connection: self didFailWithError: error];
+    } else {
+        NSLog(@"send message %@", msg);
+        [self.webSocket send: msg];
+    }
+}
+
 + (nonnull RTCConfiguration *)defaultPeerConnectionConfiguration
 {
     return [[RTCConfiguration alloc] init];

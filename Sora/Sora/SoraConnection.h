@@ -38,6 +38,7 @@ typedef NS_ENUM(NSUInteger, SoraConnectionState) {
 
 - (void)open:(nonnull SoraConnectRequest *)connectRequest;
 - (void)close;
+- (void)sendMessage:(nonnull SoraMessage *)message;
 
 + (nonnull RTCConfiguration *)defaultPeerConnectionConfiguration;
 + (nonnull NSArray *)defaultICEServers;
