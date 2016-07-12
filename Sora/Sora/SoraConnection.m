@@ -52,7 +52,6 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
 {
     self = [super init];
     if (self != nil) {
-        [RTCPeerConnectionFactory initializeSSL];
         self.URL = URL;
         self.state = SoraConnectionStateClosed;
         self.peerConnectionFactory = [[RTCPeerConnectionFactory alloc] init];
