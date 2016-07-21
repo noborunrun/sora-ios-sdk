@@ -2,6 +2,8 @@
 #import "RTCICEServer.h"
 #import "RTCSessionDescription.h"
 #import "RTCSessionDescriptionDelegate.h"
+#import "RTCMediaStream.h"
+#import "RTCVideoTrack.h"
 #import "SRWebSocket.h"
 #import "SoraConnection.h"
 #import "SoraOfferResponse.h"
@@ -17,6 +19,8 @@
 @property(nonatomic, readwrite, nonnull) RTCPeerConnectionFactory *peerConnectionFactory;
 @property(nonatomic, readwrite, nonnull) RTCPeerConnection *peerConnection;
 @property(nonatomic, readwrite, nonnull) RTCFileLogger *fileLogger;
+@property(nonatomic, readwrite, nonnull) NSMutableArray *remoteStreams;
+@property(nonatomic, readwrite, nonnull) NSMutableArray *remoteVideoRenderers;
 
 @property(nonatomic, readwrite, nullable) SRWebSocket *webSocket;
 @property(nonatomic, readwrite, nullable) SoraConnectingContext *context;
@@ -70,6 +74,8 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
                                delegate: self.context];
         self.fileLogger = [[RTCFileLogger alloc] init];
         [self.fileLogger start];
+        self.remoteStreams = [[NSMutableArray alloc] init];
+        self.remoteVideoRenderers = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -121,6 +127,26 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
 + (nonnull RTCMediaConstraints *)defaultPeerConnectionConstraints
 {
     return [[RTCMediaConstraints alloc] init];
+}
+
+- (void)addRemoteVideoRenderer:(nonnull id<RTCVideoRenderer>)view
+{
+    [(NSMutableArray *)self.remoteVideoRenderers addObject: view];
+    for (RTCMediaStream *stream in self.remoteStreams) {
+        for (RTCVideoTrack *track in stream.videoTracks) {
+            [track addRenderer: view];
+        }
+    }
+}
+
+- (void)removeRemoteVideoRenderer:(nonnull id<RTCVideoRenderer>)view
+{
+    [(NSMutableArray *)self.remoteVideoRenderers removeObject: view];
+    for (RTCMediaStream *stream in self.remoteStreams) {
+        for (RTCVideoTrack *track in stream.videoTracks) {
+            [track removeRenderer: view];
+        }
+    }
 }
 
 @end
@@ -417,11 +443,23 @@ didSetSessionDescriptionWithError:(NSError *)error
 - (void)peerConnection:(RTCPeerConnection *)peerConnection addedStream:(RTCMediaStream *)stream
 {
     NSLog(@"peerConnection:addedStream:");
+    [(NSMutableArray *)self.conn.remoteStreams addObject: stream];
+    for (id<RTCVideoRenderer> view in self.conn.remoteVideoRenderers) {
+        RTCVideoTrack *track = stream.videoTracks[0];
+        [track addRenderer: view];
+        [track setEnabled: YES];
+    }
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection removedStream:(RTCMediaStream *)stream
 {
     NSLog(@"peerConnection:removedStream:");
+    [(NSMutableArray *)self.conn.remoteStreams removeObject: stream];
+    for (id<RTCVideoRenderer> view in self.conn.remoteVideoRenderers) {
+        for (RTCVideoTrack *track in stream.videoTracks) {
+            [track removeRenderer: view];
+        }
+    }
 }
 
 - (void)peerConnection:(RTCPeerConnection *)peerConnection gotICECandidate:(RTCICECandidate *)candidate
