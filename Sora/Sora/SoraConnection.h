@@ -73,5 +73,6 @@ didReceiveErrorResponse:(nonnull SoreErrorResponse *)response;
                      willSendAnswerRequest:(nonnull SoraAnswerRequest *)request;
 - (void)connection:(nonnull SoraConnection *)connection signalingStateChanged:(RTCSignalingState)stateChanged;
 - (void)connection:(nonnull SoraConnection *)connection didReceiveWebSocketPong:(nonnull NSData *)pongPayload;
+- (void)connection:(nonnull SoraConnection *)connection numberOfDownstreamConnections:(NSUInteger)numStreams;
 
 @end

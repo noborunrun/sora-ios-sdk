@@ -248,7 +248,6 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
     }
     NSLog(@"received message: %@", [JSON description]);
     
-    // ping
     NSString *type = JSON[SoraMessageJSONKeyType];
     if (type == nil || ![type isKindOfClass: [NSString class]]) {
         if (error != nil) {
@@ -269,6 +268,19 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
         }
         [self.conn.webSocket send: pong];
         return;
+    } else if ([type isEqualToString: SoraMessageTypeNameStats]) {
+        id value;
+        if ((value = JSON[SoraMessageJSONKeyDownstreamConnections]) != nil) {
+            if (![value isKindOfClass: [NSNumber class]]) {
+                NSLog(@"value of %@ must be number", SoraMessageJSONKeyDownstreamConnections);
+                return;
+            }
+            NSUInteger uintVal = [value unsignedIntegerValue];
+            if ([self.conn.delegate respondsToSelector: @selector(connection:numberOfDownstreamConnections:)]) {
+                [self.conn.delegate connection: self.conn numberOfDownstreamConnections: uintVal];
+            }
+            return;
+        }
     }
     
     switch (self.state) {

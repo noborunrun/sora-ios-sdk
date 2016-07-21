@@ -44,6 +44,7 @@ extern NSString * const __nonnull SoraMessageTypeNameAnswer;
 extern NSString * const __nonnull SoraMessageTypeNameCandidate;
 extern NSString * const __nonnull SoraMessageTypeNameError;
 extern NSString * const __nonnull SoraMessageTypeNamePing;
+extern NSString * const __nonnull SoraMessageTypeNameStats;
 extern NSString * const __nonnull SoraMessageTypeNameSignalingConnected;
 extern NSString * const __nonnull SoraMessageTypeNameSignalingUpdated;
 extern NSString * const __nonnull SoraMessageTypeNameSignalingDisconnected;
