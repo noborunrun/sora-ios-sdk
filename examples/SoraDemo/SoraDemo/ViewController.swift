@@ -94,7 +94,7 @@ class ViewController: UIViewController {
             self.connectButton.enabled = false
             self.connectButton.setTitle("Connecting...", forState: UIControlState.Normal)
             self.connectingIndicator.startAnimating()
-            //self.tryConnect()
+            self.tryConnect()
         }
     }
     
@@ -118,11 +118,16 @@ class ViewController: UIViewController {
         }
         
         NSLog("create SoraConnection")
-        let URL = NSURL(string: self.URLField.text!)!
+        let s = NSString.init(format: "ws://%@:%@/signaling",
+                              self.URLField.text!, self.portField.text!) as String
+        let URL = NSURL(string: s)!
         let channelId = self.ChannelIdField.text!
         self.connection = SoraConnection(URL: URL)
         self.connectionDelegate = AppConnectionDelegate()
         self.connection.delegate = self.connectionDelegate
+        //self.remoteView!.setSize(CGSizeMake(320, 240))
+        self.connection.addRemoteVideoRenderer(self.remoteView!)
+        
         let req = SoraConnectRequest(role: SoraRole.Downstream, channelId: channelId, accessToken: nil)
         self.connection.open(req!)
     }
