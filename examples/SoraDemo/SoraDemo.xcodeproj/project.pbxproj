@@ -12,7 +12,6 @@
 		915F7B061CF5748200F3DE9A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 915F7B041CF5748200F3DE9A /* Main.storyboard */; };
 		915F7B081CF5748200F3DE9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 915F7B071CF5748200F3DE9A /* Assets.xcassets */; };
 		915F7B0B1CF5748200F3DE9A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 915F7B091CF5748200F3DE9A /* LaunchScreen.storyboard */; };
-		915F7B141CF5776500F3DE9A /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B131CF5776500F3DE9A /* Sora.framework */; };
 		915F7B161CF5785600F3DE9A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B151CF5785600F3DE9A /* Foundation.framework */; };
 		915F7B181CF5785D00F3DE9A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B171CF5785D00F3DE9A /* CFNetwork.framework */; };
 		915F7B1A1CF5786500F3DE9A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B191CF5786500F3DE9A /* Security.framework */; };
@@ -20,8 +19,10 @@
 		915F7B291CF57D2F00F3DE9A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B281CF57D2F00F3DE9A /* AudioToolbox.framework */; };
 		915F7B2A1CF57D3800F3DE9A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B241CF57D1500F3DE9A /* CoreMedia.framework */; };
 		915F7B2B1CF57D4200F3DE9A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B221CF57D0500F3DE9A /* AVFoundation.framework */; };
-		915F7B2D1CF57D5200F3DE9A /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B2C1CF57D5200F3DE9A /* libstdc++.tbd */; };
 		915F7B2F1CF57D5D00F3DE9A /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B2E1CF57D5D00F3DE9A /* VideoToolbox.framework */; };
+		918EC0D61D377BC0006E769A /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B131CF5776500F3DE9A /* Sora.framework */; };
+		91D33B901D38CD2200D2BD11 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D33B8F1D38CD2200D2BD11 /* libc++.tbd */; };
+		91D33B911D38CD2D00D2BD11 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D33B8D1D38CD0A00D2BD11 /* libstdc++.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,8 +45,9 @@
 		915F7B241CF57D1500F3DE9A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		915F7B261CF57D1E00F3DE9A /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
 		915F7B281CF57D2F00F3DE9A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		915F7B2C1CF57D5200F3DE9A /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		915F7B2E1CF57D5D00F3DE9A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		91D33B8D1D38CD0A00D2BD11 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		91D33B8F1D38CD2200D2BD11 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,16 +55,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D33B901D38CD2200D2BD11 /* libc++.tbd in Frameworks */,
 				915F7B2F1CF57D5D00F3DE9A /* VideoToolbox.framework in Frameworks */,
-				915F7B2D1CF57D5200F3DE9A /* libstdc++.tbd in Frameworks */,
 				915F7B2B1CF57D4200F3DE9A /* AVFoundation.framework in Frameworks */,
 				915F7B2A1CF57D3800F3DE9A /* CoreMedia.framework in Frameworks */,
 				915F7B291CF57D2F00F3DE9A /* AudioToolbox.framework in Frameworks */,
+				918EC0D61D377BC0006E769A /* Sora.framework in Frameworks */,
 				915F7B1D1CF57CD600F3DE9A /* libicucore.tbd in Frameworks */,
+				91D33B911D38CD2D00D2BD11 /* libstdc++.tbd in Frameworks */,
 				915F7B1A1CF5786500F3DE9A /* Security.framework in Frameworks */,
 				915F7B181CF5785D00F3DE9A /* CFNetwork.framework in Frameworks */,
 				915F7B161CF5785600F3DE9A /* Foundation.framework in Frameworks */,
-				915F7B141CF5776500F3DE9A /* Sora.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,6 +106,8 @@
 		915F7B121CF5767800F3DE9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				91D33B8F1D38CD2200D2BD11 /* libc++.tbd */,
+				91D33B8D1D38CD0A00D2BD11 /* libstdc++.tbd */,
 				915F7B281CF57D2F00F3DE9A /* AudioToolbox.framework */,
 				915F7B221CF57D0500F3DE9A /* AVFoundation.framework */,
 				915F7B1E1CF57CED00F3DE9A /* AVKit.framework */,
@@ -115,7 +120,6 @@
 				915F7B131CF5776500F3DE9A /* Sora.framework */,
 				915F7B2E1CF57D5D00F3DE9A /* VideoToolbox.framework */,
 				915F7B1C1CF57CD600F3DE9A /* libicucore.tbd */,
-				915F7B2C1CF57D5200F3DE9A /* libstdc++.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -152,6 +156,7 @@
 				TargetAttributes = {
 					915F7AFC1CF5748200F3DE9A = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = DQ232CBKHS;
 					};
 				};
 			};
@@ -307,6 +312,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -314,9 +321,14 @@
 				);
 				INFOPLIST_FILE = SoraDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SoraDemo",
+				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b78a3b4c-a5e8-4f3a-b9c6-967aa1b6128c";
+				PROVISIONING_PROFILE = "9a1d3a00-84da-4b12-b437-6482546e03f6";
 				SWIFT_OBJC_BRIDGING_HEADER = "SoraDemo/SoraDemo-Bridging-Header.h";
 			};
 			name = Debug;
@@ -325,6 +337,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -332,10 +346,14 @@
 				);
 				INFOPLIST_FILE = SoraDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SoraDemo",
+				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b78a3b4c-a5e8-4f3a-b9c6-967aa1b6128c";
+				PROVISIONING_PROFILE = "9a1d3a00-84da-4b12-b437-6482546e03f6";
 				SWIFT_OBJC_BRIDGING_HEADER = "SoraDemo/SoraDemo-Bridging-Header.h";
 			};
 			name = Release;
