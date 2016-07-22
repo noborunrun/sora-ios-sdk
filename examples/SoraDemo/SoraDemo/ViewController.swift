@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     var port: String!
     var state: State
     var touchedField: UITextField!
+    var connectionDelegate: AppConnectionDelegate!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         self.state = .Closed
@@ -117,6 +118,8 @@ class ViewController: UIViewController {
         let URL = NSURL(string: self.URLField.text!)!
         let channelId = self.ChannelIdField.text!
         self.connection = SoraConnection(URL: URL)
+        self.connectionDelegate = AppConnectionDelegate()
+        self.connection.delegate = self.connectionDelegate
         let req = SoraConnectRequest(role: SoraRole.Downstream, channelId: channelId, accessToken: nil)
         self.connection.open(req!)
     }
@@ -204,3 +207,25 @@ class ViewController: UIViewController {
     
 }
 
+class AppConnectionDelegate: NSObject, SoraConnectionDelegate {
+    
+    @objc func connection(connection: SoraConnection, didFailWithError error: NSError) {
+        print("connection:didFailWithError:")
+    }
+    
+    @objc func connection(connection: SoraConnection, didReceiveErrorResponse response: SoreErrorResponse) {
+        print("connection:didReceiveErrorResponse:")
+    }
+    
+    @objc func connectionDidOpen(connection: SoraConnection) {
+        print("connectionDidOpen")
+    }
+    
+    @objc func connection(connection: SoraConnection, didReceivePing message: AnyObject) {
+        print("connection:didReceivePing:")
+    }
+    
+    @objc func connection(connection: SoraConnection, numberOfDownstreamConnections numStreams: UInt) {
+        print("connection:numberOfDownstreamConnections: ", numStreams)
+    }
+}
