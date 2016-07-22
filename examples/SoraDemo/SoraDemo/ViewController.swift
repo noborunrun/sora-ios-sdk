@@ -37,6 +37,9 @@ class ViewController: UIViewController {
         self.messageLabel.text = nil
         self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
         self.connectingIndicator.stopAnimating()
+        self.URLField.text = "192.168.0.1"
+        self.ChannelIdField.text = "sora"
+        self.portField.text = "5000"
         
         let numBar = UIToolbar(frame: CGRectMake(0, 0, 320, 50))
         numBar.barStyle = UIBarStyle.Default
