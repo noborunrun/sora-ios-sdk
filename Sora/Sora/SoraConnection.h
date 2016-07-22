@@ -19,6 +19,8 @@
 typedef NS_ENUM(NSUInteger, SoraConnectionState) {
     SoraConnectionStateConnecting,
     SoraConnectionStateOpen,
+    SoraConnectionStatePeerConnecting,
+    SoraConnectionStatePeerOpen,
     SoraConnectionStateClosing,
     SoraConnectionStateClosed
 };
@@ -64,6 +66,7 @@ didReceiveErrorResponse:(nonnull SoreErrorResponse *)response;
 @optional
 
 - (void)connectionDidOpen:(nonnull SoraConnection *)connection;
+- (void)connection:(nonnull SoraConnection *)connection stateChanged:(SoraConnectionState)state;
 - (void)connection:(nonnull SoraConnection *)connection didReceiveMessage:(nonnull id)message;
 - (void)connection:(nonnull SoraConnection *)connection didDiscardMessage:(nonnull id)message;
 - (void)connection:(nonnull SoraConnection *)connection didReceiveOfferResponse:(nonnull SoraOfferResponse *)response;

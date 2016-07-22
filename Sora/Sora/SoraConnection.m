@@ -31,9 +31,9 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
     SoraConnectingContextStateClosed,
     SoraConnectingContextStateOpen,
     SoraConnectingContextStateConnecting,
-    SoraConnectingContextStateSettingOffer,
     SoraConnectingContextStateCreatingAnswer,
     SoraConnectingContextStateSendingAnswer,
+    SoraConnectingContextStatePeerOpen,
 };
 
 @interface SoraConnectingContext : NSObject <SRWebSocketDelegate, RTCPeerConnectionDelegate, RTCSessionDescriptionDelegate>
@@ -83,6 +83,14 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
 - (nullable instancetype)initWithURL:(nonnull NSURL *)URL
 {
     return [self initWithURL: URL configuration: nil constraints: nil];
+}
+
+- (void)setState:(SoraConnectionState)state
+{
+    _state = state;
+    if ([self.delegate respondsToSelector: @selector(connection:stateChanged:)]) {
+        [self.delegate connection: self stateChanged: state];
+    }
 }
 
 - (void)open:(nonnull SoraConnectRequest *)connectRequest
@@ -180,8 +188,8 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
         case SoraConnectingContextStateSendingAnswer:
             return @"SendingAnswer";
             
-        case SoraConnectingContextStateSettingOffer:
-            return @"SettingOffer";
+        case SoraConnectingContextStatePeerOpen:
+            return @"PeerOpen";
             
         default:
             NSAssert(NO, @"error");
@@ -210,6 +218,7 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
                                               encoding: NSUTF8StringEncoding];
         NSLog(@"send connecting message: %@", msg);
         self.state = SoraConnectingContextStateConnecting;
+        self.conn.state = SoraConnectionStatePeerConnecting;
         [webSocket send: msg];
     }
 }
@@ -279,6 +288,11 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
             if ([self.conn.delegate respondsToSelector: @selector(connection:numberOfDownstreamConnections:)]) {
                 [self.conn.delegate connection: self.conn numberOfDownstreamConnections: uintVal];
             }
+            
+            if (self.state == SoraConnectingContextStateSendingAnswer) {
+                self.state = SoraConnectingContextStatePeerOpen;
+                self.conn.state = SoraConnectionStatePeerOpen;
+            }
             return;
         }
     }
@@ -339,10 +353,12 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
                                                    constraints: nil];
             break;
         }
+            
         case SoraConnectingContextStateSendingAnswer: {
             // TODO:
             break;
         }
+            
         default:
             // discard
             if ([self.conn.delegate respondsToSelector: @selector(connection:didDiscardMessage:)])
@@ -425,9 +441,6 @@ didSetSessionDescriptionWithError:(NSError *)error
     // TODO: error handling
     switch (self.state) {
         case SoraConnectingContextStateCreatingAnswer:
-            break;
-            
-        case SoraConnectingContextStateSettingOffer:
             break;
             
         case SoraConnectingContextStateSendingAnswer:
