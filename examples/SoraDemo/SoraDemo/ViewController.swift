@@ -4,6 +4,7 @@ class ViewController: UIViewController {
 
     enum State {
         case Connecting
+        case Open
         case Closed
     }
     
@@ -84,10 +85,14 @@ class ViewController: UIViewController {
         NSLog("connectOrDisconnect")
         switch self.state {
         case .Connecting:
-            NSLog("disconnect")
+            // do nothing
+            break
+        case .Open:
+            NSLog("try disconnect")
             self.state = .Closed
             self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
             self.connectingIndicator.stopAnimating()
+            self.connection!.close()
         case .Closed:
             NSLog("try connect")
             self.state = .Connecting
@@ -123,13 +128,20 @@ class ViewController: UIViewController {
         let URL = NSURL(string: s)!
         let channelId = self.ChannelIdField.text!
         self.connection = SoraConnection(URL: URL)
-        self.connectionDelegate = AppConnectionDelegate()
+        self.connectionDelegate = AppConnectionDelegate(viewController: self)
         self.connection.delegate = self.connectionDelegate
         //self.remoteView!.setSize(CGSizeMake(320, 240))
         self.connection.addRemoteVideoRenderer(self.remoteView!)
         
         let req = SoraConnectRequest(role: SoraRole.Downstream, channelId: channelId, accessToken: nil)
         self.connection.open(req!)
+    }
+    
+    func finishConnect() {
+        self.state = .Open
+        self.connectButton.setTitle("Disconnect", forState: UIControlState.Normal)
+        self.connectButton.enabled = true
+        self.connectingIndicator.stopAnimating()
     }
     
     @IBAction func switchVideoView(sender: AnyObject) {
@@ -217,6 +229,12 @@ class ViewController: UIViewController {
 
 class AppConnectionDelegate: NSObject, SoraConnectionDelegate {
     
+    var viewController: ViewController
+    
+    init(viewController: ViewController) {
+        self.viewController = viewController
+    }
+    
     @objc func connection(connection: SoraConnection, didFailWithError error: NSError) {
         print("connection:didFailWithError:")
     }
@@ -231,6 +249,14 @@ class AppConnectionDelegate: NSObject, SoraConnectionDelegate {
     
     @objc func connection(connection: SoraConnection, didReceivePing message: AnyObject) {
         print("connection:didReceivePing:")
+    }
+    
+    @objc func connection(connection: SoraConnection, stateChanged state: SoraConnectionState) {
+        print("connection:stateChanged:")
+        if state == SoraConnectionState.PeerOpen {
+            print("peer open")
+            self.viewController.finishConnect()
+        }
     }
     
     @objc func connection(connection: SoraConnection, numberOfDownstreamConnections numStreams: UInt) {
