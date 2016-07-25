@@ -39,8 +39,8 @@ typedef NS_ENUM(NSUInteger, SoraConnectionState) {
 };
 
 /**
- `SoraConnection` オブジェクトは Sora サーバーとシグナリング接続を行います。
- Sora サーバーでは、シグナリングは WebSocket で JSON 形式のメッセージを介して行います。
+ Sora サーバーとシグナリング接続を行います。
+ Sora サーバーでは、シグナリングは WebSocket で JSON フォーマットのメッセージを介して行います。
  */
 @interface SoraConnection : NSObject
 
@@ -91,13 +91,13 @@ typedef NS_ENUM(NSUInteger, SoraConnectionState) {
 - (nullable instancetype)initWithURL:(nonnull NSURL *)URL;
 
 /**
- サーバーとシグナリング接続を行います。
+ サーバーに接続します。
  
  @param connectRequest connect シグナリングメッセージ
  */
 - (void)open:(nonnull SoraConnectRequest *)connectRequest;
 
-/** シグナリング接続を閉じます。 */
+/** サーバーとの接続を閉じます。 */
 - (void)close;
 
 /**
@@ -107,33 +107,107 @@ typedef NS_ENUM(NSUInteger, SoraConnectionState) {
  */
 - (void)sendMessage:(nonnull SoraMessage *)message;
 
+/**
+ ピア接続時に使われるデフォルトの設定を返します。
+
+ @return ピア接続の設定
+ */
 + (nonnull RTCConfiguration *)defaultPeerConnectionConfiguration;
+
+/**
+ ピア接続時に使われるデフォルトの ICE サーバー (RTCICEServer) の配列を返します。
+ 配列に含まれる ICE サーバーは以下の通りです。
+ 
+ - `stun:stun.l.google.com:19302`
+
+ @return ICE サーバーの配列
+ */
 + (nonnull NSArray *)defaultICEServers;
+
+/**
+ ピア接続時に使われるデフォルトの制約を返します。
+
+ @return ピア接続の制約
+ */
 + (nonnull RTCMediaConstraints *)defaultPeerConnectionConstraints;
 
+/**
+ `SoraConnection` オブジェクトが管理する映像描画オブジェクトを追加します。
+ このオブジェクトはピア接続時に使われるメディアストリームに自動的に追加されます。
+
+ @param view 
+ @code [conn addRemoteVideoRenderer: view];
+ */
 - (void)addRemoteVideoRenderer:(nonnull id<RTCVideoRenderer>)view;
+
+/**
+ `SoraConnection` オブジェクトが管理する映像描画オブジェクトを除去します。
+ このオブジェクトはメディアストリームから除去されます。
+
+ */
 - (void)removeRemoteVideoRenderer:(nonnull id<RTCVideoRenderer>)view;
 
 @end
 
 /**
- `SoraConnectionDelegate` プロトコルは `SoraConnection` のデリゲートメソッドを定義しています。
+ `SoraConnection` のデリゲートメソッドを定義しています。
  */
 @protocol SoraConnectionDelegate <NSObject>
 
 @required
 
+/**
+ サーバーからエラーメッセージを受信したときに実行されます。
+
+ @param connection サーバー接続
+ @param response エラーメッセージ
+ */
 - (void)connection:(nonnull SoraConnection *)connection
 didReceiveErrorResponse:(nonnull SoreErrorResponse *)response;
+
+/**
+ 接続時に何らかのエラーが発生したときに実行されます。
+
+ @param connection サーバー接続
+ @param error エラー内容
+ */
 - (void)connection:(nonnull SoraConnection *)connection
   didFailWithError:(nonnull NSError *)error;
 
 @optional
 
+/**
+ シグナリング接続 (WebSocket 接続) が完了したときに実行されます。
+
+ @param connection サーバー接続
+ */
 - (void)connectionDidOpen:(nonnull SoraConnection *)connection;
+
+/**
+ サーバーの接続状態が変更されたときに実行されます。
+
+ @param connection サーバー接続
+ @param state 変更後の状態
+ */
 - (void)connection:(nonnull SoraConnection *)connection stateChanged:(SoraConnectionState)state;
+
+/**
+ サーバーから何らかのメッセージを受信したときに実行されます。
+
+ @param connection サーバー接続
+ @param message 受信したメッセージ。 NSString もしくは NSData です。
+ */
 - (void)connection:(nonnull SoraConnection *)connection didReceiveMessage:(nonnull id)message;
+
+/**
+ サーバーから受信したメッセージを破棄するときに実行されます。
+ JSON 以外のフォーマットのメッセージや、無効なシグナリングメッセージが破棄されます。
+
+ @param connection サーバー接続
+ @param message 破棄するメッセージ。 NSString もしくは NSData です。
+ */
 - (void)connection:(nonnull SoraConnection *)connection didDiscardMessage:(nonnull id)message;
+
 - (void)connection:(nonnull SoraConnection *)connection didReceiveOfferResponse:(nonnull SoraOfferResponse *)response;
 - (void)connection:(nonnull SoraConnection *)connection didReceivePing:(nonnull id)message;
 - (nullable id)connection:(nonnull SoraConnection *)connection willSendPong:(nonnull id)message;
@@ -141,6 +215,13 @@ didReceiveErrorResponse:(nonnull SoreErrorResponse *)response;
                      willSendAnswerRequest:(nonnull SoraAnswerRequest *)request;
 - (void)connection:(nonnull SoraConnection *)connection signalingStateChanged:(RTCSignalingState)stateChanged;
 - (void)connection:(nonnull SoraConnection *)connection didReceiveWebSocketPong:(nonnull NSData *)pongPayload;
+
+/**
+ サーバーからダウンストリームの接続数の情報を受信したときに実行されます。
+
+ @param connection サーバー接続
+ @param numStreams ダウンストリームの接続数
+ */
 - (void)connection:(nonnull SoraConnection *)connection numberOfDownstreamConnections:(NSUInteger)numStreams;
 
 @end
