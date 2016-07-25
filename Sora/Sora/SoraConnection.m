@@ -205,6 +205,10 @@ typedef NS_ENUM(NSUInteger, SoraConnectingContextState) {
     
     self.state = SoraConnectingContextStateOpen;
     NSLog(@"WebSocket opened");
+    if ([self.conn.delegate respondsToSelector: @selector(connectionDidOpen:)]) {
+        [self.conn.delegate connectionDidOpen: self.conn];
+    }
+    
     id obj = [self.connectRequest JSONObject];
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject: obj
