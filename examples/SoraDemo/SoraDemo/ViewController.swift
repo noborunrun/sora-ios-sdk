@@ -18,11 +18,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var connectingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var switchCameraButton: UIButton!
     
-    var connection: SoraConnection!
+    var upstream: SoraConnection!
+    var downstream: SoraConnection!
     var port: String!
     var state: State
     var touchedField: UITextField!
-    var connectionDelegate: AppConnectionDelegate!
+    var upstreamDelegate: UpstreamDelegate!
+    var downstreamDelegate: DownstreamDelegate!
     var localVideoViewController: LocalVideoViewController!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -100,7 +102,8 @@ class ViewController: UIViewController {
             self.state = .Closed
             self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
             self.connectingIndicator.stopAnimating()
-            self.connection!.close()
+            self.downstream!.close()
+            self.upstream!.close()
         case .Closed:
             NSLog("try connect")
             self.state = .Connecting
@@ -135,14 +138,23 @@ class ViewController: UIViewController {
                               self.URLField.text!, self.portField.text!) as String
         let URL = NSURL(string: s)!
         let channelId = self.ChannelIdField.text!
-        self.connection = SoraConnection(URL: URL)
-        self.connectionDelegate = AppConnectionDelegate(viewController: self)
-        self.connection.delegate = self.connectionDelegate
+        
+        // upstream
+        self.upstream = SoraConnection(URL: URL)
+        self.upstreamDelegate = UpstreamDelegate(viewController: self)
+        self.upstream.delegate = self.upstreamDelegate
+        let upstreamReq = SoraConnectRequest(role: SoraRole.Upstream, channelId: channelId, accessToken: nil)
+        self.upstream.open(upstreamReq!)
+        
+        // downstream
+        self.downstream = SoraConnection(URL: URL)
+        self.downstreamDelegate = DownstreamDelegate(viewController: self)
+        self.downstream.delegate = self.downstreamDelegate
         //self.remoteView!.setSize(CGSizeMake(320, 240))
-        self.connection.addRemoteVideoRenderer(self.remoteView!)
+        self.downstream.addRemoteVideoRenderer(self.remoteView!)
         
         let req = SoraConnectRequest(role: SoraRole.Downstream, channelId: channelId, accessToken: nil)
-        self.connection.open(req!)
+        self.downstream.open(req!)
     }
     
     func finishConnect() {
@@ -237,7 +249,26 @@ class ViewController: UIViewController {
     
 }
 
-class AppConnectionDelegate: NSObject, SoraConnectionDelegate {
+class UpstreamDelegate: NSObject, SoraConnectionDelegate {
+    
+    var viewController: ViewController
+    
+    init(viewController: ViewController) {
+        self.viewController = viewController
+    }
+    
+    @objc func connection(connection: SoraConnection, didFailWithError error: NSError) {
+        print("UpstreamDelegate connection:didFailWithError:")
+    }
+    
+    @objc func connection(connection: SoraConnection, didReceiveErrorResponse response: SoreErrorResponse) {
+        print("UpstreamDelegate connection:didReceiveErrorResponse:")
+    }
+
+}
+
+
+class DownstreamDelegate: NSObject, SoraConnectionDelegate {
     
     var viewController: ViewController
     
