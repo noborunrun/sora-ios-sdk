@@ -1,6 +1,6 @@
 import UIKit
 
-class ViewController: UIViewController {
+class RemoteVideoViewController: UIViewController {
 
     enum State {
         case Connecting
@@ -251,9 +251,9 @@ class ViewController: UIViewController {
 
 class UpstreamDelegate: NSObject, SoraConnectionDelegate {
     
-    var viewController: ViewController
+    var viewController: RemoteVideoViewController
     
-    init(viewController: ViewController) {
+    init(viewController: RemoteVideoViewController) {
         self.viewController = viewController
     }
     
@@ -270,9 +270,9 @@ class UpstreamDelegate: NSObject, SoraConnectionDelegate {
 
 class DownstreamDelegate: NSObject, SoraConnectionDelegate {
     
-    var viewController: ViewController
+    var viewController: RemoteVideoViewController
     
-    init(viewController: ViewController) {
+    init(viewController: RemoteVideoViewController) {
         self.viewController = viewController
     }
     

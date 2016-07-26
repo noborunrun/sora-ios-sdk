@@ -6,7 +6,7 @@ class LocalVideoViewController : UIViewController {
     @IBOutlet weak var switchRemoteVideoButton: UIButton!
     
     var connection: SoraConnection!
-    weak var remoteVideoViewController: ViewController!
+    weak var remoteVideoViewController: RemoteVideoViewController!
 
     @IBAction func switchToRemoteVideoView(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: {})

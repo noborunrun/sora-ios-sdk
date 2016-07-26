@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		915F7B011CF5748200F3DE9A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915F7B001CF5748200F3DE9A /* AppDelegate.swift */; };
-		915F7B031CF5748200F3DE9A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915F7B021CF5748200F3DE9A /* ViewController.swift */; };
+		915F7B031CF5748200F3DE9A /* RemoteVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915F7B021CF5748200F3DE9A /* RemoteVideoViewController.swift */; };
 		915F7B061CF5748200F3DE9A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 915F7B041CF5748200F3DE9A /* Main.storyboard */; };
 		915F7B081CF5748200F3DE9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 915F7B071CF5748200F3DE9A /* Assets.xcassets */; };
 		915F7B0B1CF5748200F3DE9A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 915F7B091CF5748200F3DE9A /* LaunchScreen.storyboard */; };
@@ -29,7 +29,7 @@
 /* Begin PBXFileReference section */
 		915F7AFD1CF5748200F3DE9A /* SoraDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SoraDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		915F7B001CF5748200F3DE9A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		915F7B021CF5748200F3DE9A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		915F7B021CF5748200F3DE9A /* RemoteVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteVideoViewController.swift; sourceTree = "<group>"; };
 		915F7B051CF5748200F3DE9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		915F7B071CF5748200F3DE9A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		915F7B0A1CF5748200F3DE9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -95,7 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				915F7B001CF5748200F3DE9A /* AppDelegate.swift */,
-				915F7B021CF5748200F3DE9A /* ViewController.swift */,
+				915F7B021CF5748200F3DE9A /* RemoteVideoViewController.swift */,
 				91AF4C461D473DC70026454A /* LocalVideoViewController.swift */,
 				915F7B041CF5748200F3DE9A /* Main.storyboard */,
 				915F7B071CF5748200F3DE9A /* Assets.xcassets */,
@@ -200,7 +200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91AF4C471D473DC70026454A /* LocalVideoViewController.swift in Sources */,
-				915F7B031CF5748200F3DE9A /* ViewController.swift in Sources */,
+				915F7B031CF5748200F3DE9A /* RemoteVideoViewController.swift in Sources */,
 				915F7B011CF5748200F3DE9A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
