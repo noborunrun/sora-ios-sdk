@@ -21,6 +21,7 @@
 		915F7B2B1CF57D4200F3DE9A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B221CF57D0500F3DE9A /* AVFoundation.framework */; };
 		915F7B2F1CF57D5D00F3DE9A /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B2E1CF57D5D00F3DE9A /* VideoToolbox.framework */; };
 		918EC0D61D377BC0006E769A /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B131CF5776500F3DE9A /* Sora.framework */; };
+		91AF4C471D473DC70026454A /* LocalVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AF4C461D473DC70026454A /* LocalVideoViewController.swift */; };
 		91D33B901D38CD2200D2BD11 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D33B8F1D38CD2200D2BD11 /* libc++.tbd */; };
 		91D33B911D38CD2D00D2BD11 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D33B8D1D38CD0A00D2BD11 /* libstdc++.tbd */; };
 /* End PBXBuildFile section */
@@ -46,6 +47,7 @@
 		915F7B261CF57D1E00F3DE9A /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
 		915F7B281CF57D2F00F3DE9A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		915F7B2E1CF57D5D00F3DE9A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		91AF4C461D473DC70026454A /* LocalVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalVideoViewController.swift; sourceTree = "<group>"; };
 		91D33B8D1D38CD0A00D2BD11 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		91D33B8F1D38CD2200D2BD11 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -94,6 +96,7 @@
 			children = (
 				915F7B001CF5748200F3DE9A /* AppDelegate.swift */,
 				915F7B021CF5748200F3DE9A /* ViewController.swift */,
+				91AF4C461D473DC70026454A /* LocalVideoViewController.swift */,
 				915F7B041CF5748200F3DE9A /* Main.storyboard */,
 				915F7B071CF5748200F3DE9A /* Assets.xcassets */,
 				915F7B091CF5748200F3DE9A /* LaunchScreen.storyboard */,
@@ -196,6 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91AF4C471D473DC70026454A /* LocalVideoViewController.swift in Sources */,
 				915F7B031CF5748200F3DE9A /* ViewController.swift in Sources */,
 				915F7B011CF5748200F3DE9A /* AppDelegate.swift in Sources */,
 			);

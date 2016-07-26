@@ -16,11 +16,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var connectingIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var switchCameraButton: UIButton!
+    
     var connection: SoraConnection!
     var port: String!
     var state: State
     var touchedField: UITextField!
     var connectionDelegate: AppConnectionDelegate!
+    var localVideoViewController: LocalVideoViewController!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         self.state = .Closed
@@ -35,6 +38,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        self.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         self.messageLabel.text = nil
         self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
         self.connectingIndicator.stopAnimating()
@@ -50,6 +54,10 @@ class ViewController: UIViewController {
         UIBarButtonItem(title: "Apply", style: UIBarButtonItemStyle.Done, target: self, action: #selector(applyPortField))]
         numBar.sizeToFit()
         self.portField.inputAccessoryView = numBar
+        
+        self.localVideoViewController = self.storyboard?.instantiateViewControllerWithIdentifier("LocalViedoViewController") as! LocalVideoViewController
+        self.localVideoViewController?.remoteVideoViewController = self
+        self.localVideoViewController?.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -146,6 +154,8 @@ class ViewController: UIViewController {
     
     @IBAction func switchVideoView(sender: AnyObject) {
         NSLog("switch video view")
+        // TODO: upstream connection
+        self.presentViewController(self.localVideoViewController, animated: true, completion: {})
     }
     
     @IBAction func URLFieldEditingDidEndOnExit(sender: AnyObject) {
