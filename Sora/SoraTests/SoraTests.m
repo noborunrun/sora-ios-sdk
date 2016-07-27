@@ -7,9 +7,19 @@
 
 @implementation TestSoraConnectionDelegate
 
-- (void)connection:(SoraConnection *)connection didReceiveOffer:(SoraOffer *)offer
+- (void)connection:(SoraConnection *)connection didFailWithError:(NSError *)error
 {
-    NSLog(@"didReceiveOffer: %@", [offer description]);
+    
+}
+
+- (void)connection:(SoraConnection *)connection didReceiveErrorResponse:(SoreErrorResponse *)response
+{
+    
+}
+
+- (void)connection:(SoraConnection *)connection didReceiveOfferResponse:(SoraOfferResponse *)response
+{
+    NSLog(@"didReceiveOffer: %@", [response description]);
 }
 
 @end
@@ -42,8 +52,9 @@
     self.conn = [[SoraConnection alloc] initWithURL: URL];
     self.delegate = [[TestSoraConnectionDelegate alloc] init];
     self.conn.delegate = self.delegate;
-    [self.conn open: [[SoraRequest alloc] initWithRole: SoraRoleDownstream
-                                             channelId: @"test"]];
+    [self.conn open: [[SoraConnectRequest alloc] initWithRole: SoraRoleDownstream
+                                                    channelId: @"test"
+                                                  accessToken: nil]];
     // delegate
 }
 
