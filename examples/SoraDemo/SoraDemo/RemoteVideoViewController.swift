@@ -28,25 +28,25 @@ class RemoteVideoViewController: UIViewController {
     var localVideoViewController: LocalVideoViewController!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        self.state = .Closed
+        state = .Closed
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.state = .Closed
+        state = .Closed
         super.init(coder: aDecoder)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-        self.messageLabel.text = nil
-        self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
-        self.connectingIndicator.stopAnimating()
-        self.URLField.text = "192.168.0.1"
-        self.ChannelIdField.text = "sora"
-        self.portField.text = "5000"
+        modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        messageLabel.text = nil
+        connectButton.setTitle("Connect", forState: UIControlState.Normal)
+        connectingIndicator.stopAnimating()
+        URLField.text = "192.168.0.1"
+        ChannelIdField.text = "sora"
+        portField.text = "5000"
         
         let numBar = UIToolbar(frame: CGRectMake(0, 0, 320, 50))
         numBar.barStyle = UIBarStyle.Default
@@ -55,11 +55,11 @@ class RemoteVideoViewController: UIViewController {
         UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil),
         UIBarButtonItem(title: "Apply", style: UIBarButtonItemStyle.Done, target: self, action: #selector(applyPortField))]
         numBar.sizeToFit()
-        self.portField.inputAccessoryView = numBar
+        portField.inputAccessoryView = numBar
         
-        self.localVideoViewController = self.storyboard?.instantiateViewControllerWithIdentifier("LocalViedoViewController") as! LocalVideoViewController
-        self.localVideoViewController?.remoteVideoViewController = self
-        self.localVideoViewController?.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        localVideoViewController = storyboard?.instantiateViewControllerWithIdentifier("LocalViedoViewController") as! LocalVideoViewController
+        localVideoViewController?.remoteVideoViewController = self
+        localVideoViewController?.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -93,81 +93,81 @@ class RemoteVideoViewController: UIViewController {
 
     @IBAction func connectOrDisconnect(sender: AnyObject) {
         NSLog("connectOrDisconnect")
-        switch self.state {
+        switch state {
         case .Connecting:
             // do nothing
             break
         case .Open:
             NSLog("try disconnect")
-            self.state = .Closed
-            self.connectButton.setTitle("Connect", forState: UIControlState.Normal)
-            self.connectingIndicator.stopAnimating()
-            self.downstream!.close()
-            self.upstream!.close()
+            state = .Closed
+            connectButton.setTitle("Connect", forState: UIControlState.Normal)
+            connectingIndicator.stopAnimating()
+            downstream!.close()
+            upstream!.close()
         case .Closed:
             NSLog("try connect")
-            self.state = .Connecting
-            self.connectButton.enabled = false
-            self.connectButton.setTitle("Connecting...", forState: UIControlState.Normal)
-            self.connectingIndicator.startAnimating()
-            self.tryConnect()
+            state = .Connecting
+            connectButton.enabled = false
+            connectButton.setTitle("Connecting...", forState: UIControlState.Normal)
+            connectingIndicator.startAnimating()
+            tryConnect()
         }
     }
     
     func tryConnect() {
         NSLog("try connect")
-        print("URL = %@", self.URLField.text)
-        print("ChannelId = %@", self.ChannelIdField.text)
-        if self.URLField.text == "" {
-            self.messageLabel.text = "Error: Input URL"
+        print("URL = %@", URLField.text)
+        print("ChannelId = %@", ChannelIdField.text)
+        if URLField.text == "" {
+            messageLabel.text = "Error: Input URL"
             return
         }
         
-        if self.portField.text == "" {
-            self.messageLabel.text = "Error: Input port number"
+        if portField.text == "" {
+            messageLabel.text = "Error: Input port number"
             return
         }
         
-        if self.ChannelIdField.text == "" {
-            self.messageLabel.text = "Error: Input channel ID"
+        if ChannelIdField.text == "" {
+            messageLabel.text = "Error: Input channel ID"
             return
         }
         
         NSLog("create SoraConnection")
         let s = NSString.init(format: "ws://%@:%@/signaling",
-                              self.URLField.text!, self.portField.text!) as String
+                              URLField.text!, portField.text!) as String
         let URL = NSURL(string: s)!
-        let channelId = self.ChannelIdField.text!
+        let channelId = ChannelIdField.text!
         
         // upstream
-        self.upstream = SoraConnection(URL: URL)
-        self.upstreamDelegate = UpstreamDelegate(viewController: self)
-        self.upstream.delegate = self.upstreamDelegate
+        upstream = SoraConnection(URL: URL)
+        upstreamDelegate = UpstreamDelegate(viewController: self)
+        upstream.delegate = upstreamDelegate
         let upstreamReq = SoraConnectRequest(role: SoraRole.Upstream, channelId: channelId, accessToken: nil)
-        self.upstream.open(upstreamReq!)
+        upstream.open(upstreamReq!)
         
         // downstream
-        self.downstream = SoraConnection(URL: URL)
-        self.downstreamDelegate = DownstreamDelegate(viewController: self)
-        self.downstream.delegate = self.downstreamDelegate
-        //self.remoteView!.setSize(CGSizeMake(320, 240))
-        self.downstream.addRemoteVideoRenderer(self.remoteView!)
+        downstream = SoraConnection(URL: URL)
+        downstreamDelegate = DownstreamDelegate(viewController: self)
+        downstream.delegate = downstreamDelegate
+        //remoteView!.setSize(CGSizeMake(320, 240))
+        downstream.addRemoteVideoRenderer(remoteView!)
         
         let req = SoraConnectRequest(role: SoraRole.Downstream, channelId: channelId, accessToken: nil)
-        self.downstream.open(req!)
+        downstream.open(req!)
     }
     
     func finishConnect() {
-        self.state = .Open
-        self.connectButton.setTitle("Disconnect", forState: UIControlState.Normal)
-        self.connectButton.enabled = true
-        self.connectingIndicator.stopAnimating()
+        state = .Open
+        connectButton.setTitle("Disconnect", forState: UIControlState.Normal)
+        connectButton.enabled = true
+        connectingIndicator.stopAnimating()
     }
     
     @IBAction func switchVideoView(sender: AnyObject) {
         NSLog("switch video view")
         // TODO: upstream connection
-        self.presentViewController(self.localVideoViewController, animated: true, completion: {})
+        presentViewController(localVideoViewController, animated: true, completion: {})
     }
     
     @IBAction func URLFieldEditingDidEndOnExit(sender: AnyObject) {
@@ -175,13 +175,13 @@ class RemoteVideoViewController: UIViewController {
     }
     
     func cancelPortField() {
-        self.portField.resignFirstResponder()
-        self.portField.text = ""
+        portField.resignFirstResponder()
+        portField.text = ""
     }
     
     func applyPortField() {
-        self.port = self.portField.text!
-        self.portField.resignFirstResponder()
+        port = portField.text!
+        portField.resignFirstResponder()
     }
     
     @IBAction func portFieldEditingDidEndOnExit(sender: AnyObject) {
@@ -196,19 +196,19 @@ class RemoteVideoViewController: UIViewController {
     
     @IBAction func URLFieldDidTouchDown(sender: AnyObject) {
         print("URLFieldDidTouchDown")
-        self.touchedField = self.URLField
+        touchedField = URLField
     }
     
     @IBAction func portFieldDidTouchDown(sender: AnyObject) {
         print("portFieldDidTouchDown")
 
-        self.touchedField = self.portField
+        touchedField = portField
     }
     
     @IBAction func channelIdFieldDidTouchDown(sender: AnyObject) {
         print("channelIdFieldDidTouchDown")
 
-        self.touchedField = self.ChannelIdField
+        touchedField = ChannelIdField
     }
     
     func keyboardWillBeShown(notification: NSNotification) {
@@ -218,7 +218,7 @@ class RemoteVideoViewController: UIViewController {
                 restoreScrollViewSize()
                 
                 let convertedKeyboardFrame = scrollView.convertRect(keyboardFrame, fromView: nil)
-                let offsetY: CGFloat = CGRectGetMaxY(self.touchedField.frame) - CGRectGetMinY(convertedKeyboardFrame)
+                let offsetY: CGFloat = CGRectGetMaxY(touchedField.frame) - CGRectGetMinY(convertedKeyboardFrame)
                 if offsetY < 0 { return }
                 updateScrollViewSize(offsetY, duration: animationDuration)
             }
@@ -296,7 +296,7 @@ class DownstreamDelegate: NSObject, SoraConnectionDelegate {
         print("connection:stateChanged:")
         if state == SoraConnectionState.PeerOpen {
             print("peer open")
-            self.viewController.finishConnect()
+            viewController.finishConnect()
         }
     }
     
