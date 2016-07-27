@@ -32,6 +32,7 @@
                                                     <constraint firstAttribute="height" constant="30" id="dpb-q2-HWj"/>
                                                     <constraint firstAttribute="width" constant="174" id="lT3-VH-34C"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <state key="normal" title="Switch to Local Camera"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
@@ -39,10 +40,11 @@
                                                         <exclude reference="lT3-VH-34C"/>
                                                     </mask>
                                                 </variation>
-                                                <variation key="heightClass=regular-widthClass=compact">
+                                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                    <rect key="frame" x="113" y="8" width="253" height="30"/>
                                                     <mask key="constraints">
                                                         <include reference="dpb-q2-HWj"/>
-                                                        <include reference="lT3-VH-34C"/>
+                                                        <exclude reference="lT3-VH-34C"/>
                                                     </mask>
                                                 </variation>
                                                 <connections>
@@ -553,13 +555,15 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="riz-i5-lAA"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Switch to Remote Video"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="riz-i5-lAA"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact">
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="82" y="28" width="200" height="30"/>
                                     <mask key="constraints">
                                         <include reference="riz-i5-lAA"/>
                                     </mask>
