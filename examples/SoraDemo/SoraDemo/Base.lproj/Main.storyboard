@@ -545,6 +545,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Lg0-zz-RJ2"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="KEh-ax-dSY">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lsz-B0-b3f">
@@ -616,14 +617,14 @@
                                 <exclude reference="WFx-qm-0da"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="c42-fk-x3C"/>
+                                <exclude reference="rzc-VZ-Cy2"/>
+                                <exclude reference="dtg-Yt-fMi"/>
+                                <exclude reference="hTk-h2-L8O"/>
                                 <exclude reference="IdN-nI-7yP"/>
                                 <exclude reference="JCL-PD-uYF"/>
                                 <exclude reference="i7w-GN-VeL"/>
                                 <exclude reference="lK6-z7-Fw3"/>
-                                <exclude reference="dtg-Yt-fMi"/>
-                                <exclude reference="hTk-h2-L8O"/>
-                                <exclude reference="c42-fk-x3C"/>
-                                <exclude reference="rzc-VZ-Cy2"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -632,14 +633,14 @@
                                 <include reference="WFx-qm-0da"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="c42-fk-x3C"/>
+                                <exclude reference="rzc-VZ-Cy2"/>
+                                <include reference="dtg-Yt-fMi"/>
+                                <include reference="hTk-h2-L8O"/>
                                 <include reference="IdN-nI-7yP"/>
                                 <include reference="JCL-PD-uYF"/>
                                 <include reference="i7w-GN-VeL"/>
                                 <include reference="lK6-z7-Fw3"/>
-                                <include reference="dtg-Yt-fMi"/>
-                                <include reference="hTk-h2-L8O"/>
-                                <exclude reference="c42-fk-x3C"/>
-                                <exclude reference="rzc-VZ-Cy2"/>
                             </mask>
                         </variation>
                     </view>
