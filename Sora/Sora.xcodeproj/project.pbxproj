@@ -6,402 +6,107 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		918201871D585E1A00178E2B /* Carthage */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 9182018A1D585E1B00178E2B /* Build configuration list for PBXAggregateTarget "Carthage" */;
+			buildPhases = (
+				9182018B1D585E2500178E2B /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Carthage;
+			productName = Carthage;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
-		9126998F1CC7531E008352EF /* Sora.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126998E1CC7531E008352EF /* Sora.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699961CC7531E008352EF /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9126998B1CC7531E008352EF /* Sora.framework */; };
-		9126999B1CC7531E008352EF /* SoraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126999A1CC7531E008352EF /* SoraTests.m */; };
-		912699A91CC7541A008352EF /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699A71CC7541A008352EF /* SRWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699AA1CC7541A008352EF /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 912699A81CC7541A008352EF /* SRWebSocket.m */; };
-		912699CC1CC7542C008352EF /* RTCAudioSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699AC1CC7542C008352EF /* RTCAudioSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699CD1CC7542C008352EF /* RTCAudioTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699AD1CC7542C008352EF /* RTCAudioTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699CE1CC7542C008352EF /* RTCAVFoundationVideoSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699AE1CC7542C008352EF /* RTCAVFoundationVideoSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699CF1CC7542C008352EF /* RTCDataChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699AF1CC7542C008352EF /* RTCDataChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D01CC7542C008352EF /* RTCEAGLVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B01CC7542C008352EF /* RTCEAGLVideoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D11CC7542C008352EF /* RTCFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B11CC7542C008352EF /* RTCFileLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D21CC7542C008352EF /* RTCI420Frame.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B21CC7542C008352EF /* RTCI420Frame.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D31CC7542C008352EF /* RTCICECandidate.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B31CC7542C008352EF /* RTCICECandidate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D41CC7542C008352EF /* RTCICEServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B41CC7542C008352EF /* RTCICEServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D51CC7542C008352EF /* RTCLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B51CC7542C008352EF /* RTCLogging.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D61CC7542C008352EF /* RTCMediaConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B61CC7542C008352EF /* RTCMediaConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D71CC7542C008352EF /* RTCMediaSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B71CC7542C008352EF /* RTCMediaSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D81CC7542C008352EF /* RTCMediaStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B81CC7542C008352EF /* RTCMediaStream.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699D91CC7542C008352EF /* RTCMediaStreamTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699B91CC7542C008352EF /* RTCMediaStreamTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699DA1CC7542C008352EF /* RTCNSGLVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699BA1CC7542C008352EF /* RTCNSGLVideoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699DB1CC7542C008352EF /* RTCOpenGLVideoRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699BB1CC7542C008352EF /* RTCOpenGLVideoRenderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699DC1CC7542C008352EF /* RTCPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699BC1CC7542C008352EF /* RTCPair.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699DD1CC7542C008352EF /* RTCPeerConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699BD1CC7542C008352EF /* RTCPeerConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699DE1CC7542C008352EF /* RTCPeerConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699BE1CC7542C008352EF /* RTCPeerConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699DF1CC7542C008352EF /* RTCPeerConnectionFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699BF1CC7542C008352EF /* RTCPeerConnectionFactory.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E01CC7542C008352EF /* RTCPeerConnectionInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C01CC7542C008352EF /* RTCPeerConnectionInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E11CC7542C008352EF /* RTCSessionDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C11CC7542C008352EF /* RTCSessionDescription.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E21CC7542C008352EF /* RTCSessionDescriptionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C21CC7542C008352EF /* RTCSessionDescriptionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E31CC7542C008352EF /* RTCStatsDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C31CC7542C008352EF /* RTCStatsDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E41CC7542C008352EF /* RTCStatsReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C41CC7542C008352EF /* RTCStatsReport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E51CC7542C008352EF /* RTCTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C51CC7542C008352EF /* RTCTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E61CC7542C008352EF /* RTCVideoCapturer.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C61CC7542C008352EF /* RTCVideoCapturer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E71CC7542C008352EF /* RTCVideoRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C71CC7542C008352EF /* RTCVideoRenderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E81CC7542C008352EF /* RTCVideoSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C81CC7542C008352EF /* RTCVideoSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699E91CC7542C008352EF /* RTCVideoTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 912699C91CC7542C008352EF /* RTCVideoTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912699EA1CC7542C008352EF /* libWebRTC-version.txt in Resources */ = {isa = PBXBuildFile; fileRef = 912699CA1CC7542C008352EF /* libWebRTC-version.txt */; };
-		9126F81C1D20F71300FA08FC /* SoraMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126F81B1D20F71300FA08FC /* SoraMessage.m */; };
-		9126F81E1D20F90000FA08FC /* SoraMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126F81D1D20F8C300FA08FC /* SoraMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9126F8271D21884500FA08FC /* SoraAnswerRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126F8251D21884500FA08FC /* SoraAnswerRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9126F8281D21884500FA08FC /* SoraAnswerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126F8261D21884500FA08FC /* SoraAnswerRequest.m */; };
-		9126F82B1D21887500FA08FC /* SoraCandidateRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126F8291D21887500FA08FC /* SoraCandidateRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9126F82C1D21887500FA08FC /* SoraCandidateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126F82A1D21887500FA08FC /* SoraCandidateRequest.m */; };
-		9126F82F1D218C7600FA08FC /* SoraFailureResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126F82D1D218C7600FA08FC /* SoraFailureResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9126F8301D218C7600FA08FC /* SoraFailureResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126F82E1D218C7600FA08FC /* SoraFailureResponse.m */; };
-		9126F8331D218D9400FA08FC /* SoraSignalingResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126F8311D218D9400FA08FC /* SoraSignalingResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9126F8341D218D9400FA08FC /* SoraSignalingResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126F8321D218D9400FA08FC /* SoraSignalingResponse.m */; };
-		9126F8371D218E7600FA08FC /* SoraArchiveFinishedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126F8351D218E7600FA08FC /* SoraArchiveFinishedResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9126F8381D218E7600FA08FC /* SoraArchiveFinishedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126F8361D218E7600FA08FC /* SoraArchiveFinishedResponse.m */; };
-		9126F83C1D218FC300FA08FC /* SoraStreamingMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126F83A1D218FC300FA08FC /* SoraStreamingMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9126F83D1D218FC300FA08FC /* SoraStreamingMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126F83B1D218FC300FA08FC /* SoraStreamingMessage.m */; };
-		9126F8401D21900300FA08FC /* SoreErrorResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 9126F83E1D21900300FA08FC /* SoreErrorResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9126F8411D21900300FA08FC /* SoreErrorResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 9126F83F1D21900300FA08FC /* SoreErrorResponse.m */; };
-		912834431CCE04B2009DFA2E /* SoraOfferResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 912834411CCE04B2009DFA2E /* SoraOfferResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912834441CCE04B2009DFA2E /* SoraOfferResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 912834421CCE04B2009DFA2E /* SoraOfferResponse.m */; };
-		9129DDF81CCA740900016F0F /* SoraConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9129DDF61CCA740900016F0F /* SoraConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9129DDF91CCA740900016F0F /* SoraConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9129DDF71CCA740900016F0F /* SoraConnection.m */; };
-		912ED1101D2241AE00C6462D /* SoraArchiveFailedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED10E1D2241AE00C6462D /* SoraArchiveFailedResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912ED1111D2241AE00C6462D /* SoraArchiveFailedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED10F1D2241AE00C6462D /* SoraArchiveFailedResponse.m */; };
-		912ED1141D2242F900C6462D /* SoraSignalingFailedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED1121D2242F900C6462D /* SoraSignalingFailedResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912ED1151D2242F900C6462D /* SoraSignalingFailedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED1131D2242F900C6462D /* SoraSignalingFailedResponse.m */; };
-		912ED1181D22437B00C6462D /* SoraSignalingConnectedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED1161D22437B00C6462D /* SoraSignalingConnectedResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912ED1191D22437B00C6462D /* SoraSignalingConnectedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED1171D22437B00C6462D /* SoraSignalingConnectedResponse.m */; };
-		912ED11C1D2243B200C6462D /* SoraSignalingUpdatedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED11A1D2243B200C6462D /* SoraSignalingUpdatedResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912ED11D1D2243B200C6462D /* SoraSignalingUpdatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED11B1D2243B200C6462D /* SoraSignalingUpdatedResponse.m */; };
-		912ED1201D2243C300C6462D /* SoraSignalingDisconnectedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED11E1D2243C300C6462D /* SoraSignalingDisconnectedResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912ED1211D2243C300C6462D /* SoraSignalingDisconnectedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED11F1D2243C300C6462D /* SoraSignalingDisconnectedResponse.m */; };
-		912ED1251D22D5E200C6462D /* SoraError.h in Headers */ = {isa = PBXBuildFile; fileRef = 912ED1241D22D5E200C6462D /* SoraError.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		912ED1271D22D66A00C6462D /* SoraError.m in Sources */ = {isa = PBXBuildFile; fileRef = 912ED1261D22D66A00C6462D /* SoraError.m */; };
-		914102B51CCF57BA002885BF /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 914102B41CCF57BA002885BF /* libicucore.tbd */; };
-		9159AB711D17BE0C00024E5C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB701D17BE0C00024E5C /* AudioToolbox.framework */; };
-		9159AB731D17BE1300024E5C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB721D17BE1300024E5C /* AVFoundation.framework */; };
-		9159AB751D17BE1900024E5C /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB741D17BE1900024E5C /* AVKit.framework */; };
-		9159AB771D17BE1E00024E5C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB761D17BE1E00024E5C /* CFNetwork.framework */; };
-		9159AB791D17BE2600024E5C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB781D17BE2600024E5C /* Security.framework */; };
-		9159AB7B1D17BE3100024E5C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7A1D17BE3100024E5C /* CoreAudio.framework */; };
-		9159AB7D1D17BE3700024E5C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7C1D17BE3700024E5C /* CoreMedia.framework */; };
-		9159AB7F1D17BE3E00024E5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7E1D17BE3E00024E5C /* Foundation.framework */; };
-		9159AB811D17BE4600024E5C /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB801D17BE4600024E5C /* MediaToolbox.framework */; };
-		9159AB831D17BE4C00024E5C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB821D17BE4C00024E5C /* VideoToolbox.framework */; };
-		9159AB851D17BEAE00024E5C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB701D17BE0C00024E5C /* AudioToolbox.framework */; };
-		9159AB861D17BEAE00024E5C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB721D17BE1300024E5C /* AVFoundation.framework */; };
-		9159AB871D17BEAE00024E5C /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB741D17BE1900024E5C /* AVKit.framework */; };
-		9159AB881D17BEAE00024E5C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB761D17BE1E00024E5C /* CFNetwork.framework */; };
-		9159AB891D17BEAE00024E5C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7A1D17BE3100024E5C /* CoreAudio.framework */; };
-		9159AB8A1D17BEAE00024E5C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7C1D17BE3700024E5C /* CoreMedia.framework */; };
-		9159AB8B1D17BEAE00024E5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB7E1D17BE3E00024E5C /* Foundation.framework */; };
-		9159AB8C1D17BEAE00024E5C /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB801D17BE4600024E5C /* MediaToolbox.framework */; };
-		9159AB8D1D17BEAE00024E5C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB781D17BE2600024E5C /* Security.framework */; };
-		9159AB8E1D17BEAE00024E5C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB821D17BE4C00024E5C /* VideoToolbox.framework */; };
-		9159AB911D17BEDE00024E5C /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9159AB8F1D17BED700024E5C /* libstdc++.tbd */; };
-		918EC0D71D377DA1006E769A /* libWebRTC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 912699AB1CC7542C008352EF /* libWebRTC.a */; };
-		91C9F9111CCCFCAA00036375 /* SoraConnectRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C9F90F1CCCFCAA00036375 /* SoraConnectRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		91C9F9121CCCFCAA00036375 /* SoraConnectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C9F9101CCCFCAA00036375 /* SoraConnectRequest.m */; };
+		91C7B08D1D54636A006F5FA2 /* Sora.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C7B08C1D54636A006F5FA2 /* Sora.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		91C7B0941D54636A006F5FA2 /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C7B0891D54636A006F5FA2 /* Sora.framework */; };
+		91C7B0991D54636A006F5FA2 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C7B0981D54636A006F5FA2 /* SoraTests.swift */; };
+		91C7B0A91D5463EA006F5FA2 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 91C7B0A81D5463EA006F5FA2 /* Cartfile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		912699971CC7531E008352EF /* PBXContainerItemProxy */ = {
+		91C7B0951D54636A006F5FA2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 912699821CC7531E008352EF /* Project object */;
+			containerPortal = 91C7B0801D54636A006F5FA2 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 9126998A1CC7531E008352EF;
+			remoteGlobalIDString = 91C7B0881D54636A006F5FA2;
 			remoteInfo = Sora;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9126998B1CC7531E008352EF /* Sora.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sora.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9126998E1CC7531E008352EF /* Sora.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sora.h; sourceTree = "<group>"; };
-		912699901CC7531E008352EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		912699951CC7531E008352EF /* SoraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9126999A1CC7531E008352EF /* SoraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoraTests.m; sourceTree = "<group>"; };
-		9126999C1CC7531E008352EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		912699A71CC7541A008352EF /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
-		912699A81CC7541A008352EF /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
-		912699AB1CC7542C008352EF /* libWebRTC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWebRTC.a; path = ../WebRTC/libWebRTC.a; sourceTree = "<group>"; };
-		912699AC1CC7542C008352EF /* RTCAudioSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAudioSource.h; sourceTree = "<group>"; };
-		912699AD1CC7542C008352EF /* RTCAudioTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAudioTrack.h; sourceTree = "<group>"; };
-		912699AE1CC7542C008352EF /* RTCAVFoundationVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAVFoundationVideoSource.h; sourceTree = "<group>"; };
-		912699AF1CC7542C008352EF /* RTCDataChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCDataChannel.h; sourceTree = "<group>"; };
-		912699B01CC7542C008352EF /* RTCEAGLVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCEAGLVideoView.h; sourceTree = "<group>"; };
-		912699B11CC7542C008352EF /* RTCFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCFileLogger.h; sourceTree = "<group>"; };
-		912699B21CC7542C008352EF /* RTCI420Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCI420Frame.h; sourceTree = "<group>"; };
-		912699B31CC7542C008352EF /* RTCICECandidate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCICECandidate.h; sourceTree = "<group>"; };
-		912699B41CC7542C008352EF /* RTCICEServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCICEServer.h; sourceTree = "<group>"; };
-		912699B51CC7542C008352EF /* RTCLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCLogging.h; sourceTree = "<group>"; };
-		912699B61CC7542C008352EF /* RTCMediaConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCMediaConstraints.h; sourceTree = "<group>"; };
-		912699B71CC7542C008352EF /* RTCMediaSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCMediaSource.h; sourceTree = "<group>"; };
-		912699B81CC7542C008352EF /* RTCMediaStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCMediaStream.h; sourceTree = "<group>"; };
-		912699B91CC7542C008352EF /* RTCMediaStreamTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCMediaStreamTrack.h; sourceTree = "<group>"; };
-		912699BA1CC7542C008352EF /* RTCNSGLVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCNSGLVideoView.h; sourceTree = "<group>"; };
-		912699BB1CC7542C008352EF /* RTCOpenGLVideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCOpenGLVideoRenderer.h; sourceTree = "<group>"; };
-		912699BC1CC7542C008352EF /* RTCPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPair.h; sourceTree = "<group>"; };
-		912699BD1CC7542C008352EF /* RTCPeerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPeerConnection.h; sourceTree = "<group>"; };
-		912699BE1CC7542C008352EF /* RTCPeerConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPeerConnectionDelegate.h; sourceTree = "<group>"; };
-		912699BF1CC7542C008352EF /* RTCPeerConnectionFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPeerConnectionFactory.h; sourceTree = "<group>"; };
-		912699C01CC7542C008352EF /* RTCPeerConnectionInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCPeerConnectionInterface.h; sourceTree = "<group>"; };
-		912699C11CC7542C008352EF /* RTCSessionDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCSessionDescription.h; sourceTree = "<group>"; };
-		912699C21CC7542C008352EF /* RTCSessionDescriptionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCSessionDescriptionDelegate.h; sourceTree = "<group>"; };
-		912699C31CC7542C008352EF /* RTCStatsDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCStatsDelegate.h; sourceTree = "<group>"; };
-		912699C41CC7542C008352EF /* RTCStatsReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCStatsReport.h; sourceTree = "<group>"; };
-		912699C51CC7542C008352EF /* RTCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCTypes.h; sourceTree = "<group>"; };
-		912699C61CC7542C008352EF /* RTCVideoCapturer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCVideoCapturer.h; sourceTree = "<group>"; };
-		912699C71CC7542C008352EF /* RTCVideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCVideoRenderer.h; sourceTree = "<group>"; };
-		912699C81CC7542C008352EF /* RTCVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCVideoSource.h; sourceTree = "<group>"; };
-		912699C91CC7542C008352EF /* RTCVideoTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCVideoTrack.h; sourceTree = "<group>"; };
-		912699CA1CC7542C008352EF /* libWebRTC-version.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "libWebRTC-version.txt"; path = "WebRTC/libWebRTC-version.txt"; sourceTree = "<group>"; };
-		9126F81B1D20F71300FA08FC /* SoraMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraMessage.m; sourceTree = "<group>"; };
-		9126F81D1D20F8C300FA08FC /* SoraMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoraMessage.h; sourceTree = "<group>"; };
-		9126F8251D21884500FA08FC /* SoraAnswerRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraAnswerRequest.h; sourceTree = "<group>"; };
-		9126F8261D21884500FA08FC /* SoraAnswerRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraAnswerRequest.m; sourceTree = "<group>"; };
-		9126F8291D21887500FA08FC /* SoraCandidateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraCandidateRequest.h; sourceTree = "<group>"; };
-		9126F82A1D21887500FA08FC /* SoraCandidateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraCandidateRequest.m; sourceTree = "<group>"; };
-		9126F82D1D218C7600FA08FC /* SoraFailureResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraFailureResponse.h; sourceTree = "<group>"; };
-		9126F82E1D218C7600FA08FC /* SoraFailureResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraFailureResponse.m; sourceTree = "<group>"; };
-		9126F8311D218D9400FA08FC /* SoraSignalingResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraSignalingResponse.h; sourceTree = "<group>"; };
-		9126F8321D218D9400FA08FC /* SoraSignalingResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraSignalingResponse.m; sourceTree = "<group>"; };
-		9126F8351D218E7600FA08FC /* SoraArchiveFinishedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraArchiveFinishedResponse.h; sourceTree = "<group>"; };
-		9126F8361D218E7600FA08FC /* SoraArchiveFinishedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraArchiveFinishedResponse.m; sourceTree = "<group>"; };
-		9126F83A1D218FC300FA08FC /* SoraStreamingMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraStreamingMessage.h; sourceTree = "<group>"; };
-		9126F83B1D218FC300FA08FC /* SoraStreamingMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraStreamingMessage.m; sourceTree = "<group>"; };
-		9126F83E1D21900300FA08FC /* SoreErrorResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoreErrorResponse.h; sourceTree = "<group>"; };
-		9126F83F1D21900300FA08FC /* SoreErrorResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoreErrorResponse.m; sourceTree = "<group>"; };
-		912834411CCE04B2009DFA2E /* SoraOfferResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraOfferResponse.h; sourceTree = "<group>"; };
-		912834421CCE04B2009DFA2E /* SoraOfferResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraOfferResponse.m; sourceTree = "<group>"; };
-		9129DDF41CCA10F800016F0F /* jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = jazzy.yaml; sourceTree = "<group>"; };
-		9129DDF61CCA740900016F0F /* SoraConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraConnection.h; sourceTree = "<group>"; };
-		9129DDF71CCA740900016F0F /* SoraConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraConnection.m; sourceTree = "<group>"; };
-		912ED10E1D2241AE00C6462D /* SoraArchiveFailedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraArchiveFailedResponse.h; sourceTree = "<group>"; };
-		912ED10F1D2241AE00C6462D /* SoraArchiveFailedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraArchiveFailedResponse.m; sourceTree = "<group>"; };
-		912ED1121D2242F900C6462D /* SoraSignalingFailedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraSignalingFailedResponse.h; sourceTree = "<group>"; };
-		912ED1131D2242F900C6462D /* SoraSignalingFailedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraSignalingFailedResponse.m; sourceTree = "<group>"; };
-		912ED1161D22437B00C6462D /* SoraSignalingConnectedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraSignalingConnectedResponse.h; sourceTree = "<group>"; };
-		912ED1171D22437B00C6462D /* SoraSignalingConnectedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraSignalingConnectedResponse.m; sourceTree = "<group>"; };
-		912ED11A1D2243B200C6462D /* SoraSignalingUpdatedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraSignalingUpdatedResponse.h; sourceTree = "<group>"; };
-		912ED11B1D2243B200C6462D /* SoraSignalingUpdatedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraSignalingUpdatedResponse.m; sourceTree = "<group>"; };
-		912ED11E1D2243C300C6462D /* SoraSignalingDisconnectedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraSignalingDisconnectedResponse.h; sourceTree = "<group>"; };
-		912ED11F1D2243C300C6462D /* SoraSignalingDisconnectedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraSignalingDisconnectedResponse.m; sourceTree = "<group>"; };
-		912ED1241D22D5E200C6462D /* SoraError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraError.h; sourceTree = "<group>"; };
-		912ED1261D22D66A00C6462D /* SoraError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraError.m; sourceTree = "<group>"; };
-		914102B41CCF57BA002885BF /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
-		9154FBD31CCA101300458C1E /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
-		9154FBD41CCA101300458C1E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		9159AB701D17BE0C00024E5C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		9159AB721D17BE1300024E5C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		9159AB741D17BE1900024E5C /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
-		9159AB761D17BE1E00024E5C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		9159AB781D17BE2600024E5C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		9159AB7A1D17BE3100024E5C /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		9159AB7C1D17BE3700024E5C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		9159AB7E1D17BE3E00024E5C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		9159AB801D17BE4600024E5C /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
-		9159AB821D17BE4C00024E5C /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
-		9159AB8F1D17BED700024E5C /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
-		91C9F90F1CCCFCAA00036375 /* SoraConnectRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoraConnectRequest.h; sourceTree = "<group>"; };
-		91C9F9101CCCFCAA00036375 /* SoraConnectRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoraConnectRequest.m; sourceTree = "<group>"; };
+		91C7B0891D54636A006F5FA2 /* Sora.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sora.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		91C7B08C1D54636A006F5FA2 /* Sora.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sora.h; sourceTree = "<group>"; };
+		91C7B08E1D54636A006F5FA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		91C7B0931D54636A006F5FA2 /* SoraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		91C7B0981D54636A006F5FA2 /* SoraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoraTests.swift; sourceTree = "<group>"; };
+		91C7B09A1D54636A006F5FA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		91C7B0A81D5463EA006F5FA2 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		912699871CC7531E008352EF /* Frameworks */ = {
+		91C7B0851D54636A006F5FA2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9159AB831D17BE4C00024E5C /* VideoToolbox.framework in Frameworks */,
-				9159AB811D17BE4600024E5C /* MediaToolbox.framework in Frameworks */,
-				9159AB7F1D17BE3E00024E5C /* Foundation.framework in Frameworks */,
-				9159AB7D1D17BE3700024E5C /* CoreMedia.framework in Frameworks */,
-				918EC0D71D377DA1006E769A /* libWebRTC.a in Frameworks */,
-				9159AB7B1D17BE3100024E5C /* CoreAudio.framework in Frameworks */,
-				9159AB791D17BE2600024E5C /* Security.framework in Frameworks */,
-				9159AB771D17BE1E00024E5C /* CFNetwork.framework in Frameworks */,
-				9159AB751D17BE1900024E5C /* AVKit.framework in Frameworks */,
-				9159AB731D17BE1300024E5C /* AVFoundation.framework in Frameworks */,
-				9159AB711D17BE0C00024E5C /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		912699921CC7531E008352EF /* Frameworks */ = {
+		91C7B0901D54636A006F5FA2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9159AB8A1D17BEAE00024E5C /* CoreMedia.framework in Frameworks */,
-				9159AB8B1D17BEAE00024E5C /* Foundation.framework in Frameworks */,
-				9159AB891D17BEAE00024E5C /* CoreAudio.framework in Frameworks */,
-				9159AB8D1D17BEAE00024E5C /* Security.framework in Frameworks */,
-				9159AB881D17BEAE00024E5C /* CFNetwork.framework in Frameworks */,
-				9159AB861D17BEAE00024E5C /* AVFoundation.framework in Frameworks */,
-				914102B51CCF57BA002885BF /* libicucore.tbd in Frameworks */,
-				9159AB871D17BEAE00024E5C /* AVKit.framework in Frameworks */,
-				9159AB8E1D17BEAE00024E5C /* VideoToolbox.framework in Frameworks */,
-				9159AB8C1D17BEAE00024E5C /* MediaToolbox.framework in Frameworks */,
-				912699961CC7531E008352EF /* Sora.framework in Frameworks */,
-				9159AB911D17BEDE00024E5C /* libstdc++.tbd in Frameworks */,
-				9159AB851D17BEAE00024E5C /* AudioToolbox.framework in Frameworks */,
+				91C7B0941D54636A006F5FA2 /* Sora.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		912699811CC7531E008352EF = {
+		91C7B07F1D54636A006F5FA2 = {
 			isa = PBXGroup;
 			children = (
-				912699A61CC753F8008352EF /* SocketRocket */,
-				912699A51CC7538A008352EF /* WebRTC */,
-				9126998D1CC7531E008352EF /* Sora */,
-				9154FBD21CCA0FEB00458C1E /* Misc */,
-				912699991CC7531E008352EF /* SoraTests */,
-				912699EB1CC75440008352EF /* Frameworks */,
-				9126998C1CC7531E008352EF /* Products */,
+				91C7B08B1D54636A006F5FA2 /* Sora */,
+				91C7B0A31D5463A4006F5FA2 /* Misc */,
+				91C7B0971D54636A006F5FA2 /* SoraTests */,
+				91C7B08A1D54636A006F5FA2 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		9126998C1CC7531E008352EF /* Products */ = {
+		91C7B08A1D54636A006F5FA2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9126998B1CC7531E008352EF /* Sora.framework */,
-				912699951CC7531E008352EF /* SoraTests.xctest */,
+				91C7B0891D54636A006F5FA2 /* Sora.framework */,
+				91C7B0931D54636A006F5FA2 /* SoraTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9126998D1CC7531E008352EF /* Sora */ = {
+		91C7B08B1D54636A006F5FA2 /* Sora */ = {
 			isa = PBXGroup;
 			children = (
-				9126F8391D218F7400FA08FC /* Messages */,
-				912699901CC7531E008352EF /* Info.plist */,
-				9126998E1CC7531E008352EF /* Sora.h */,
-				9129DDF61CCA740900016F0F /* SoraConnection.h */,
-				9129DDF71CCA740900016F0F /* SoraConnection.m */,
-				912ED1241D22D5E200C6462D /* SoraError.h */,
-				912ED1261D22D66A00C6462D /* SoraError.m */,
+				91C7B08C1D54636A006F5FA2 /* Sora.h */,
+				91C7B08E1D54636A006F5FA2 /* Info.plist */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
 		};
-		912699991CC7531E008352EF /* SoraTests */ = {
+		91C7B0971D54636A006F5FA2 /* SoraTests */ = {
 			isa = PBXGroup;
 			children = (
-				9126999A1CC7531E008352EF /* SoraTests.m */,
-				9126999C1CC7531E008352EF /* Info.plist */,
+				91C7B0981D54636A006F5FA2 /* SoraTests.swift */,
+				91C7B09A1D54636A006F5FA2 /* Info.plist */,
 			);
 			path = SoraTests;
 			sourceTree = "<group>";
 		};
-		912699A51CC7538A008352EF /* WebRTC */ = {
+		91C7B0A31D5463A4006F5FA2 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				912699AC1CC7542C008352EF /* RTCAudioSource.h */,
-				912699AD1CC7542C008352EF /* RTCAudioTrack.h */,
-				912699AE1CC7542C008352EF /* RTCAVFoundationVideoSource.h */,
-				912699AF1CC7542C008352EF /* RTCDataChannel.h */,
-				912699B01CC7542C008352EF /* RTCEAGLVideoView.h */,
-				912699B11CC7542C008352EF /* RTCFileLogger.h */,
-				912699B21CC7542C008352EF /* RTCI420Frame.h */,
-				912699B31CC7542C008352EF /* RTCICECandidate.h */,
-				912699B41CC7542C008352EF /* RTCICEServer.h */,
-				912699B51CC7542C008352EF /* RTCLogging.h */,
-				912699B61CC7542C008352EF /* RTCMediaConstraints.h */,
-				912699B71CC7542C008352EF /* RTCMediaSource.h */,
-				912699B81CC7542C008352EF /* RTCMediaStream.h */,
-				912699B91CC7542C008352EF /* RTCMediaStreamTrack.h */,
-				912699BA1CC7542C008352EF /* RTCNSGLVideoView.h */,
-				912699BB1CC7542C008352EF /* RTCOpenGLVideoRenderer.h */,
-				912699BC1CC7542C008352EF /* RTCPair.h */,
-				912699BD1CC7542C008352EF /* RTCPeerConnection.h */,
-				912699BE1CC7542C008352EF /* RTCPeerConnectionDelegate.h */,
-				912699BF1CC7542C008352EF /* RTCPeerConnectionFactory.h */,
-				912699C01CC7542C008352EF /* RTCPeerConnectionInterface.h */,
-				912699C11CC7542C008352EF /* RTCSessionDescription.h */,
-				912699C21CC7542C008352EF /* RTCSessionDescriptionDelegate.h */,
-				912699C31CC7542C008352EF /* RTCStatsDelegate.h */,
-				912699C41CC7542C008352EF /* RTCStatsReport.h */,
-				912699C51CC7542C008352EF /* RTCTypes.h */,
-				912699C61CC7542C008352EF /* RTCVideoCapturer.h */,
-				912699C71CC7542C008352EF /* RTCVideoRenderer.h */,
-				912699C81CC7542C008352EF /* RTCVideoSource.h */,
-				912699C91CC7542C008352EF /* RTCVideoTrack.h */,
-			);
-			path = WebRTC;
-			sourceTree = "<group>";
-		};
-		912699A61CC753F8008352EF /* SocketRocket */ = {
-			isa = PBXGroup;
-			children = (
-				912699A71CC7541A008352EF /* SRWebSocket.h */,
-				912699A81CC7541A008352EF /* SRWebSocket.m */,
-			);
-			path = SocketRocket;
-			sourceTree = "<group>";
-		};
-		912699EB1CC75440008352EF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				9159AB8F1D17BED700024E5C /* libstdc++.tbd */,
-				912699AB1CC7542C008352EF /* libWebRTC.a */,
-				9159AB701D17BE0C00024E5C /* AudioToolbox.framework */,
-				9159AB721D17BE1300024E5C /* AVFoundation.framework */,
-				9159AB741D17BE1900024E5C /* AVKit.framework */,
-				9159AB761D17BE1E00024E5C /* CFNetwork.framework */,
-				9159AB7A1D17BE3100024E5C /* CoreAudio.framework */,
-				9159AB7C1D17BE3700024E5C /* CoreMedia.framework */,
-				9159AB7E1D17BE3E00024E5C /* Foundation.framework */,
-				9159AB801D17BE4600024E5C /* MediaToolbox.framework */,
-				9159AB781D17BE2600024E5C /* Security.framework */,
-				9159AB821D17BE4C00024E5C /* VideoToolbox.framework */,
-				914102B41CCF57BA002885BF /* libicucore.tbd */,
-			);
-			name = Frameworks;
-			path = SoraTests;
-			sourceTree = "<group>";
-		};
-		9126F8391D218F7400FA08FC /* Messages */ = {
-			isa = PBXGroup;
-			children = (
-				9126F8251D21884500FA08FC /* SoraAnswerRequest.h */,
-				9126F8261D21884500FA08FC /* SoraAnswerRequest.m */,
-				912ED10E1D2241AE00C6462D /* SoraArchiveFailedResponse.h */,
-				912ED10F1D2241AE00C6462D /* SoraArchiveFailedResponse.m */,
-				9126F8351D218E7600FA08FC /* SoraArchiveFinishedResponse.h */,
-				9126F8361D218E7600FA08FC /* SoraArchiveFinishedResponse.m */,
-				9126F8291D21887500FA08FC /* SoraCandidateRequest.h */,
-				9126F82A1D21887500FA08FC /* SoraCandidateRequest.m */,
-				91C9F90F1CCCFCAA00036375 /* SoraConnectRequest.h */,
-				91C9F9101CCCFCAA00036375 /* SoraConnectRequest.m */,
-				9126F82D1D218C7600FA08FC /* SoraFailureResponse.h */,
-				9126F82E1D218C7600FA08FC /* SoraFailureResponse.m */,
-				9126F81D1D20F8C300FA08FC /* SoraMessage.h */,
-				9126F81B1D20F71300FA08FC /* SoraMessage.m */,
-				912834411CCE04B2009DFA2E /* SoraOfferResponse.h */,
-				912834421CCE04B2009DFA2E /* SoraOfferResponse.m */,
-				912ED1161D22437B00C6462D /* SoraSignalingConnectedResponse.h */,
-				912ED1171D22437B00C6462D /* SoraSignalingConnectedResponse.m */,
-				912ED11E1D2243C300C6462D /* SoraSignalingDisconnectedResponse.h */,
-				912ED11F1D2243C300C6462D /* SoraSignalingDisconnectedResponse.m */,
-				912ED1121D2242F900C6462D /* SoraSignalingFailedResponse.h */,
-				912ED1131D2242F900C6462D /* SoraSignalingFailedResponse.m */,
-				9126F8311D218D9400FA08FC /* SoraSignalingResponse.h */,
-				9126F8321D218D9400FA08FC /* SoraSignalingResponse.m */,
-				912ED11A1D2243B200C6462D /* SoraSignalingUpdatedResponse.h */,
-				912ED11B1D2243B200C6462D /* SoraSignalingUpdatedResponse.m */,
-				9126F83A1D218FC300FA08FC /* SoraStreamingMessage.h */,
-				9126F83B1D218FC300FA08FC /* SoraStreamingMessage.m */,
-				9126F83E1D21900300FA08FC /* SoreErrorResponse.h */,
-				9126F83F1D21900300FA08FC /* SoreErrorResponse.m */,
-			);
-			name = Messages;
-			sourceTree = "<group>";
-		};
-		9154FBD21CCA0FEB00458C1E /* Misc */ = {
-			isa = PBXGroup;
-			children = (
-				912699CA1CC7542C008352EF /* libWebRTC-version.txt */,
-				9129DDF41CCA10F800016F0F /* jazzy.yaml */,
-				9154FBD31CCA101300458C1E /* Cartfile */,
-				9154FBD41CCA101300458C1E /* Makefile */,
+				91C7B0A81D5463EA006F5FA2 /* Cartfile */,
 			);
 			name = Misc;
 			sourceTree = "<group>";
@@ -409,73 +114,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		912699881CC7531E008352EF /* Headers */ = {
+		91C7B0861D54636A006F5FA2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9126F8271D21884500FA08FC /* SoraAnswerRequest.h in Headers */,
-				912ED1101D2241AE00C6462D /* SoraArchiveFailedResponse.h in Headers */,
-				912699D41CC7542C008352EF /* RTCICEServer.h in Headers */,
-				912699CC1CC7542C008352EF /* RTCAudioSource.h in Headers */,
-				912ED11C1D2243B200C6462D /* SoraSignalingUpdatedResponse.h in Headers */,
-				912ED1181D22437B00C6462D /* SoraSignalingConnectedResponse.h in Headers */,
-				912699D51CC7542C008352EF /* RTCLogging.h in Headers */,
-				912699CD1CC7542C008352EF /* RTCAudioTrack.h in Headers */,
-				912699D01CC7542C008352EF /* RTCEAGLVideoView.h in Headers */,
-				912699D91CC7542C008352EF /* RTCMediaStreamTrack.h in Headers */,
-				912699E11CC7542C008352EF /* RTCSessionDescription.h in Headers */,
-				912699E61CC7542C008352EF /* RTCVideoCapturer.h in Headers */,
-				912699CF1CC7542C008352EF /* RTCDataChannel.h in Headers */,
-				912699D71CC7542C008352EF /* RTCMediaSource.h in Headers */,
-				912699D81CC7542C008352EF /* RTCMediaStream.h in Headers */,
-				912699DF1CC7542C008352EF /* RTCPeerConnectionFactory.h in Headers */,
-				912699E31CC7542C008352EF /* RTCStatsDelegate.h in Headers */,
-				9126F82F1D218C7600FA08FC /* SoraFailureResponse.h in Headers */,
-				912699D31CC7542C008352EF /* RTCICECandidate.h in Headers */,
-				912699DE1CC7542C008352EF /* RTCPeerConnectionDelegate.h in Headers */,
-				912ED1251D22D5E200C6462D /* SoraError.h in Headers */,
-				912699E51CC7542C008352EF /* RTCTypes.h in Headers */,
-				9126998F1CC7531E008352EF /* Sora.h in Headers */,
-				912699D61CC7542C008352EF /* RTCMediaConstraints.h in Headers */,
-				912699E41CC7542C008352EF /* RTCStatsReport.h in Headers */,
-				912699DB1CC7542C008352EF /* RTCOpenGLVideoRenderer.h in Headers */,
-				912699CE1CC7542C008352EF /* RTCAVFoundationVideoSource.h in Headers */,
-				912699DD1CC7542C008352EF /* RTCPeerConnection.h in Headers */,
-				912699DA1CC7542C008352EF /* RTCNSGLVideoView.h in Headers */,
-				912ED1201D2243C300C6462D /* SoraSignalingDisconnectedResponse.h in Headers */,
-				912834431CCE04B2009DFA2E /* SoraOfferResponse.h in Headers */,
-				9129DDF81CCA740900016F0F /* SoraConnection.h in Headers */,
-				912699DC1CC7542C008352EF /* RTCPair.h in Headers */,
-				912699D11CC7542C008352EF /* RTCFileLogger.h in Headers */,
-				912699E71CC7542C008352EF /* RTCVideoRenderer.h in Headers */,
-				912699E91CC7542C008352EF /* RTCVideoTrack.h in Headers */,
-				9126F8401D21900300FA08FC /* SoreErrorResponse.h in Headers */,
-				912699A91CC7541A008352EF /* SRWebSocket.h in Headers */,
-				9126F82B1D21887500FA08FC /* SoraCandidateRequest.h in Headers */,
-				912699E21CC7542C008352EF /* RTCSessionDescriptionDelegate.h in Headers */,
-				912699D21CC7542C008352EF /* RTCI420Frame.h in Headers */,
-				912699E81CC7542C008352EF /* RTCVideoSource.h in Headers */,
-				9126F83C1D218FC300FA08FC /* SoraStreamingMessage.h in Headers */,
-				9126F8371D218E7600FA08FC /* SoraArchiveFinishedResponse.h in Headers */,
-				912699E01CC7542C008352EF /* RTCPeerConnectionInterface.h in Headers */,
-				9126F8331D218D9400FA08FC /* SoraSignalingResponse.h in Headers */,
-				912ED1141D2242F900C6462D /* SoraSignalingFailedResponse.h in Headers */,
-				91C9F9111CCCFCAA00036375 /* SoraConnectRequest.h in Headers */,
-				9126F81E1D20F90000FA08FC /* SoraMessage.h in Headers */,
+				91C7B08D1D54636A006F5FA2 /* Sora.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		9126998A1CC7531E008352EF /* Sora */ = {
+		91C7B0881D54636A006F5FA2 /* Sora */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9126999F1CC7531E008352EF /* Build configuration list for PBXNativeTarget "Sora" */;
+			buildConfigurationList = 91C7B09D1D54636A006F5FA2 /* Build configuration list for PBXNativeTarget "Sora" */;
 			buildPhases = (
-				912699861CC7531E008352EF /* Sources */,
-				912699871CC7531E008352EF /* Frameworks */,
-				912699881CC7531E008352EF /* Headers */,
-				912699891CC7531E008352EF /* Resources */,
+				91C7B0841D54636A006F5FA2 /* Sources */,
+				91C7B0851D54636A006F5FA2 /* Frameworks */,
+				91C7B0861D54636A006F5FA2 /* Headers */,
+				91C7B0871D54636A006F5FA2 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -483,72 +140,77 @@
 			);
 			name = Sora;
 			productName = Sora;
-			productReference = 9126998B1CC7531E008352EF /* Sora.framework */;
+			productReference = 91C7B0891D54636A006F5FA2 /* Sora.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		912699941CC7531E008352EF /* SoraTests */ = {
+		91C7B0921D54636A006F5FA2 /* SoraTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 912699A21CC7531E008352EF /* Build configuration list for PBXNativeTarget "SoraTests" */;
+			buildConfigurationList = 91C7B0A01D54636A006F5FA2 /* Build configuration list for PBXNativeTarget "SoraTests" */;
 			buildPhases = (
-				912699911CC7531E008352EF /* Sources */,
-				912699921CC7531E008352EF /* Frameworks */,
-				912699931CC7531E008352EF /* Resources */,
+				91C7B08F1D54636A006F5FA2 /* Sources */,
+				91C7B0901D54636A006F5FA2 /* Frameworks */,
+				91C7B0911D54636A006F5FA2 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				912699981CC7531E008352EF /* PBXTargetDependency */,
+				91C7B0961D54636A006F5FA2 /* PBXTargetDependency */,
 			);
 			name = SoraTests;
 			productName = SoraTests;
-			productReference = 912699951CC7531E008352EF /* SoraTests.xctest */;
+			productReference = 91C7B0931D54636A006F5FA2 /* SoraTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		912699821CC7531E008352EF /* Project object */ = {
+		91C7B0801D54636A006F5FA2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Shiguredo Inc.";
 				TargetAttributes = {
-					9126998A1CC7531E008352EF = {
-						CreatedOnToolsVersion = 7.3;
+					918201871D585E1A00178E2B = {
+						CreatedOnToolsVersion = 7.3.1;
 					};
-					912699941CC7531E008352EF = {
-						CreatedOnToolsVersion = 7.3;
+					91C7B0881D54636A006F5FA2 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					91C7B0921D54636A006F5FA2 = {
+						CreatedOnToolsVersion = 7.3.1;
 					};
 				};
 			};
-			buildConfigurationList = 912699851CC7531E008352EF /* Build configuration list for PBXProject "Sora" */;
+			buildConfigurationList = 91C7B0831D54636A006F5FA2 /* Build configuration list for PBXProject "Sora" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 912699811CC7531E008352EF;
-			productRefGroup = 9126998C1CC7531E008352EF /* Products */;
+			mainGroup = 91C7B07F1D54636A006F5FA2;
+			productRefGroup = 91C7B08A1D54636A006F5FA2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9126998A1CC7531E008352EF /* Sora */,
-				912699941CC7531E008352EF /* SoraTests */,
+				91C7B0881D54636A006F5FA2 /* Sora */,
+				91C7B0921D54636A006F5FA2 /* SoraTests */,
+				918201871D585E1A00178E2B /* Carthage */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		912699891CC7531E008352EF /* Resources */ = {
+		91C7B0871D54636A006F5FA2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				912699EA1CC7542C008352EF /* libWebRTC-version.txt in Resources */,
+				91C7B0A91D5463EA006F5FA2 /* Cartfile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		912699931CC7531E008352EF /* Resources */ = {
+		91C7B0911D54636A006F5FA2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -557,52 +219,64 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		9182018B1D585E2500178E2B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd $SRCROOT\ncarthage update --platform iOS";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		912699861CC7531E008352EF /* Sources */ = {
+		91C7B0841D54636A006F5FA2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				912ED11D1D2243B200C6462D /* SoraSignalingUpdatedResponse.m in Sources */,
-				9126F83D1D218FC300FA08FC /* SoraStreamingMessage.m in Sources */,
-				912ED1211D2243C300C6462D /* SoraSignalingDisconnectedResponse.m in Sources */,
-				9126F8341D218D9400FA08FC /* SoraSignalingResponse.m in Sources */,
-				9126F8381D218E7600FA08FC /* SoraArchiveFinishedResponse.m in Sources */,
-				912ED1191D22437B00C6462D /* SoraSignalingConnectedResponse.m in Sources */,
-				9126F8281D21884500FA08FC /* SoraAnswerRequest.m in Sources */,
-				9126F82C1D21887500FA08FC /* SoraCandidateRequest.m in Sources */,
-				912ED1111D2241AE00C6462D /* SoraArchiveFailedResponse.m in Sources */,
-				9129DDF91CCA740900016F0F /* SoraConnection.m in Sources */,
-				91C9F9121CCCFCAA00036375 /* SoraConnectRequest.m in Sources */,
-				9126F8301D218C7600FA08FC /* SoraFailureResponse.m in Sources */,
-				9126F8411D21900300FA08FC /* SoreErrorResponse.m in Sources */,
-				912834441CCE04B2009DFA2E /* SoraOfferResponse.m in Sources */,
-				9126F81C1D20F71300FA08FC /* SoraMessage.m in Sources */,
-				912ED1271D22D66A00C6462D /* SoraError.m in Sources */,
-				912699AA1CC7541A008352EF /* SRWebSocket.m in Sources */,
-				912ED1151D2242F900C6462D /* SoraSignalingFailedResponse.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		912699911CC7531E008352EF /* Sources */ = {
+		91C7B08F1D54636A006F5FA2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9126999B1CC7531E008352EF /* SoraTests.m in Sources */,
+				91C7B0991D54636A006F5FA2 /* SoraTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		912699981CC7531E008352EF /* PBXTargetDependency */ = {
+		91C7B0961D54636A006F5FA2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9126998A1CC7531E008352EF /* Sora */;
-			targetProxy = 912699971CC7531E008352EF /* PBXContainerItemProxy */;
+			target = 91C7B0881D54636A006F5FA2 /* Sora */;
+			targetProxy = 91C7B0951D54636A006F5FA2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		9126999D1CC7531E008352EF /* Debug */ = {
+		918201881D585E1B00178E2B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		918201891D585E1B00178E2B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		91C7B09B1D54636A006F5FA2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -644,13 +318,14 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		9126999E1CC7531E008352EF /* Release */ = {
+		91C7B09C1D54636A006F5FA2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -692,81 +367,53 @@
 			};
 			name = Release;
 		};
-		912699A01CC7531E008352EF /* Debug */ = {
+		91C7B09E1D54636A006F5FA2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Sora/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WebRTC",
-				);
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.Sora;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Debug;
 		};
-		912699A11CC7531E008352EF /* Release */ = {
+		91C7B09F1D54636A006F5FA2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Sora/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WebRTC",
-				);
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.Sora;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Release;
 		};
-		912699A31CC7531E008352EF /* Debug */ = {
+		91C7B0A11D54636A006F5FA2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = SoraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WebRTC",
-				);
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		912699A41CC7531E008352EF /* Release */ = {
+		91C7B0A21D54636A006F5FA2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = SoraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WebRTC",
-				);
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -775,34 +422,42 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		912699851CC7531E008352EF /* Build configuration list for PBXProject "Sora" */ = {
+		9182018A1D585E1B00178E2B /* Build configuration list for PBXAggregateTarget "Carthage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9126999D1CC7531E008352EF /* Debug */,
-				9126999E1CC7531E008352EF /* Release */,
+				918201881D585E1B00178E2B /* Debug */,
+				918201891D585E1B00178E2B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		91C7B0831D54636A006F5FA2 /* Build configuration list for PBXProject "Sora" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91C7B09B1D54636A006F5FA2 /* Debug */,
+				91C7B09C1D54636A006F5FA2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9126999F1CC7531E008352EF /* Build configuration list for PBXNativeTarget "Sora" */ = {
+		91C7B09D1D54636A006F5FA2 /* Build configuration list for PBXNativeTarget "Sora" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				912699A01CC7531E008352EF /* Debug */,
-				912699A11CC7531E008352EF /* Release */,
+				91C7B09E1D54636A006F5FA2 /* Debug */,
+				91C7B09F1D54636A006F5FA2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		912699A21CC7531E008352EF /* Build configuration list for PBXNativeTarget "SoraTests" */ = {
+		91C7B0A01D54636A006F5FA2 /* Build configuration list for PBXNativeTarget "SoraTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				912699A31CC7531E008352EF /* Debug */,
-				912699A41CC7531E008352EF /* Release */,
+				91C7B0A11D54636A006F5FA2 /* Debug */,
+				91C7B0A21D54636A006F5FA2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 912699821CC7531E008352EF /* Project object */;
+	rootObject = 91C7B0801D54636A006F5FA2 /* Project object */;
 }
