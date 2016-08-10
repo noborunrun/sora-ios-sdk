@@ -1,5 +1,6 @@
 import Foundation
 import WebRTC
+import SocketRocket
 
 /**
  Sora サーバーとシグナリング接続を行います。
@@ -43,9 +44,17 @@ public struct Connection {
      ピア接続オブジェクト
      
      @warning このオブジェクトのデリゲートを変更しないでください。
-     デリゲートは `SoraConnection` オブジェクトの状態管理に使われます。
+     デリゲートは `Connection` オブジェクトの状態管理に使われます。
+     デリゲートをセットしたい場合は `peerConnectionDelegate` を利用してください。
      */
     public var peerConnection: RTCPeerConnection
+
+    /**
+     `peerConnection` のデリゲート。
+     `Connection` オブジェクトは接続状態の管理のためのデリゲートを `peerConnection` にセットしているので、
+     このプロパティに `peerConnection` のデリゲートをセットしてください。
+     */
+    public var peerConnectionDelegate: RTCPeerConnectionDelegate?
     
     public var fileLogger: RTCFileLogger
     
@@ -55,25 +64,44 @@ public struct Connection {
     /** 受信した映像を描画するオブジェクト ( プロトコル) の配列 */
     public var remoteVideoRenderers: [RTCVideoRenderer]
 
+    public var didStateChanged: ((Connection, State) -> ())?
+
+    /**
+     WebSocket 接続オブジェクト
+     
+     @warning このオブジェクトのデリゲートを変更しないでください。
+     デリゲートは `Connection` オブジェクトの状態管理に使われます。
+     デリゲートを設定したい場合は `webSocketDelegate` を利用してください。
+     */
+    public var webSocket: SRWebSocket
+    
+    /**
+     `webSocket` のデリゲート。
+     `Connection` オブジェクトは接続状態の管理のためのデリゲートを `webSocket` にセットしているので、
+     このプロパティに `webSocket` のデリゲートをセットしてください。
+     */
+    public var webSocketDelegate: SRWebSocketDelegate?
+    
     var context: Context
     
     /**
-     指定のサーバーに接続し、初期化済みの `SoraConnection` オブジェクトを返します。
+     指定のサーバーに接続し、初期化済みの `Connection` オブジェクトを返します。
      
      @param URL 接続するサーバーの URL
      @param config ピア接続の設定
      @param constraints メディアの制約
-     @return 初期化済みの `SoraConnection` オブジェクト
+     @return 初期化済みの `Connection` オブジェクト
      */
     init(URL: NSURL, config: RTCConfiguration?, constraints: RTCMediaConstraints?) {
         self.URL = URL
-        self.state = State.Closed
-        self.peerConnectionFactory = RTCPeerConnectionFactory()
-        self.context = Context()
-        self.fileLogger = RTCFileLogger()
-        self.fileLogger.start()
-        self.remoteStreams = []
-        self.remoteVideoRenderers = []
+        state = State.Closed
+        peerConnectionFactory = RTCPeerConnectionFactory()
+        context = Context()
+        fileLogger = RTCFileLogger()
+        fileLogger.start()
+        remoteStreams = []
+        remoteVideoRenderers = []
+        webSocket = SRWebSocket(URL: URL)
         
         var config: RTCConfiguration? = config
         var constraints: RTCMediaConstraints? = constraints
@@ -87,10 +115,15 @@ public struct Connection {
         // default ICE servers
         config?.iceServers = [RTCIceServer(URLStrings: ["stun:stun.l.google.com:19302"])]
         
-        self.peerConnection = self.peerConnectionFactory
+        peerConnection = peerConnectionFactory
             .peerConnectionWithConfiguration(config!,
                                              constraints: constraints!,
-                                             delegate: self.context)
+                                             delegate: context)
+    }
+    
+    public mutating func setState(state: State) {
+        self.state = state
+        didStateChanged?(self, state)
     }
     
     /**
@@ -98,8 +131,10 @@ public struct Connection {
      
      @param connectRequest connect シグナリングメッセージ
      */
-    public func open(request: ConnectRequest) {
+    public mutating func open(request: ConnectRequest) {
         // TODO
+        webSocket.delegate = context
+        webSocket.open()
     }
     
     /** サーバーとの接続を閉じます。 */
@@ -116,44 +151,99 @@ public struct Connection {
         // TODO
     }
     
-    class Context: NSObject, RTCPeerConnectionDelegate {
-    
-        let conn: Connection! = nil
+    class Context: NSObject, RTCPeerConnectionDelegate, SRWebSocketDelegate {
+        
+        enum State {
+            case Closed
+            case Open
+            case Connecting
+            case CreatingAnswer
+            case SendingAnswer
+            case PeerOpen
+        }
+        
+        var conn: Connection! = nil
+        var state: State = .Closed
+        
+        func webSocketDidOpen(webSocket: SRWebSocket!) {
+            // TODO
+            print("WebSocket open")
+            conn!.webSocketDelegate?.webSocketDidOpen?(webSocket)
+        }
+        
+        func webSocket(webSocket: SRWebSocket!, didFailWithError error: NSError!) {
+            print("WebSocket failed")
+            state = .Closed
+            conn!.state = .Closed
+            conn!.webSocketDelegate?.webSocket?(webSocket, didFailWithError: error)
+        }
+        
+        func webSocket(webSocket: SRWebSocket!, didReceivePong pongPayload: NSData!) {
+            // TODO
+            conn!.webSocketDelegate?.webSocket?(webSocket, didReceivePong: pongPayload)
+        }
+        
+        func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
+            // TODO
+            conn!.webSocketDelegate?.webSocket(webSocket, didReceiveMessage: message)
+        }
+        
+        func webSocket(webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
+            // TODO
+            conn!.webSocketDelegate?.webSocket?(webSocket, didCloseWithCode: code, reason: reason, wasClean: wasClean)
+        }
         
         func peerConnection(peerConnection: RTCPeerConnection, didChangeSignalingState stateChanged: RTCSignalingState) {
             // TODO
+            conn!.peerConnectionDelegate?
+                .peerConnection(peerConnection, didChangeSignalingState: stateChanged)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didAddStream stream: RTCMediaStream) {
             // TODO
+            conn!.peerConnectionDelegate?
+                .peerConnection(peerConnection, didAddStream: stream)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didRemoveStream stream: RTCMediaStream) {
             // TODO
+            conn!.peerConnectionDelegate?
+                .peerConnection(peerConnection, didRemoveStream: stream)
         }
         
         func peerConnectionShouldNegotiate(peerConnection: RTCPeerConnection) {
             // TODO
+            conn!.peerConnectionDelegate?.peerConnectionShouldNegotiate(peerConnection)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didChangeIceConnectionState newState: RTCIceConnectionState) {
             // TODO
+            conn!.peerConnectionDelegate?
+                .peerConnection(peerConnection, didChangeIceConnectionState: newState)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didChangeIceGatheringState newState: RTCIceGatheringState) {
             // TODO
+            conn!.peerConnectionDelegate?
+                .peerConnection(peerConnection, didChangeIceGatheringState: newState)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didGenerateIceCandidate candidate: RTCIceCandidate) {
             // TODO
+            conn!.peerConnectionDelegate?
+                .peerConnection(peerConnection, didGenerateIceCandidate: candidate)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didRemoveIceCandidates candidates: [RTCIceCandidate]) {
             // TODO
+            conn!.peerConnectionDelegate?
+                .peerConnection(peerConnection, didRemoveIceCandidates: candidates)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didOpenDataChannel dataChannel: RTCDataChannel) {
             // TODO
+            conn!.peerConnectionDelegate?
+                .peerConnection(peerConnection, didOpenDataChannel: dataChannel)
         }
         
     }
