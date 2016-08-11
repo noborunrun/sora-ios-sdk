@@ -2,6 +2,17 @@ import Foundation
 import WebRTC
 import SocketRocket
 
+public protocol ConnectionDelegate {
+    
+    func didFail(connection: Connection, error: NSError) -> ()
+    func didChangeState(connection: Connection, state: Connection.State) -> ()
+    func didSendConnectRequest(connection: Connection, request: ConnectRequest) -> ()
+    func didReceiveOfferResponse(connection: Connection, response: OfferResponse) -> ()
+    func didSendAnswerRequest(connection: Connection, request: AnswerRequest) -> ()
+    func didSendCandidate(connection: Connection, candidate: RTCIceCandidate) -> ()
+
+}
+
 /**
  Sora サーバーとシグナリング接続を行います。
  Sora サーバーでは、シグナリングは WebSocket で JSON フォーマットのメッセージを介して行います。
@@ -30,14 +41,26 @@ public struct Connection {
         case Closed
         
     }
+    
+    public enum ErrorCode: Int {
+        /** 内部エラー */
+        case InvalidState = 0
+    }
+
+    static let errorDomain = "Sora.Connection"
 
     /** Sora サーバーの URL */
     public var URL: NSURL
     
     /** Sora サーバーとの接続状態 */
-    public var state: State
+    public var state: State = .Closed {
+        
+        didSet {
+            delegate?.didChangeState(self, state: state)
+        }
+        
+    }
     
-    /** デリゲート */
     public var peerConnectionFactory: RTCPeerConnectionFactory
     
     /**
@@ -64,8 +87,6 @@ public struct Connection {
     /** 受信した映像を描画するオブジェクト ( プロトコル) の配列 */
     public var remoteVideoRenderers: [RTCVideoRenderer]
 
-    public var didStateChanged: ((Connection, State) -> ())?
-
     /**
      WebSocket 接続オブジェクト
      
@@ -81,6 +102,9 @@ public struct Connection {
      このプロパティに `webSocket` のデリゲートをセットしてください。
      */
     public var webSocketDelegate: SRWebSocketDelegate?
+
+    /** デリゲート */
+    public var delegate: ConnectionDelegate?
     
     var context: Context
     
@@ -121,11 +145,6 @@ public struct Connection {
                                              delegate: context)
     }
     
-    public mutating func setState(state: State) {
-        self.state = state
-        didStateChanged?(self, state)
-    }
-    
     /**
      サーバーに接続します。
      
@@ -147,7 +166,7 @@ public struct Connection {
      
      @param message 送信するシグナリングメッセージ
      */
-    public func send(message: Message) {
+    public func send(message: String) {
         // TODO
     }
     
@@ -165,10 +184,26 @@ public struct Connection {
         var conn: Connection! = nil
         var state: State = .Closed
         
+        func sendConnectReuest(request: ConnectRequest) {
+            // TODO:
+        }
+        
+        // MARK: SRWebSocket Delegate
+        
         func webSocketDidOpen(webSocket: SRWebSocket!) {
             // TODO
             print("WebSocket open")
             conn!.webSocketDelegate?.webSocketDidOpen?(webSocket)
+            
+            switch state {
+            case .Closed:
+                break
+            default:
+                let error = NSError(domain: errorDomain,
+                                    code: ErrorCode.InvalidState.rawValue,
+                                    userInfo: nil)
+                conn.delegate?.didFail(conn, error: error)
+            }
         }
         
         func webSocket(webSocket: SRWebSocket!, didFailWithError error: NSError!) {
@@ -192,6 +227,8 @@ public struct Connection {
             // TODO
             conn!.webSocketDelegate?.webSocket?(webSocket, didCloseWithCode: code, reason: reason, wasClean: wasClean)
         }
+        
+        // MARK: RTCPeerConnection Delegate
         
         func peerConnection(peerConnection: RTCPeerConnection, didChangeSignalingState stateChanged: RTCSignalingState) {
             // TODO

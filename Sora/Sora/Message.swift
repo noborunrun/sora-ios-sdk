@@ -16,13 +16,6 @@ public enum AudioCodecType {
     case Opus
 }
 
-public enum Message {
-
-    case Connect(reuqest: ConnectRequest)
-    case Offer(clientId: String, SDP: String, config: [String: String])
-    
-}
-
 public struct ConnectRequest {
 
     public var role: Role
@@ -32,5 +25,21 @@ public struct ConnectRequest {
     public var audioCodecType: AudioCodecType
     public var isVideoEnabled: Bool
     public var isAudioEnabled: Bool
+    
+    public func JSON() {
+        
+    }
+    
+}
+
+public struct OfferResponse {
+    
+    public var clientId: String
+    public var SDP: String
+    public var config: [String: String]
+
+}
+
+public struct AnswerRequest {
     
 }
