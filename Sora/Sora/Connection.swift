@@ -106,8 +106,8 @@ public struct Connection {
     /** デリゲート */
     public var delegate: ConnectionDelegate?
     
-    var context: Context
-    
+    var context: Context?
+
     /**
      指定のサーバーに接続し、初期化済みの `Connection` オブジェクトを返します。
      
@@ -120,7 +120,6 @@ public struct Connection {
         self.URL = URL
         state = State.Closed
         peerConnectionFactory = RTCPeerConnectionFactory()
-        context = Context()
         fileLogger = RTCFileLogger()
         fileLogger.start()
         remoteStreams = []
@@ -152,6 +151,7 @@ public struct Connection {
      */
     public mutating func open(message: Signaling.Connect) {
         // TODO
+        context = Context(connection: self)
         webSocket.delegate = context
         webSocket.open()
     }
@@ -197,10 +197,12 @@ public struct Connection {
         func webSocketDidOpen(webSocket: SRWebSocket!) {
             // TODO
             print("WebSocket open")
-            conn!.webSocketDelegate?.webSocketDidOpen?(webSocket)
+            conn.webSocketDelegate?.webSocketDidOpen?(webSocket)
             
             switch state {
             case .Closed:
+                // TODO
+                state = .Open
                 break
             default:
                 let error = NSError(domain: errorDomain,
@@ -213,77 +215,77 @@ public struct Connection {
         func webSocket(webSocket: SRWebSocket!, didFailWithError error: NSError!) {
             print("WebSocket failed")
             state = .Closed
-            conn!.state = .Closed
-            conn!.webSocketDelegate?.webSocket?(webSocket, didFailWithError: error)
+            conn.state = .Closed
+            conn.webSocketDelegate?.webSocket?(webSocket, didFailWithError: error)
         }
         
         func webSocket(webSocket: SRWebSocket!, didReceivePong pongPayload: NSData!) {
             // TODO
-            conn!.webSocketDelegate?.webSocket?(webSocket, didReceivePong: pongPayload)
+            conn.webSocketDelegate?.webSocket?(webSocket, didReceivePong: pongPayload)
         }
         
         func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
             // TODO
-            conn!.webSocketDelegate?.webSocket(webSocket, didReceiveMessage: message)
+            conn.webSocketDelegate?.webSocket(webSocket, didReceiveMessage: message)
         }
         
         func webSocket(webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
             // TODO
-            conn!.webSocketDelegate?.webSocket?(webSocket, didCloseWithCode: code, reason: reason, wasClean: wasClean)
+            conn.webSocketDelegate?.webSocket?(webSocket, didCloseWithCode: code, reason: reason, wasClean: wasClean)
         }
         
         // MARK: RTCPeerConnection Delegate
         
         func peerConnection(peerConnection: RTCPeerConnection, didChangeSignalingState stateChanged: RTCSignalingState) {
             // TODO
-            conn!.peerConnectionDelegate?
+            conn.peerConnectionDelegate?
                 .peerConnection(peerConnection, didChangeSignalingState: stateChanged)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didAddStream stream: RTCMediaStream) {
             // TODO
-            conn!.peerConnectionDelegate?
+            conn.peerConnectionDelegate?
                 .peerConnection(peerConnection, didAddStream: stream)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didRemoveStream stream: RTCMediaStream) {
             // TODO
-            conn!.peerConnectionDelegate?
+            conn.peerConnectionDelegate?
                 .peerConnection(peerConnection, didRemoveStream: stream)
         }
         
         func peerConnectionShouldNegotiate(peerConnection: RTCPeerConnection) {
             // TODO
-            conn!.peerConnectionDelegate?.peerConnectionShouldNegotiate(peerConnection)
+            conn.peerConnectionDelegate?.peerConnectionShouldNegotiate(peerConnection)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didChangeIceConnectionState newState: RTCIceConnectionState) {
             // TODO
-            conn!.peerConnectionDelegate?
+            conn.peerConnectionDelegate?
                 .peerConnection(peerConnection, didChangeIceConnectionState: newState)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didChangeIceGatheringState newState: RTCIceGatheringState) {
             // TODO
-            conn!.peerConnectionDelegate?
+            conn.peerConnectionDelegate?
                 .peerConnection(peerConnection, didChangeIceGatheringState: newState)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didGenerateIceCandidate candidate: RTCIceCandidate) {
             // TODO
-            conn!.peerConnectionDelegate?
+            conn.peerConnectionDelegate?
                 .peerConnection(peerConnection, didGenerateIceCandidate: candidate)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didRemoveIceCandidates candidates: [RTCIceCandidate]) {
             // TODO
-            conn!.peerConnectionDelegate?
+            conn.peerConnectionDelegate?
                 .peerConnection(peerConnection, didRemoveIceCandidates: candidates)
         }
         
         func peerConnection(peerConnection: RTCPeerConnection, didOpenDataChannel dataChannel: RTCDataChannel) {
             // TODO
-            conn!.peerConnectionDelegate?
+            conn.peerConnectionDelegate?
                 .peerConnection(peerConnection, didOpenDataChannel: dataChannel)
         }
         
