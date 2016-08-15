@@ -4,12 +4,12 @@ import SocketRocket
 
 public protocol ConnectionDelegate {
     
-    func didFail(connection: Connection, error: NSError) -> ()
-    func didChangeState(connection: Connection, state: Connection.State) -> ()
-    func didSendConnectRequest(connection: Connection, request: ConnectRequest) -> ()
-    func didReceiveOfferResponse(connection: Connection, response: OfferResponse) -> ()
-    func didSendAnswerRequest(connection: Connection, request: AnswerRequest) -> ()
-    func didSendCandidate(connection: Connection, candidate: RTCIceCandidate) -> ()
+    func didFail(connection: Connection, error: NSError)
+    func didChangeState(connection: Connection, state: Connection.State)
+    func didSendSignalingConnect(connection: Connection, message: Signaling.Connect)
+    func didReceiveSignalingOffer(connection: Connection, message: Signaling.Offer)
+    func didSendSignalingAnswer(connection: Connection, message: Signaling.Answer)
+    func didSendCandidate(connection: Connection, candidate: RTCIceCandidate)
 
 }
 
@@ -148,9 +148,9 @@ public struct Connection {
     /**
      サーバーに接続します。
      
-     @param connectRequest connect シグナリングメッセージ
+     @param connect connect シグナリングメッセージ
      */
-    public mutating func open(request: ConnectRequest) {
+    public mutating func open(message: Signaling.Connect) {
         // TODO
         webSocket.delegate = context
         webSocket.open()
@@ -181,10 +181,14 @@ public struct Connection {
             case PeerOpen
         }
         
-        var conn: Connection! = nil
+        var conn: Connection
         var state: State = .Closed
         
-        func sendConnectReuest(request: ConnectRequest) {
+        init(connection: Connection) {
+            conn = connection
+        }
+        
+        func sendSignalingConnect(connect: Signaling.Connect) {
             // TODO:
         }
         
