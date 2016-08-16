@@ -22,10 +22,22 @@
 
 /* Begin PBXBuildFile section */
 		91192F741D598E4600F92D78 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91192F731D598E4600F92D78 /* Message.swift */; };
+		914CE9301D5F0C390013E795 /* Argo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; };
+		914CE9311D5F0C490013E795 /* Argo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; };
+		914CE9321D5F0C530013E795 /* Argo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		91715A7B1D5DB3B50004C995 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
+		91715A821D5DED6C0004C995 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; };
+		91715A841D5DF24B0004C995 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		91715A851D5DF2570004C995 /* WebRTC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		91715A861D5DF25B0004C995 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9182018D1D58623400178E2B /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9182018C1D58623400178E2B /* Connection.swift */; };
 		918201921D58668E00178E2B /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; };
 		918201931D58668E00178E2B /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
 		918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; };
+		91C465591D633A1E00AD9C28 /* Runes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; };
+		91C4655A1D633A1E00AD9C28 /* Curry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C465581D633A1E00AD9C28 /* Curry.framework */; };
+		91C4655B1D633A3D00AD9C28 /* Runes.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		91C4655C1D633A3D00AD9C28 /* Curry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465581D633A1E00AD9C28 /* Curry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91C7B08D1D54636A006F5FA2 /* Sora.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C7B08C1D54636A006F5FA2 /* Sora.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91C7B0941D54636A006F5FA2 /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C7B0891D54636A006F5FA2 /* Sora.framework */; };
 		91C7B0991D54636A006F5FA2 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C7B0981D54636A006F5FA2 /* SoraTests.swift */; };
@@ -42,12 +54,33 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		91715A831D5DF22F0004C995 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				91C4655B1D633A3D00AD9C28 /* Runes.framework in CopyFiles */,
+				91C4655C1D633A3D00AD9C28 /* Curry.framework in CopyFiles */,
+				914CE9321D5F0C530013E795 /* Argo.framework in CopyFiles */,
+				91715A861D5DF25B0004C995 /* SocketRocket.framework in CopyFiles */,
+				91715A851D5DF2570004C995 /* WebRTC.framework in CopyFiles */,
+				91715A841D5DF24B0004C995 /* Result.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		91192F731D598E4600F92D78 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		914CE92F1D5F0C390013E795 /* Argo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Argo.framework; path = Carthage/Build/iOS/Argo.framework; sourceTree = "<group>"; };
 		9182018C1D58623400178E2B /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		9182018F1D58668E00178E2B /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		918201901D58668E00178E2B /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = Carthage/Build/iOS/WebRTC.framework; sourceTree = "<group>"; };
 		918201911D58668E00178E2B /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
+		91C465571D633A1E00AD9C28 /* Runes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Runes.framework; path = Carthage/Build/iOS/Runes.framework; sourceTree = "<group>"; };
+		91C465581D633A1E00AD9C28 /* Curry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Curry.framework; path = Carthage/Build/iOS/Curry.framework; sourceTree = "<group>"; };
 		91C7B0891D54636A006F5FA2 /* Sora.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sora.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		91C7B08C1D54636A006F5FA2 /* Sora.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sora.h; sourceTree = "<group>"; };
 		91C7B08E1D54636A006F5FA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -64,7 +97,10 @@
 			files = (
 				918201921D58668E00178E2B /* Result.framework in Frameworks */,
 				918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */,
+				91C4655A1D633A1E00AD9C28 /* Curry.framework in Frameworks */,
 				918201931D58668E00178E2B /* WebRTC.framework in Frameworks */,
+				91C465591D633A1E00AD9C28 /* Runes.framework in Frameworks */,
+				914CE9301D5F0C390013E795 /* Argo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,7 +108,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91715A821D5DED6C0004C995 /* Result.framework in Frameworks */,
 				91C7B0941D54636A006F5FA2 /* Sora.framework in Frameworks */,
+				91715A7B1D5DB3B50004C995 /* WebRTC.framework in Frameworks */,
+				914CE9311D5F0C490013E795 /* Argo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +121,9 @@
 		9182018E1D58667600178E2B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				91C465571D633A1E00AD9C28 /* Runes.framework */,
+				91C465581D633A1E00AD9C28 /* Curry.framework */,
+				914CE92F1D5F0C390013E795 /* Argo.framework */,
 				9182018F1D58668E00178E2B /* Result.framework */,
 				918201901D58668E00178E2B /* WebRTC.framework */,
 				918201911D58668E00178E2B /* SocketRocket.framework */,
@@ -177,6 +219,7 @@
 				91C7B08F1D54636A006F5FA2 /* Sources */,
 				91C7B0901D54636A006F5FA2 /* Frameworks */,
 				91C7B0911D54636A006F5FA2 /* Resources */,
+				91715A831D5DF22F0004C995 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -271,6 +314,7 @@
 			inputPaths = (
 			);
 			outputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/WebRTC.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -423,6 +467,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -446,6 +491,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -462,6 +508,11 @@
 		91C7B0A11D54636A006F5FA2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SoraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
@@ -472,6 +523,11 @@
 		91C7B0A21D54636A006F5FA2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SoraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.shiguredo.SoraTests;
