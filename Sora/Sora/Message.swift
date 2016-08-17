@@ -4,17 +4,6 @@ import Argo
 import Curry
 import Runes
 
-func CreateJSONString(obj: AnyObject) -> String {
-    return try! String(data: NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions(rawValue: 0)),
-                       encoding: NSUTF8StringEncoding)!
-}
-
-public protocol JSONEncodable {
-    
-    func JSONString() -> String
-
-}
-
 public enum Config<T: JSONEncodable> {
     
     case Default
