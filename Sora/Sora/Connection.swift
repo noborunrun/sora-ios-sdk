@@ -157,8 +157,10 @@ public struct Connection {
     }
     
     /** サーバーとの接続を閉じます。 */
-    public func close() {
-        // TODO
+    public mutating func close() {
+        context = nil
+        webSocket.delegate = nil
+        webSocket.close()
     }
     
     /**
