@@ -143,9 +143,14 @@ public enum Signaling {
     
     public struct Offer {
         
-        public var clientId: String
-        public var SDP: String
-        public var config: [String: String]
+        public var type: String
+        public var client_id: String
+        public var sdp: String
+        //public var config: [String: String]?
+        
+        public func sessionDescription() -> RTCSessionDescription {
+            return RTCSessionDescription(type: RTCSdpType.Offer, sdp: sdp)
+        }
         
     }
     
@@ -229,6 +234,18 @@ extension Signaling.Audio: Decodable {
     public static func decode(j: JSON) -> Decoded<Signaling.Audio> {
         return curry(Signaling.Audio.init)
             <^> j <| "codec_type"
+    }
+    
+}
+
+extension Signaling.Offer: Decodable {
+    
+    public static func decode(j: JSON) -> Decoded<Signaling.Offer> {
+        return curry(Signaling.Offer.init)
+            <^> j <| "type"
+            <*> j <| "client_id"
+            <*> j <| "sdp"
+            //<*> j <|? "config"
     }
     
 }
