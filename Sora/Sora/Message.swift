@@ -118,6 +118,9 @@ public enum Signaling {
         public var accessToken: String?
         public var video: Config<Video> = Config.Default
         public var audio: Config<Audio> = Config.Default
+        public var answerConstraints: RTCMediaConstraints =
+            RTCMediaConstraints(mandatoryConstraints: [:],
+                                optionalConstraints: [:])
         
         init(role: Role, channelId: String, accessToken: String?) {
             self.role = role
@@ -154,7 +157,16 @@ public enum Signaling {
         
     }
     
-    public struct Answer {
+    public struct Answer: JSONEncodable {
+        
+        public var SDP: RTCSessionDescription
+        
+        public func JSONString() -> String {
+            let dict = NSMutableDictionary()
+            dict["type"] = "answer"
+            dict["sdp"] = SDP.sdp
+            return CreateJSONString(dict)
+        }
         
     }
     

@@ -1,6 +1,7 @@
 import Foundation
 import WebRTC
 import SocketRocket
+import Argo
 
 public protocol ConnectionDelegate {
     
@@ -10,6 +11,7 @@ public protocol ConnectionDelegate {
     func didReceiveSignalingOffer(connection: Connection, message: Signaling.Offer)
     func didSendSignalingAnswer(connection: Connection, message: Signaling.Answer)
     func didSendCandidate(connection: Connection, candidate: RTCIceCandidate)
+    //func didReceiveNotification(connection: Connection, message: String)
 
 }
 
@@ -45,8 +47,21 @@ public struct Connection {
     public enum ErrorCode: Int {
         /** 内部エラー */
         case InvalidState = 0
+        
+        /** RTCPeerConnection のエラー */
+        case PeerConnection
+        
+        /** SRWebSocket のエラー */
+        case WebSocket
+        
     }
 
+    public enum ErrorKey: String {
+        
+        case Wrap = "Wrap"
+        
+    }
+    
     static let errorDomain = "Sora.Connection"
 
     /** Sora サーバーの URL */
@@ -149,9 +164,10 @@ public struct Connection {
      
      @param connect connect シグナリングメッセージ
      */
-    public mutating func open(message: Signaling.Connect) {
-        // TODO
-        context = Context(connection: self)
+    public mutating func open(message: Signaling.Connect,
+                              completionHandler: ((NSError?) -> ())?) {
+        context = Context(connection: self, message: message,
+                          completionHandler: completionHandler)
         webSocket.delegate = context
         webSocket.open()
     }
@@ -185,28 +201,39 @@ public struct Connection {
         
         var conn: Connection
         var state: State = .Closed
+        var sigConnect: Signaling.Connect
+        var completionHandler: ((NSError?) -> ())?
         
-        init(connection: Connection) {
+        init(connection: Connection, message: Signaling.Connect, completionHandler: ((NSError?) -> ())?) {
             conn = connection
+            sigConnect = message
+            self.completionHandler = completionHandler
         }
         
-        func sendSignalingConnect(connect: Signaling.Connect) {
-            // TODO:
+        func wrapError(code: ErrorCode, error: NSError) -> NSError {
+            return NSError(domain: errorDomain,
+                           code: code.rawValue,
+                           userInfo: [ErrorKey.Wrap.rawValue: error])
+        }
+        
+        func wrapFail(code: ErrorCode, error: NSError) {
+            let wrap = wrapError(code, error: error)
+            completionHandler?(wrap)
         }
         
         // MARK: SRWebSocket Delegate
         
         func webSocketDidOpen(webSocket: SRWebSocket!) {
-            // TODO
             print("WebSocket open")
             conn.webSocketDelegate?.webSocketDidOpen?(webSocket)
-            
             switch state {
             case .Closed:
-                // TODO
-                state = .Open
-                break
+                state = .Connecting
+                let json = sigConnect.JSONString()
+                print(json)
+                webSocket.send(json)
             default:
+                state = .Open
                 let error = NSError(domain: errorDomain,
                                     code: ErrorCode.InvalidState.rawValue,
                                     userInfo: nil)
@@ -218,6 +245,7 @@ public struct Connection {
             print("WebSocket failed")
             state = .Closed
             conn.state = .Closed
+            conn.delegate?.didFail(conn, error: error)
             conn.webSocketDelegate?.webSocket?(webSocket, didFailWithError: error)
         }
         
@@ -228,7 +256,72 @@ public struct Connection {
         
         func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
             // TODO
-            conn.webSocketDelegate?.webSocket(webSocket, didReceiveMessage: message)
+            print("WebSocket receive message")
+            if let s = message as? String {
+                if let json = ParseJSONData(s) {
+                    switch json["type"] as? String {
+                    case "pong"?:
+                        print("ping pong")
+                        return
+                    default:
+                        break
+                    }
+                    
+                    switch state {
+                    case .Connecting:
+                        // TODO
+                        if let offer: Signaling.Offer = decode(json) {
+                            receiveSignalingOffer(webSocket, message: offer)
+                        }
+                        break
+                    default:
+                        // do nothing
+                        break
+                    }
+                }
+                conn.webSocketDelegate?.webSocket(webSocket, didReceiveMessage: message)
+            }
+        }
+        
+        func receiveSignalingOffer(webSocket: SRWebSocket, message: Signaling.Offer) {
+            // TODO: config
+            conn.delegate?.didReceiveSignalingOffer(conn, message: message)
+            state = .CreatingAnswer
+            
+            print("set remote description")
+            conn.peerConnection
+                .setRemoteDescription(message.sessionDescription()) {
+                (error: NSError?) -> () in
+                if let error = error {
+                    self.wrapFail(ErrorCode.PeerConnection, error: error)
+                    return
+                }
+            }
+            
+            print("create answer")
+            conn.peerConnection.answerForConstraints(sigConnect.answerConstraints) {
+                    (sdp: RTCSessionDescription?, error: NSError?) -> () in
+                if let error = error {
+                    self.wrapFail(ErrorCode.PeerConnection, error: error)
+                    return
+                } else if let sdp = sdp {
+                    self.sendSignalingAnswer(webSocket, SDP: sdp)
+                }
+            }
+        }
+        
+        func sendSignalingAnswer(webSocket: SRWebSocket, SDP: RTCSessionDescription) {
+            print("set local description")
+            conn.peerConnection.setLocalDescription(SDP) {
+                (error: NSError?) -> () in
+                if let error = error {
+                    self.wrapFail(ErrorCode.PeerConnection, error: error)
+                    return
+                }
+            }
+            print("send answer")
+            let answer = Signaling.Answer(SDP: SDP)
+            webSocket.send(answer.JSONString())
         }
         
         func webSocket(webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
