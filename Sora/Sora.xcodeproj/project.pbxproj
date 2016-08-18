@@ -38,6 +38,7 @@
 		91C4655A1D633A1E00AD9C28 /* Curry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C465581D633A1E00AD9C28 /* Curry.framework */; };
 		91C4655B1D633A3D00AD9C28 /* Runes.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91C4655C1D633A3D00AD9C28 /* Curry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465581D633A1E00AD9C28 /* Curry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C4655D1D6376AC00AD9C28 /* JSON.swift */; };
 		91C7B08D1D54636A006F5FA2 /* Sora.h in Headers */ = {isa = PBXBuildFile; fileRef = 91C7B08C1D54636A006F5FA2 /* Sora.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91C7B0941D54636A006F5FA2 /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C7B0891D54636A006F5FA2 /* Sora.framework */; };
 		91C7B0991D54636A006F5FA2 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C7B0981D54636A006F5FA2 /* SoraTests.swift */; };
@@ -81,6 +82,7 @@
 		918201911D58668E00178E2B /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		91C465571D633A1E00AD9C28 /* Runes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Runes.framework; path = Carthage/Build/iOS/Runes.framework; sourceTree = "<group>"; };
 		91C465581D633A1E00AD9C28 /* Curry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Curry.framework; path = Carthage/Build/iOS/Curry.framework; sourceTree = "<group>"; };
+		91C4655D1D6376AC00AD9C28 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		91C7B0891D54636A006F5FA2 /* Sora.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sora.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		91C7B08C1D54636A006F5FA2 /* Sora.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sora.h; sourceTree = "<group>"; };
 		91C7B08E1D54636A006F5FA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				91C7B08E1D54636A006F5FA2 /* Info.plist */,
 				9182018C1D58623400178E2B /* Connection.swift */,
 				91192F731D598E4600F92D78 /* Message.swift */,
+				91C4655D1D6376AC00AD9C28 /* JSON.swift */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */,
 				9182018D1D58623400178E2B /* Connection.swift in Sources */,
 				91192F741D598E4600F92D78 /* Message.swift in Sources */,
 			);
