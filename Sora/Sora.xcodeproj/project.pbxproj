@@ -25,6 +25,12 @@
 		914CE9301D5F0C390013E795 /* Argo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; };
 		914CE9311D5F0C490013E795 /* Argo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; };
 		914CE9321D5F0C530013E795 /* Argo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		916C1EB11D65FE9800B00943 /* WebRTC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		916C1EB21D65FEA600B00943 /* Runes.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		916C1EB31D65FEA600B00943 /* Curry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465581D633A1E00AD9C28 /* Curry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		916C1EB41D65FEA600B00943 /* Argo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		916C1EB51D65FEA600B00943 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		916C1EB61D65FEA700B00943 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91715A7B1D5DB3B50004C995 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
 		91715A821D5DED6C0004C995 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; };
 		91715A841D5DF24B0004C995 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -56,6 +62,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		916C1EB01D65FE8800B00943 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				916C1EB21D65FEA600B00943 /* Runes.framework in CopyFiles */,
+				916C1EB31D65FEA600B00943 /* Curry.framework in CopyFiles */,
+				916C1EB41D65FEA600B00943 /* Argo.framework in CopyFiles */,
+				916C1EB51D65FEA600B00943 /* Result.framework in CopyFiles */,
+				916C1EB61D65FEA700B00943 /* SocketRocket.framework in CopyFiles */,
+				916C1EB11D65FE9800B00943 /* WebRTC.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		91715A831D5DF22F0004C995 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -205,6 +226,7 @@
 				91C7B0861D54636A006F5FA2 /* Headers */,
 				91C7B0871D54636A006F5FA2 /* Resources */,
 				91192F751D59BB9200F92D78 /* ShellScript */,
+				916C1EB01D65FE8800B00943 /* CopyFiles */,
 			);
 			buildRules = (
 			);
