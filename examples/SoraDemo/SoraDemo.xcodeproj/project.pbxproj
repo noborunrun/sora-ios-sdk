@@ -20,9 +20,9 @@
 		915F7B2A1CF57D3800F3DE9A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B241CF57D1500F3DE9A /* CoreMedia.framework */; };
 		915F7B2B1CF57D4200F3DE9A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B221CF57D0500F3DE9A /* AVFoundation.framework */; };
 		915F7B2F1CF57D5D00F3DE9A /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B2E1CF57D5D00F3DE9A /* VideoToolbox.framework */; };
-		918EC0D61D377BC0006E769A /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 915F7B131CF5776500F3DE9A /* Sora.framework */; };
 		91AF4C471D473DC70026454A /* LocalVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AF4C461D473DC70026454A /* LocalVideoViewController.swift */; };
 		91C8AD211D66ED9900CCECE3 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 91C8AD201D66ED9900CCECE3 /* Cartfile */; };
+		91C8AD251D676A3000CCECE3 /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C8AD241D676A3000CCECE3 /* Sora.framework */; };
 		91D33B901D38CD2200D2BD11 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D33B8F1D38CD2200D2BD11 /* libc++.tbd */; };
 		91D33B911D38CD2D00D2BD11 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D33B8D1D38CD0A00D2BD11 /* libstdc++.tbd */; };
 /* End PBXBuildFile section */
@@ -35,7 +35,6 @@
 		915F7B071CF5748200F3DE9A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		915F7B0A1CF5748200F3DE9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		915F7B0C1CF5748200F3DE9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		915F7B131CF5776500F3DE9A /* Sora.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sora.framework; path = SoraDemo/Sora.framework; sourceTree = "<group>"; };
 		915F7B151CF5785600F3DE9A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		915F7B171CF5785D00F3DE9A /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		915F7B191CF5786500F3DE9A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -50,6 +49,7 @@
 		915F7B2E1CF57D5D00F3DE9A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		91AF4C461D473DC70026454A /* LocalVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalVideoViewController.swift; sourceTree = "<group>"; };
 		91C8AD201D66ED9900CCECE3 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		91C8AD241D676A3000CCECE3 /* Sora.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sora.framework; path = Carthage/Build/iOS/Sora.framework; sourceTree = "<group>"; };
 		91D33B8D1D38CD0A00D2BD11 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		91D33B8F1D38CD2200D2BD11 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -62,9 +62,9 @@
 				91D33B901D38CD2200D2BD11 /* libc++.tbd in Frameworks */,
 				915F7B2F1CF57D5D00F3DE9A /* VideoToolbox.framework in Frameworks */,
 				915F7B2B1CF57D4200F3DE9A /* AVFoundation.framework in Frameworks */,
+				91C8AD251D676A3000CCECE3 /* Sora.framework in Frameworks */,
 				915F7B2A1CF57D3800F3DE9A /* CoreMedia.framework in Frameworks */,
 				915F7B291CF57D2F00F3DE9A /* AudioToolbox.framework in Frameworks */,
-				918EC0D61D377BC0006E769A /* Sora.framework in Frameworks */,
 				915F7B1D1CF57CD600F3DE9A /* libicucore.tbd in Frameworks */,
 				91D33B911D38CD2D00D2BD11 /* libstdc++.tbd in Frameworks */,
 				915F7B1A1CF5786500F3DE9A /* Security.framework in Frameworks */,
@@ -114,6 +114,7 @@
 			children = (
 				91D33B8F1D38CD2200D2BD11 /* libc++.tbd */,
 				91D33B8D1D38CD0A00D2BD11 /* libstdc++.tbd */,
+				915F7B1C1CF57CD600F3DE9A /* libicucore.tbd */,
 				915F7B281CF57D2F00F3DE9A /* AudioToolbox.framework */,
 				915F7B221CF57D0500F3DE9A /* AVFoundation.framework */,
 				915F7B1E1CF57CED00F3DE9A /* AVKit.framework */,
@@ -123,9 +124,8 @@
 				915F7B151CF5785600F3DE9A /* Foundation.framework */,
 				915F7B261CF57D1E00F3DE9A /* MediaToolbox.framework */,
 				915F7B191CF5786500F3DE9A /* Security.framework */,
-				915F7B131CF5776500F3DE9A /* Sora.framework */,
 				915F7B2E1CF57D5D00F3DE9A /* VideoToolbox.framework */,
-				915F7B1C1CF57CD600F3DE9A /* libicucore.tbd */,
+				91C8AD241D676A3000CCECE3 /* Sora.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -334,6 +334,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SoraDemo",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = SoraDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -359,6 +360,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SoraDemo",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = SoraDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
