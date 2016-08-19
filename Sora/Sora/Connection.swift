@@ -163,6 +163,7 @@ public struct Connection {
      サーバーに接続します。
      
      @param connect connect シグナリングメッセージ
+     @param completionHandler 接続処理終了時に実行されるクロージャー
      */
     public mutating func open(message: Signaling.Connect,
                               completionHandler: ((NSError?) -> ())?) {
