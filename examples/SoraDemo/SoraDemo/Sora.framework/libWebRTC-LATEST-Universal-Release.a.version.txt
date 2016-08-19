@@ -1,2 +1,0 @@
-The libWebRTC-LATEST-Universal-Release.a in this same directory, is revision 
-12283

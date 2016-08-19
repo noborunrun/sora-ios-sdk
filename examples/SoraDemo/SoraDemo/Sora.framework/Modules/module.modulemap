@@ -1,6 +1,0 @@
-framework module Sora {
-  umbrella header "Sora.h"
-
-  export *
-  module * { export * }
-}
