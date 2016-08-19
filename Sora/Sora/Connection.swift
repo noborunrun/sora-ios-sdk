@@ -179,15 +179,6 @@ public struct Connection {
         webSocket.close()
     }
     
-    /**
-     シグナリングメッセージを送信します。
-     
-     @param message 送信するシグナリングメッセージ
-     */
-    public func send(message: String) {
-        // TODO
-    }
-    
     class Context: NSObject, RTCPeerConnectionDelegate, SRWebSocketDelegate {
         
         enum State {
