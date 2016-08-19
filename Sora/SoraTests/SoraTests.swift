@@ -53,8 +53,7 @@ class SoraTests: XCTestCase {
         let message = Signaling.Connect(role: Signaling.Role.Downstream,
                                         channelId: "sora",
                                         accessToken: nil)
-        conn.open(message) {
-            (error: NSError?) -> () in
+        conn.open(message) { (error: NSError?) -> () in
             print("connection open", error)
         }
     }
