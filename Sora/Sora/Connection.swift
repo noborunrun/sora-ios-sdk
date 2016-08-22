@@ -3,18 +3,6 @@ import WebRTC
 import SocketRocket
 import Argo
 
-public protocol ConnectionDelegate {
-    
-    func didFail(connection: Connection, error: NSError)
-    func didChangeState(connection: Connection, state: Connection.State)
-    func didSendSignalingConnect(connection: Connection, message: Signaling.Connect)
-    func didReceiveSignalingOffer(connection: Connection, message: Signaling.Offer)
-    func didSendSignalingAnswer(connection: Connection, message: Signaling.Answer)
-    func didSendCandidate(connection: Connection, candidate: RTCIceCandidate)
-    //func didReceiveNotification(connection: Connection, message: String)
-
-}
-
 /**
  Sora サーバーとシグナリング接続を行います。
  Sora サーバーでは、シグナリングは WebSocket で JSON フォーマットのメッセージを介して行います。
@@ -71,7 +59,7 @@ public struct Connection {
     public var state: State = .Closed {
         
         didSet {
-            delegate?.didChangeState(self, state: state)
+            _onChangeState?(state)
         }
         
     }
@@ -117,9 +105,6 @@ public struct Connection {
      このプロパティに `webSocket` のデリゲートをセットしてください。
      */
     public var webSocketDelegate: SRWebSocketDelegate?
-
-    /** デリゲート */
-    public var delegate: ConnectionDelegate?
     
     var context: Context?
 
@@ -192,7 +177,40 @@ public struct Connection {
     public mutating func removeRemoteVideoRenderer(renderer: RTCVideoRenderer) {
         remoteVideoRenderers = remoteVideoRenderers.filter { !$0.isEqual(renderer) }
     }
- 
+    
+    // MARK: Callbacks
+    
+    var _onFail: ((NSError) -> ())?
+    var _onChangeState: ((Connection.State) -> ())?
+    var _onSendSignalingConnect: ((Signaling.Connect) -> ())?
+    var _onReceiveSignalingOffer: ((Signaling.Offer) -> ())?
+    var _onSendSignalingAnswer: ((Signaling.Answer) -> ())?
+    var _onReceiveCandidate: ((RTCIceCandidate) -> ())?
+    
+    mutating func onFail(callback: (NSError) -> ()) {
+        _onFail = callback
+    }
+    
+    mutating func onChangeState(callback: (Connection.State) -> ()) {
+        _onChangeState = callback
+    }
+    
+    mutating func onSendSignalingConnect(callback: (Signaling.Connect) -> ()) {
+        _onSendSignalingConnect = callback
+    }
+    
+    mutating func onReceiveSignalingOffer(callback: (Signaling.Offer) -> ()) {
+        _onReceiveSignalingOffer = callback
+    }
+    
+    mutating func onSendSignalingAnswer(callback: (Signaling.Answer) -> ()) {
+        _onSendSignalingAnswer = callback
+    }
+    
+    mutating func onReceiveCandidate(callback: (RTCIceCandidate) -> ()) {
+        _onReceiveCandidate = callback
+    }
+    
     class Context: NSObject, RTCPeerConnectionDelegate, SRWebSocketDelegate {
         
         enum State {
@@ -242,7 +260,7 @@ public struct Connection {
                 let error = NSError(domain: errorDomain,
                                     code: ErrorCode.InvalidState.rawValue,
                                     userInfo: nil)
-                conn.delegate?.didFail(conn, error: error)
+                conn._onFail?(error)
             }
         }
         
@@ -250,7 +268,7 @@ public struct Connection {
             print("WebSocket failed")
             state = .Closed
             conn.state = .Closed
-            conn.delegate?.didFail(conn, error: error)
+            conn._onFail?(error)
             conn.webSocketDelegate?.webSocket?(webSocket, didFailWithError: error)
         }
         
@@ -290,7 +308,7 @@ public struct Connection {
         
         func receiveSignalingOffer(webSocket: SRWebSocket, message: Signaling.Offer) {
             // TODO: config
-            conn.delegate?.didReceiveSignalingOffer(conn, message: message)
+            conn._onReceiveSignalingOffer?(message)
             state = .CreatingAnswer
             
             print("set remote description")
