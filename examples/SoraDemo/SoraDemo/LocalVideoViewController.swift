@@ -1,12 +1,14 @@
 import Foundation
 import AVFoundation
+import UIKit
+import Sora
 
 class LocalVideoViewController : UIViewController {
     
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var switchRemoteVideoButton: UIButton!
     
-    var connection: SoraConnection!
+    var connection: Sora.Connection!
     weak var remoteVideoViewController: RemoteVideoViewController!
     var cameraInput: AVCaptureDeviceInput!
     var cameraOutput: AVCaptureVideoDataOutput!
