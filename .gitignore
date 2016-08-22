@@ -54,6 +54,8 @@ Cartfile.resolved
 Carthage/Build
 Sora/Carthage/Build
 Sora/Carthage/Checkouts
+examples/SoraDemo/Carthage/Build
+examples/SoraDemo/Carthage/Checkouts
 
 # fastlane
 #

@@ -1,4 +1,6 @@
 import UIKit
+import WebRTC
+import Sora
 
 class RemoteVideoViewController: UIViewController {
 
@@ -18,8 +20,8 @@ class RemoteVideoViewController: UIViewController {
     @IBOutlet weak var connectingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var switchCameraButton: UIButton!
     
-    var upstream: SoraConnection!
-    var downstream: SoraConnection!
+    var upstream: Sora.Connection!
+    var downstream: Sora.Connection!
     var port: String!
     var state: State
     var touchedField: UITextField!
@@ -133,28 +135,32 @@ class RemoteVideoViewController: UIViewController {
             return
         }
         
-        NSLog("create SoraConnection")
+        NSLog("create Sora.Connection")
         let s = NSString.init(format: "ws://%@:%@/signaling",
                               URLField.text!, portField.text!) as String
         let URL = NSURL(string: s)!
         let channelId = ChannelIdField.text!
         
         // upstream
-        upstream = SoraConnection(URL: URL)
+        upstream = Sora.Connection(URL: URL, config: nil, constraints: nil)
         upstreamDelegate = UpstreamDelegate(viewController: self)
         upstream.delegate = upstreamDelegate
-        let upstreamReq = SoraConnectRequest(role: SoraRole.Upstream, channelId: channelId, accessToken: nil)
-        upstream.open(upstreamReq!)
+        let upSigConnect = Sora.Signaling.Connect(role: Sora.Signaling.Role.Upstream,
+                                                 channelId: channelId,
+                                                 accessToken: nil)
+        upstream.open(upSigConnect) { (error: NSError?) -> () in return }
         
         // downstream
-        downstream = SoraConnection(URL: URL)
+        downstream = Sora.Connection(URL: URL, config: nil, constraints: nil)
         downstreamDelegate = DownstreamDelegate(viewController: self)
         downstream.delegate = downstreamDelegate
         //remoteView!.setSize(CGSizeMake(320, 240))
         downstream.addRemoteVideoRenderer(remoteView!)
         
-        let req = SoraConnectRequest(role: SoraRole.Downstream, channelId: channelId, accessToken: nil)
-        downstream.open(req!)
+        let downSigConnect = Sora.Signaling.Connect(role: Sora.Signaling.Role.Downstream,
+                                         channelId: channelId,
+                                         accessToken: nil)
+        downstream.open(downSigConnect) { (error: NSError?) -> () in return }
     }
     
     func finishConnect() {
@@ -249,7 +255,7 @@ class RemoteVideoViewController: UIViewController {
     
 }
 
-class UpstreamDelegate: NSObject, SoraConnectionDelegate {
+class UpstreamDelegate: NSObject, Sora.ConnectionDelegate {
     
     var viewController: RemoteVideoViewController
     
@@ -257,18 +263,20 @@ class UpstreamDelegate: NSObject, SoraConnectionDelegate {
         self.viewController = viewController
     }
     
-    @objc func connection(connection: SoraConnection, didFailWithError error: NSError) {
-        print("UpstreamDelegate connection:didFailWithError:")
+    func didFail(connection: Sora.Connection, error: NSError) {
+        print("UpstreamDelegate didFail")
     }
-    
-    @objc func connection(connection: SoraConnection, didReceiveErrorResponse response: SoreErrorResponse) {
-        print("UpstreamDelegate connection:didReceiveErrorResponse:")
-    }
+
+    func didChangeState(connection: Sora.Connection, state: Sora.Connection.State) {}
+    func didSendSignalingConnect(connection: Sora.Connection, message: Sora.Signaling.Connect) {}
+    func didReceiveSignalingOffer(connection: Sora.Connection, message: Sora.Signaling.Offer) {}
+    func didSendSignalingAnswer(connection: Sora.Connection, message: Sora.Signaling.Answer) {}
+    func didSendCandidate(connection: Sora.Connection, candidate: RTCIceCandidate) {}
 
 }
 
 
-class DownstreamDelegate: NSObject, SoraConnectionDelegate {
+class DownstreamDelegate: NSObject, Sora.ConnectionDelegate {
     
     var viewController: RemoteVideoViewController
     
@@ -276,31 +284,21 @@ class DownstreamDelegate: NSObject, SoraConnectionDelegate {
         self.viewController = viewController
     }
     
-    @objc func connection(connection: SoraConnection, didFailWithError error: NSError) {
-        print("connection:didFailWithError:")
+    func didFail(connection: Sora.Connection, error: NSError) {
+        print("didFail")
     }
     
-    @objc func connection(connection: SoraConnection, didReceiveErrorResponse response: SoreErrorResponse) {
-        print("connection:didReceiveErrorResponse:")
-    }
-    
-    @objc func connectionDidOpen(connection: SoraConnection) {
-        print("connectionDidOpen")
-    }
-    
-    @objc func connection(connection: SoraConnection, didReceivePing message: AnyObject) {
-        print("connection:didReceivePing:")
-    }
-    
-    @objc func connection(connection: SoraConnection, stateChanged state: SoraConnectionState) {
-        print("connection:stateChanged:")
-        if state == SoraConnectionState.PeerOpen {
+    func didChangeState(connection: Sora.Connection, state: Sora.Connection.State) {
+        print("didChangeState")
+        if state == Sora.Connection.State.PeerOpen {
             print("peer open")
             viewController.finishConnect()
         }
     }
     
-    @objc func connection(connection: SoraConnection, numberOfDownstreamConnections numStreams: UInt) {
-        print("connection:numberOfDownstreamConnections: ", numStreams)
-    }
+    func didSendSignalingConnect(connection: Sora.Connection, message: Sora.Signaling.Connect) {}
+    func didReceiveSignalingOffer(connection: Sora.Connection, message: Sora.Signaling.Offer) {}
+    func didSendSignalingAnswer(connection: Sora.Connection, message: Sora.Signaling.Answer) {}
+    func didSendCandidate(connection: Sora.Connection, candidate: RTCIceCandidate) {}
+
 }
