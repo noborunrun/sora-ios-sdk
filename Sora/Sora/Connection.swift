@@ -180,6 +180,19 @@ public struct Connection {
         webSocket.close()
     }
     
+    public mutating func addRemoteVideoRenderer(renderer: RTCVideoRenderer) {
+        remoteVideoRenderers.append(renderer)
+        for stream in remoteStreams {
+            for track in stream.videoTracks {
+                track.addRenderer(renderer)
+            }
+        }
+    }
+    
+    public mutating func removeRemoteVideoRenderer(renderer: RTCVideoRenderer) {
+        remoteVideoRenderers = remoteVideoRenderers.filter { !$0.isEqual(renderer) }
+    }
+ 
     class Context: NSObject, RTCPeerConnectionDelegate, SRWebSocketDelegate {
         
         enum State {
