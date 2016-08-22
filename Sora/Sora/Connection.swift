@@ -131,7 +131,7 @@ public struct Connection {
      @param constraints メディアの制約
      @return 初期化済みの `Connection` オブジェクト
      */
-    init(URL: NSURL, config: RTCConfiguration?, constraints: RTCMediaConstraints?) {
+    public init(URL: NSURL, config: RTCConfiguration?, constraints: RTCMediaConstraints?) {
         self.URL = URL
         state = State.Closed
         peerConnectionFactory = RTCPeerConnectionFactory()

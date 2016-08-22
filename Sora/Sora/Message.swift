@@ -122,7 +122,7 @@ public enum Signaling {
             RTCMediaConstraints(mandatoryConstraints: [:],
                                 optionalConstraints: [:])
         
-        init(role: Role, channelId: String, accessToken: String?) {
+        public init(role: Role, channelId: String, accessToken: String?) {
             self.role = role
             self.channelId = channelId
             self.accessToken = accessToken
