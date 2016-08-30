@@ -4,26 +4,26 @@ import Argo
 import Curry
 import Runes
 
-public enum Config<T: JSONEncodable> {
+public enum JSON {
     
-    case Default
-    case Enable(T)
-    case Disable
-    
-    func JSONString() -> String! {
-        switch self {
-        case .Default:
-            return nil
-        case .Enable(let value):
-            return value.JSONString()
-        case .Disable:
-            return "false"
+    public enum Config<T> {
+        
+        case Default
+        case Enable(T)
+        case Disable
+        
+        func JSONString() -> String! {
+            switch self {
+            case .Default:
+                return nil
+            case .Enable(let value):
+                return value.JSONString()
+            case .Disable:
+                return "false"
+            }
         }
+        
     }
-    
-}
-
-public enum Signaling {
     
     public enum Role {
         
@@ -41,7 +41,7 @@ public enum Signaling {
         
     }
     
-    public enum VideoCodecType: JSONEncodable {
+    public enum VideoCodecType {
         
         case VP8
         case VP9
@@ -60,21 +60,9 @@ public enum Signaling {
         
     }
     
-    public struct Video: JSONEncodable {
+    public struct Video {
         
         var codec_type: VideoCodecType
-        
-        public var codecType: VideoCodecType {
-            
-            get {
-                return codec_type
-            }
-            
-            set(newCodecType) {
-                codec_type = newCodecType
-            }
-            
-        }
         
         public func JSONString() -> String {
             let dict = NSMutableDictionary()
@@ -85,7 +73,7 @@ public enum Signaling {
         
     }
     
-    public enum AudioCodecType: JSONEncodable {
+    public enum AudioCodecType {
         
         case Opus
         
@@ -98,7 +86,7 @@ public enum Signaling {
         
     }
     
-    public struct Audio: JSONEncodable {
+    public struct Audio {
         
         public var codec_type: AudioCodecType
         
@@ -157,15 +145,12 @@ public enum Signaling {
         
     }
     
-    public struct Answer: JSONEncodable {
+    public struct Answer {
         
         public var SDP: RTCSessionDescription
         
         public func JSONString() -> String {
-            let dict = NSMutableDictionary()
-            dict["type"] = "answer"
-            dict["sdp"] = SDP.sdp
-            return CreateJSONString(dict)
+            ["type": "answer", "sdp": self.SDP.sdp]
         }
         
     }
