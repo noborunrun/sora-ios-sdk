@@ -4,162 +4,193 @@ import Argo
 import Curry
 import Runes
 
-public enum JSON {
+protocol JSONEncodable {
     
-    public enum Config<T> {
-        
-        case Default
-        case Enable(T)
-        case Disable
-        
-        func JSONString() -> String! {
-            switch self {
-            case .Default:
-                return nil
-            case .Enable(let value):
-                return value.JSONString()
-            case .Disable:
-                return "false"
-            }
+    func encode() -> AnyObject
+    
+}
+
+enum Enable<T: JSONEncodable>: JSONEncodable {
+    
+    case Default(T)
+    case Enable(T)
+    case Disable
+    
+    func encode() -> AnyObject {
+        switch self {
+        case .Default(let value):
+            return value.encode()
+        case .Enable(let value):
+            return value.encode()
+        case .Disable:
+            return "false"
         }
-        
     }
     
-    public enum Role {
-        
-        case Upstream
-        case Downstream
-        
-        public func JSONString() -> String {
-            switch self {
-            case .Upstream:
-                return "upstream"
-            case .Downstream:
-                return "downstream"
-            }
+}
+
+enum SignalingRole {
+    
+    case Upstream
+    case Downstream
+    
+}
+
+extension SignalingRole: JSONEncodable {
+    
+    func encode() -> AnyObject {
+        switch self {
+        case .Upstream:
+            return "upstream"
+        case .Downstream:
+            return "downstream"
         }
-        
     }
     
-    public enum VideoCodecType {
-        
-        case VP8
-        case VP9
-        case H264
-        
-        public func JSONString() -> String {
-            switch self {
-            case .VP8:
-                return "VP8"
-            case .VP9:
-                return "VP9"
-            case .H264:
-                return "H264"
-            }
-        }
-        
-    }
+}
+
+enum SignalingVideoCodec {
     
-    public struct Video {
-        
-        var codec_type: VideoCodecType
-        
-        public func JSONString() -> String {
-            let dict = NSMutableDictionary()
-            dict["codec_type"] = codec_type.JSONString()
-            return try! String(data: NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions(rawValue: 0)),
-                               encoding: NSUTF8StringEncoding)!
-        }
-        
-    }
+    case VP8
+    case VP9
+    case H264
     
-    public enum AudioCodecType {
-        
-        case Opus
-        
-        public func JSONString() -> String {
-            switch self {
-            case .Opus:
-                return "OPUS"
-            }
-        }
-        
-    }
+}
+
+extension SignalingVideoCodec: JSONEncodable {
     
-    public struct Audio {
-        
-        public var codec_type: AudioCodecType
-        
-        public func JSONString() -> String {
-            let dict = NSMutableDictionary()
-            dict["codec_type"] = codec_type.JSONString()
-            return try! String(data: NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions(rawValue: 0)),
-                               encoding: NSUTF8StringEncoding)!
-        }
-        
-    }
-    
-    public struct Connect {
-        
-        public var role: Role
-        public var channelId: String
-        public var accessToken: String?
-        public var video: Config<Video> = Config.Default
-        public var audio: Config<Audio> = Config.Default
-        public var answerConstraints: RTCMediaConstraints =
-            RTCMediaConstraints(mandatoryConstraints: [:],
-                                optionalConstraints: [:])
-        
-        public init(role: Role, channelId: String, accessToken: String?) {
-            self.role = role
-            self.channelId = channelId
-            self.accessToken = accessToken
-        }
-        
-        public func JSONString() -> String {
-            let dict = NSMutableDictionary()
-            dict["type"] = "connect"
-            dict["role"] = role.JSONString()
-            dict["channel_id"] = channelId
-            if let value = accessToken {
-                dict["access_token"] = value
-            }
-            if let value = video.JSONString() {
-                dict["video"] = value
-            }
-            return CreateJSONString(dict)
-        }
-        
-    }
-    
-    public struct Offer {
-        
-        public var type: String
-        public var client_id: String
-        public var sdp: String
-        //public var config: [String: String]?
-        
-        public func sessionDescription() -> RTCSessionDescription {
-            return RTCSessionDescription(type: RTCSdpType.Offer, sdp: sdp)
-        }
-        
-    }
-    
-    public struct Answer {
-        
-        public var SDP: RTCSessionDescription
-        
-        public func JSONString() -> String {
-            ["type": "answer", "sdp": self.SDP.sdp]
+    func encode() -> AnyObject {
+        switch self {
+        case .VP8:
+            return "VP8"
+        case .VP9:
+            return "VP9"
+        case .H264:
+            return "h264"
         }
         
     }
     
 }
 
-extension Signaling.Role: Decodable {
+enum SignalingAudioCodec {
     
-    public static func decode(j: JSON) -> Decoded<Signaling.Role> {
+    case OPUS
+    case PCMU
+    
+}
+
+extension SignalingAudioCodec: JSONEncodable {
+    
+    func encode() -> AnyObject {
+        switch self {
+        case .OPUS:
+            return "OPUS"
+        case .PCMU:
+            return "PCMU"
+        }
+        
+    }
+    
+}
+
+struct SignalingVideo {
+    
+    var bit_rate: Int?
+    var codec_type: SignalingVideoCodec
+    
+}
+
+extension SignalingVideo: JSONEncodable {
+    
+    func encode() -> AnyObject {
+        var data = ["codec_type": codec_type.encode()]
+        if let value = bit_rate {
+            data["bit_rate"] = value
+        }
+        return data
+    }
+    
+}
+
+struct SignalingAudio {
+    
+    var codec_type: SignalingAudioCodec
+    
+}
+
+extension SignalingAudio: JSONEncodable {
+    
+    func encode() -> AnyObject {
+        return ["codec_type": codec_type.encode()]
+    }
+    
+}
+
+struct SignalingConnect {
+    
+    var role: SignalingRole
+    var channel_id: String
+    var access_token: String?
+    var video: SignalingVideo?
+    var audio: SignalingAudio?
+    var answerConstraints: RTCMediaConstraints =
+        RTCMediaConstraints(mandatoryConstraints: [:],
+                            optionalConstraints: [:])
+    
+    init(role: SignalingRole, channel_id: String, access_token: String? = nil) {
+        self.role = role
+        self.channel_id = channel_id
+        self.access_token = access_token
+    }
+    
+}
+
+extension SignalingConnect: JSONEncodable {
+    
+    func encode() -> AnyObject {
+        var data = ["type": "connect", "role": role.encode(), "channel_id": channel_id]
+        if let value = access_token {
+            data["access_token"] = value
+        }
+        if let value = video {
+            data["video"] = value.encode()
+        }
+        return data
+    }
+    
+}
+
+struct SignalingOffer {
+    
+    var type: String
+    var client_id: String
+    var sdp: String
+    //var Enable: [String: String]?
+    
+    func sessionDescription() -> RTCSessionDescription {
+        return RTCSessionDescription(type: RTCSdpType.Offer, sdp: sdp)
+    }
+    
+}
+
+struct SignalingAnswer {
+    
+    var sdp: String
+    
+}
+
+extension SignalingAnswer: JSONEncodable {
+    
+    func encode() -> AnyObject {
+        return ["type": "answer", "sdp": sdp]
+    }
+    
+}
+
+extension SignalingRole: Decodable {
+    
+    static func decode(j: JSON) -> Decoded<SignalingRole> {
         switch j {
         case let .String(dest):
             switch dest {
@@ -177,9 +208,9 @@ extension Signaling.Role: Decodable {
     
 }
 
-extension Signaling.VideoCodecType: Decodable {
+extension SignalingVideoCodec: Decodable {
     
-    public static func decode(j: JSON) -> Decoded<Signaling.VideoCodecType> {
+    static func decode(j: JSON) -> Decoded<SignalingVideoCodec> {
         switch j {
         case let .String(name):
             switch name {
@@ -199,23 +230,24 @@ extension Signaling.VideoCodecType: Decodable {
     
 }
 
-extension Signaling.Video: Decodable {
+extension SignalingVideo: Decodable {
     
-    public static func decode(j: JSON) -> Decoded<Signaling.Video> {
-        return curry(Signaling.Video.init)
-            <^> j <| "codec_type"
+    static func decode(j: JSON) -> Decoded<SignalingVideo> {
+        return curry(SignalingVideo.init)
+            <^> j <|? "bit_rate"
+            <*> j <| "codec_type"
     }
     
 }
 
-extension Signaling.AudioCodecType: Decodable {
+extension SignalingAudioCodec: Decodable {
     
-    public static func decode(j: JSON) -> Decoded<Signaling.AudioCodecType> {
+    static func decode(j: JSON) -> Decoded<SignalingAudioCodec> {
         switch j {
         case let .String(name):
             switch name {
             case "OPUS":
-                return pure(.Opus)
+                return pure(.OPUS)
             default:
                 return .typeMismatch("invalid audio codec type", actual: name)
             }
@@ -226,23 +258,23 @@ extension Signaling.AudioCodecType: Decodable {
     
 }
 
-extension Signaling.Audio: Decodable {
+extension SignalingAudio: Decodable {
     
-    public static func decode(j: JSON) -> Decoded<Signaling.Audio> {
-        return curry(Signaling.Audio.init)
+    static func decode(j: JSON) -> Decoded<SignalingAudio> {
+        return curry(SignalingAudio.init)
             <^> j <| "codec_type"
     }
     
 }
 
-extension Signaling.Offer: Decodable {
+extension SignalingOffer: Decodable {
     
-    public static func decode(j: JSON) -> Decoded<Signaling.Offer> {
-        return curry(Signaling.Offer.init)
+    static func decode(j: JSON) -> Decoded<SignalingOffer> {
+        return curry(SignalingOffer.init)
             <^> j <| "type"
             <*> j <| "client_id"
             <*> j <| "sdp"
-            //<*> j <|? "config"
+        //<*> j <|? "Enable"
     }
     
 }

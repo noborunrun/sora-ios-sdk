@@ -18,7 +18,8 @@ public enum VideoCodec {
 
 public enum AudioCodec {
     
-    case Opus
+    case OPUS
+    case PCMU
         
 }
 

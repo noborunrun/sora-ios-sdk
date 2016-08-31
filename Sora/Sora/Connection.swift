@@ -115,29 +115,34 @@ public struct Connection {
     
     // MARK: イベントハンドラ: Web フック
     
-    var onSignalingConnectedHandler: ((Notification.SignalingConnected) -> ())?
-    var onSignalingCompletedHandler: ((Notification.SignalingCompleted) -> ())?
-    var onSignalingDisconnectedHandler: ((Notification.SignalingDisconnected) -> ())?
-    var onArchiveFinishedHandler: ((MediaChannel, Notification.ArchiveFinished) -> ())?
-    var onArchiveFailedHandler: ((MediaChannel, Notification.ArchiveFailed) -> ())?
+    var onSignalingConnectedHandler: ((SignalingConnected) -> ())?
+    var onSignalingCompletedHandler: ((SignalingCompleted) -> ())?
+    var onSignalingDisconnectedHandler: ((SignalingDisconnected) -> ())?
+    var onSignalingFailedHandler: ((SignalingFailed) -> ())?
+    var onArchiveFinishedHandler: ((MediaChannel, ArchiveFinished) -> ())?
+    var onArchiveFailedHandler: ((MediaChannel, ArchiveFailed) -> ())?
     
-    public mutating func SignalingConnected(handler: ((Notification.SignalingConnected) -> ())) {
+    public mutating func SignalingConnected(handler: ((SignalingConnected) -> ())) {
         onSignalingConnectedHandler = handler
     }
     
-    public mutating func SignalingCompleted(handler: ((Notification.SignalingCompleted) -> ())) {
+    public mutating func SignalingCompleted(handler: ((SignalingCompleted) -> ())) {
         onSignalingCompletedHandler = handler
     }
     
-    public mutating func SignalingDisconnected(handler: ((Notification.SignalingDisconnected) -> ())) {
+    public mutating func SignalingDisconnected(handler: ((SignalingDisconnected) -> ())) {
         onSignalingDisconnectedHandler = handler
     }
     
-    public mutating func onArchiveFinished(handler: ((MediaChannel, Notification.ArchiveFinished) -> ())) {
+    public mutating func onSignalingFailedHandler(handler: ((SignalingFailed) -> ())) {
+        onSignalingFailedHandler = handler
+    }
+
+    public mutating func onArchiveFinished(handler: ((MediaChannel, ArchiveFinished) -> ())) {
         onArchiveFinishedHandler = handler
     }
     
-    public mutating func onArchiveFailed(handler: ((MediaChannel, Notification.ArchiveFailed) -> ())) {
+    public mutating func onArchiveFailed(handler: ((MediaChannel, ArchiveFailed) -> ())) {
         onArchiveFailedHandler = handler
     }
     
