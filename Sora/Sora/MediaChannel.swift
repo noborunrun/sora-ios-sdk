@@ -73,7 +73,9 @@ public struct Publisher {
     public var mediaStream: MediaStream
     public var videoRenderer: VideoRenderer?
     
-    public func switchCamera() {}
+    public func switchCamera() {
+        // TODO:
+    }
     
 }
 
@@ -81,7 +83,5 @@ public struct Subscriber {
     
     public var mediaStream: MediaStream
     public var videoRenderer: VideoRenderer?
-    
-    public var f: ((Error?) -> ()) -> ()
     
 }

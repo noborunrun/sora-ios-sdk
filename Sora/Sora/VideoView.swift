@@ -20,7 +20,6 @@ public struct VideoFormat {
     
 }
 
-
 public struct VideoView: VideoRenderer {
 
     public func renderVideoFrame(frame: VideoFrame) -> () {
