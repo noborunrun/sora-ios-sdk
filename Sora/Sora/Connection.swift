@@ -122,15 +122,15 @@ public struct Connection {
     var onArchiveFinishedHandler: ((MediaChannel, ArchiveFinished) -> ())?
     var onArchiveFailedHandler: ((MediaChannel, ArchiveFailed) -> ())?
     
-    public mutating func SignalingConnected(handler: ((SignalingConnected) -> ())) {
+    public mutating func onSignalingConnected(handler: ((SignalingConnected) -> ())) {
         onSignalingConnectedHandler = handler
     }
     
-    public mutating func SignalingCompleted(handler: ((SignalingCompleted) -> ())) {
+    public mutating func onSignalingCompleted(handler: ((SignalingCompleted) -> ())) {
         onSignalingCompletedHandler = handler
     }
     
-    public mutating func SignalingDisconnected(handler: ((SignalingDisconnected) -> ())) {
+    public mutating func onSignalingDisconnected(handler: ((SignalingDisconnected) -> ())) {
         onSignalingDisconnectedHandler = handler
     }
     
