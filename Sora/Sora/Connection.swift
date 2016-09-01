@@ -26,13 +26,6 @@ public struct Connection {
         case Disconnecting
     }
     
-    public struct Info {
-        public var minites: Int
-        public var channelConnections: Int
-        public var upstreamConnections: Int
-        public var downstreamConnections: Int
-    }
-    
     public var state: State
     public var clientId: String
     public var creationTime: NSDate
@@ -73,9 +66,9 @@ public struct Connection {
     // MARK: イベントハンドラ
     
     var onReceiveHandler: ((Data) -> ())?
-    var onConnectedHandler: ((Info) -> ())?
-    var onDisconnectedHandler: ((Info) -> ())?
-    var onUpdatedHandler: ((Info) -> ())?
+    var onConnectedHandler: (() -> ())?
+    var onDisconnectedHandler: (() -> ())?
+    var onUpdatedHandler: ((State) -> ())?
     var onFailedHandler: ((Error) -> ())?
 
     // シグナリングメッセージ
@@ -84,15 +77,15 @@ public struct Connection {
     }
     
     // 接続
-    public mutating func onConnected(handler: ((Info) -> ())) {
+    public mutating func onConnected(handler: (() -> ())) {
         onConnectedHandler = handler
     }
     
-    public mutating func onDisconnected(handler: ((Info) -> ())) {
+    public mutating func onDisconnected(handler: (() -> ())) {
         onDisconnectedHandler = handler
     }
     
-    public mutating func onUpdated(handler: ((Info) -> ())) {
+    public mutating func onUpdated(handler: ((State) -> ())) {
         onUpdatedHandler = handler
     }
     
