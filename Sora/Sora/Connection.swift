@@ -65,85 +65,85 @@ public struct Connection {
     
     // MARK: イベントハンドラ
     
-    var onReceiveHandler: ((Data) -> ())?
-    var onConnectedHandler: (() -> ())?
-    var onDisconnectedHandler: (() -> ())?
-    var onUpdatedHandler: ((State) -> ())?
-    var onFailedHandler: ((Error) -> ())?
+    var onReceiveHandler: ((Connection, Data) -> ())?
+    var onConnectedHandler: ((Connection) -> ())?
+    var onDisconnectedHandler: ((Connection) -> ())?
+    var onUpdatedHandler: ((Connection, State) -> ())?
+    var onFailedHandler: ((Connection, Error) -> ())?
 
     // シグナリングメッセージ
-    public mutating func onReceive(handler: ((Data) -> ())) {
+    public mutating func onReceive(handler: ((Connection, Data) -> ())) {
         onReceiveHandler = handler
     }
     
     // 接続
-    public mutating func onConnected(handler: (() -> ())) {
+    public mutating func onConnected(handler: ((Connection) -> ())) {
         onConnectedHandler = handler
     }
     
-    public mutating func onDisconnected(handler: (() -> ())) {
+    public mutating func onDisconnected(handler: ((Connection) -> ())) {
         onDisconnectedHandler = handler
     }
     
-    public mutating func onUpdated(handler: ((State) -> ())) {
+    public mutating func onUpdated(handler: ((Connection, State) -> ())) {
         onUpdatedHandler = handler
     }
     
-    public mutating func onFailed(handler: ((Error) -> ())) {
+    public mutating func onFailed(handler: ((Connection, Error) -> ())) {
         onFailedHandler = handler
     }
     
     // MARK: イベントハンドラ: メディアチャネル
     
-    var onDisconnectMediaChannelHandler: ((MediaChannel) -> ())?
-    var onMediaChannelFailedHandler: ((MediaChannel, Error) -> ())?
+    var onDisconnectMediaChannelHandler: ((Connection, MediaChannel) -> ())?
+    var onMediaChannelFailedHandler: ((Connection, MediaChannel, Error) -> ())?
     
-    public mutating func onDisconnectMediaChannel(handler: ((MediaChannel) -> ())) {
+    public mutating func onDisconnectMediaChannel(handler: ((Connection, MediaChannel) -> ())) {
         onDisconnectMediaChannelHandler = handler
     }
     
-    public mutating func onMediaChannelFailed(handler: ((MediaChannel, Error) -> ())) {
+    public mutating func onMediaChannelFailed(handler: ((Connection, MediaChannel, Error) -> ())) {
         onMediaChannelFailedHandler = handler
     }
     
     // MARK: イベントハンドラ: Web フック
     
-    var onSignalingConnectedHandler: ((SignalingConnected) -> ())?
-    var onSignalingCompletedHandler: ((SignalingCompleted) -> ())?
-    var onSignalingDisconnectedHandler: ((SignalingDisconnected) -> ())?
-    var onSignalingFailedHandler: ((SignalingFailed) -> ())?
-    var onArchiveFinishedHandler: ((MediaChannel, ArchiveFinished) -> ())?
-    var onArchiveFailedHandler: ((MediaChannel, ArchiveFailed) -> ())?
+    var onSignalingConnectedHandler: ((Connection, SignalingConnected) -> ())?
+    var onSignalingCompletedHandler: ((Connection, SignalingCompleted) -> ())?
+    var onSignalingDisconnectedHandler: ((Connection, SignalingDisconnected) -> ())?
+    var onSignalingFailedHandler: ((Connection, SignalingFailed) -> ())?
+    var onArchiveFinishedHandler: ((Connection, MediaChannel, ArchiveFinished) -> ())?
+    var onArchiveFailedHandler: ((Connection, MediaChannel, ArchiveFailed) -> ())?
     
-    public mutating func onSignalingConnected(handler: ((SignalingConnected) -> ())) {
+    public mutating func onSignalingConnected(handler: ((Connection, SignalingConnected) -> ())) {
         onSignalingConnectedHandler = handler
     }
     
-    public mutating func onSignalingCompleted(handler: ((SignalingCompleted) -> ())) {
+    public mutating func onSignalingCompleted(handler: ((Connection, SignalingCompleted) -> ())) {
         onSignalingCompletedHandler = handler
     }
     
-    public mutating func onSignalingDisconnected(handler: ((SignalingDisconnected) -> ())) {
+    public mutating func onSignalingDisconnected(handler: ((Connection, SignalingDisconnected) -> ())) {
         onSignalingDisconnectedHandler = handler
     }
     
-    public mutating func onSignalingFailedHandler(handler: ((SignalingFailed) -> ())) {
+    public mutating func onSignalingFailedHandler(handler: ((Connection, SignalingFailed) -> ())) {
         onSignalingFailedHandler = handler
     }
 
-    public mutating func onArchiveFinished(handler: ((MediaChannel, ArchiveFinished) -> ())) {
+    public mutating func onArchiveFinished(handler: ((Connection, MediaChannel, ArchiveFinished) -> ())) {
         onArchiveFinishedHandler = handler
     }
     
-    public mutating func onArchiveFailed(handler: ((MediaChannel, ArchiveFailed) -> ())) {
+    public mutating func onArchiveFailed(handler: ((Connection, MediaChannel, ArchiveFailed) -> ())) {
         onArchiveFailedHandler = handler
     }
     
     // MARK: イベントハンドラ: プッシュ通知
     
-    var onReceivePushHandler: ((MediaChannel?, Data) -> ())?
+    var onReceivePushHandler: ((Connection, MediaChannel?, Data) -> ())?
 
-    public mutating func onReceivePush(handler: ((MediaChannel?, Data) -> ())) {
+    public mutating func onReceivePush(handler: ((Connection, MediaChannel?, Data) -> ())) {
         onReceivePushHandler = handler
     }
 
