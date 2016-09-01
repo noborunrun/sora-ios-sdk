@@ -65,7 +65,18 @@ public struct MediaStream {
         self.creationTime = NSDate()
     }
     
-    public func close() {}
+    public func disconnect() {
+        // TODO:
+    }
+    
+    // MARK: イベントハンドラ
+    
+    var onDisconnectHandler: ((MediaStream) -> ())?
+    
+    public mutating func onDisconnect(handler: ((MediaStream) -> ())) {
+        onDisconnectHandler = handler
+    }
+    
 }
 
 public struct Publisher {
