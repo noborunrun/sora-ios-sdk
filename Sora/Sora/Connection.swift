@@ -15,6 +15,7 @@ public enum Error: ErrorType {
     case FailureMissingSDP
     case UnknownType
     case ConnectWaitTimeout
+    case WebSocketError(String)
 }
 
 public struct Connection {
@@ -26,29 +27,42 @@ public struct Connection {
         case Disconnecting
     }
     
-    public var state: State
-    public var clientId: String
+    public var URL: NSURL
+    public var clientId: String?
     public var creationTime: NSDate
     public var mediaChannels: [MediaChannel]
     
-    public init(clientId: String) {
+    public var state: State = .Disconnected {
+        
+        didSet {
+            onUpdatedHandler?(self, state)
+        }
+        
+    }
+    
+    var webSocket: SRWebSocket?
+    var context: ConnectionContext
+    
+    public init(URL: NSURL) {
+        self.URL = URL
         state = .Disconnected
-        self.clientId = clientId
         creationTime = NSDate()
         mediaChannels = []
+        context = ConnectionContext()
     }
     
     // MARK: シグナリング接続
     
-    public mutating func connect(handler: ((Error?) -> ())) {
-        // TODO:
+    public func connect(handler: ((Connection, Error?) -> ())) {
+        context.conn = self
+        context.connect(handler)
     }
     
-    public mutating func disconnect(handler: ((Error?) -> ())) {
-        // TODO:
+    public func disconnect(handler: ((Connection, Error?) -> ())) {
+        context.disconnect(handler)
     }
     
-    public func send(message: Data, handler: ((Error?) -> ())) {
+    public func send(message: Data, handler: ((Connection, Error?) -> ())) {
         // TODO:
     }
     
@@ -70,6 +84,7 @@ public struct Connection {
     var onDisconnectedHandler: ((Connection) -> ())?
     var onUpdatedHandler: ((Connection, State) -> ())?
     var onFailedHandler: ((Connection, Error) -> ())?
+    var onPingHandler: ((Connection) -> ())?
 
     // シグナリングメッセージ
     public mutating func onReceive(handler: ((Connection, Data) -> ())) {
@@ -91,6 +106,10 @@ public struct Connection {
     
     public mutating func onFailed(handler: ((Connection, Error) -> ())) {
         onFailedHandler = handler
+    }
+    
+    public mutating func onPing(handler: ((Connection) -> ())) {
+        onPingHandler = handler
     }
     
     // MARK: イベントハンドラ: メディアチャネル
@@ -149,12 +168,63 @@ public struct Connection {
 
 }
 
-class Context {
+class ConnectionContext: NSObject, SRWebSocketDelegate {
     
-    // MARK: イベントハンドラ
+    enum State {
+        case Connecting
+        case Connected
+        case Disconnecting
+        case Disconnected
+    }
     
-    var onConnectedHandler: ((Error?) -> ())?
-    var onDisconnectedHandler: ((Error?) -> ())?
-    var onSentHandler: ((Error?) -> ())?
+    var conn: Connection!
+    var webSocket: SRWebSocket!
+    var state: State = .Disconnected
+    
+    var onConnectedHandler: ((Connection, Error?) -> ())?
+    var onDisconnectedHandler: ((Connection, Error?) -> ())?
+    var onSentHandler: ((Connection, Error?) -> ())?
+
+    func connect(handler: ((Connection, Error?) -> ())) {
+        state = .Connecting
+        onConnectedHandler = handler
+        webSocket = SRWebSocket(URL: conn.URL)
+        webSocket.delegate = self
+        webSocket.open()
+    }
+
+    func disconnect(handler: ((Connection, Error?) -> ())) {
+        state = .Disconnecting
+        onDisconnectedHandler = handler
+        webSocket.close()
+        webSocket = nil
+    }
+    
+    // MARK: SRWebSocketDelegate
+    
+    func webSocketDidOpen(webSocket: SRWebSocket!) {
+        state = .Connected
+        onConnectedHandler?(conn, nil)
+    }
+    
+    func webSocket(webSocket: SRWebSocket!, didFailWithError error: NSError!) {
+        // TODO:
+    }
+    
+    func webSocket(webSocket: SRWebSocket!, didReceivePong pongPayload: NSData!) {
+        // TODO:
+    }
+    
+    func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
+        // TODO:
+    }
+    
+    func webSocket(webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
+        var error: Error? = nil
+        if let reason = reason {
+            error = Error.WebSocketError(reason)
+        }
+        onDisconnectedHandler?(conn, error)
+    }
     
 }

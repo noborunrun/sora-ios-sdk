@@ -2,34 +2,6 @@ import XCTest
 import WebRTC
 @testable import Sora
 
-class SoraConnectionTestDelegate: ConnectionDelegate {
-    
-    func didFail(connection: Connection, error: NSError) {
-        
-    }
-    
-    func didChangeState(connection: Connection, state: Connection.State) {
-        
-    }
-    
-    func didSendSignalingConnect(connection: Connection, message: Signaling.Connect) {
-        
-    }
-    
-    func didReceiveSignalingOffer(connection: Connection, message: Signaling.Offer) {
-        
-    }
-    
-    func didSendSignalingAnswer(connection: Connection, message: Signaling.Answer) {
-    
-    }
-    
-    func didSendCandidate(connection: Connection, candidate: RTCIceCandidate) {
-        
-    }
-
-}
-
 class SoraTests: XCTestCase {
     
     var conn: Connection!
@@ -47,14 +19,13 @@ class SoraTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-        conn = Connection(URL: NSURL(string: "ws://127.0.0.1:5000/signaling")!,
-                          config: nil, constraints: nil)
-        conn.delegate = SoraConnectionTestDelegate()
-        let message = Signaling.Connect(role: Signaling.Role.Downstream,
-                                        channelId: "sora",
-                                        accessToken: nil)
-        conn.open(message) { (error: NSError?) -> () in
-            print("connection open", error)
+        conn = Sora.Connection(URL: NSURL(string: "ws://127.0.0.1:5000/signaling")!)
+        conn.connect { (conn, error) in
+            if let error = error {
+                print("signaling connecting is failed: ", error)
+            } else {
+                print("signaling connection is open")
+            }
         }
     }
     
