@@ -174,6 +174,17 @@ struct SignalingOffer {
     
 }
 
+extension SignalingOffer: Decodable {
+    
+    static func decode(j: JSON) -> Decoded<SignalingOffer> {
+        return curry(SignalingOffer.init)
+            <^> j <| "type"
+            <*> j <| "client_id"
+            <*> j <| "sdp"
+    }
+    
+}
+
 struct SignalingAnswer {
     
     var sdp: String
@@ -267,14 +278,7 @@ extension SignalingAudio: Decodable {
     
 }
 
-extension SignalingOffer: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingOffer> {
-        return curry(SignalingOffer.init)
-            <^> j <| "type"
-            <*> j <| "client_id"
-            <*> j <| "sdp"
-        //<*> j <|? "Enable"
     }
     
 }
