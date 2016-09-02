@@ -278,7 +278,14 @@ extension SignalingAudio: Decodable {
     
 }
 
+struct SignalingPong {
+    // no properties
+}
+
+extension SignalingPong: JSONEncodable {
     
+    func encode() -> AnyObject {
+        return ["type": "pong"]
     }
     
 }
