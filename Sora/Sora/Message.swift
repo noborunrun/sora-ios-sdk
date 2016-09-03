@@ -34,6 +34,14 @@ enum SignalingRole {
     case Upstream
     case Downstream
     
+    static func from(role: Role) -> SignalingRole {
+        switch role {
+        case .Upstream:
+            return Upstream
+        case .Downstream:
+            return Downstream
+        }
+    }
 }
 
 extension SignalingRole: JSONEncodable {
