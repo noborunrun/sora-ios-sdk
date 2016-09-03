@@ -37,6 +37,16 @@ public struct MediaChannel {
     public var publisher: Publisher?
     public var subscriber: Subscriber?
     
+    init(connection: Connection, channelId: String) {
+        self.connection = connection
+        self.channelId = channelId
+        creationTime = NSDate()
+    }
+    
+    func connect(handler: ((MediaChannel?, Error?) -> ())) {
+        
+    }
+    
     public func disconnect() {}
 
 }
@@ -49,32 +59,6 @@ public struct MediaOption {
     public init(videoEnabled: Bool = true, audioEnabled: Bool = true) {
         self.videoEnabled = videoEnabled
         self.audioEnabled = audioEnabled
-    }
-    
-}
-
-public struct MediaStream {
-    
-    public var peerConnection: RTCPeerConnection?
-    public var nativeMediaStream: RTCMediaStream?
-    public var option: MediaOption
-    public var creationTime: NSDate
-    
-    init(option: MediaOption = MediaOption()) {
-        self.option = option
-        self.creationTime = NSDate()
-    }
-    
-    public func disconnect() {
-        // TODO:
-    }
-    
-    // MARK: イベントハンドラ
-    
-    var onDisconnectHandler: ((MediaStream) -> ())?
-    
-    public mutating func onDisconnect(handler: ((MediaStream) -> ())) {
-        onDisconnectHandler = handler
     }
     
 }

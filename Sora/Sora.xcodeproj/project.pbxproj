@@ -52,6 +52,7 @@
 		91C7B0991D54636A006F5FA2 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C7B0981D54636A006F5FA2 /* SoraTests.swift */; };
 		91C7B0A91D5463EA006F5FA2 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 91C7B0A81D5463EA006F5FA2 /* Cartfile */; };
 		91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DB5E9D1D6F43A5007744BF /* Connection.swift */; };
+		91E098841D799389004CF024 /* MediaStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E098831D799389004CF024 /* MediaStream.swift */; };
 		91E69B671D77536A004124C3 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D63F1D756AF800112A4E /* Notifications.swift */; };
 /* End PBXBuildFile section */
 
@@ -120,6 +121,7 @@
 		91C7B09A1D54636A006F5FA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91C7B0A81D5463EA006F5FA2 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		91DB5E9D1D6F43A5007744BF /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		91E098831D799389004CF024 /* MediaStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaStream.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +198,7 @@
 				91B1D6411D756C0D00112A4E /* MediaChannel.swift */,
 				91B1D6431D75D8CC00112A4E /* APIOperator.swift */,
 				91B1D6451D75E11F00112A4E /* VideoView.swift */,
+				91E098831D799389004CF024 /* MediaStream.swift */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91E098841D799389004CF024 /* MediaStream.swift in Sources */,
 				91B1D6441D75D8CC00112A4E /* APIOperator.swift in Sources */,
 				91E69B671D77536A004124C3 /* Notifications.swift in Sources */,
 				91B1D6461D75E11F00112A4E /* VideoView.swift in Sources */,

@@ -15,6 +15,8 @@ public enum Error: ErrorType {
     case FailureMissingSDP
     case UnknownType
     case ConnectWaitTimeout
+    case ConnectionDisconnected
+    case ConnectionBusy
     case WebSocketError(String)
 }
 
@@ -30,7 +32,7 @@ public struct Connection {
     public var URL: NSURL
     public var clientId: String?
     public var creationTime: NSDate
-    public var mediaChannels: [MediaChannel]
+    public var mediaChannels: [MediaChannel] = []
     
     public var state: State = .Disconnected {
         
@@ -41,20 +43,22 @@ public struct Connection {
     }
     
     var webSocket: SRWebSocket?
-    var context: ConnectionContext
+    var context: ConnectionContext!
     
     public init(URL: NSURL) {
         self.URL = URL
         state = .Disconnected
         creationTime = NSDate()
-        mediaChannels = []
-        context = ConnectionContext()
+        config()
+    }
+    
+    mutating func config() {
+        context = ConnectionContext(connection: self)
     }
     
     // MARK: シグナリング接続
     
     public func connect(handler: ((Connection, Error?) -> ())) {
-        context.conn = self
         context.connect(handler)
     }
     
@@ -72,9 +76,14 @@ public struct Connection {
                                     publisherOption: MediaOption = MediaOption(),
                                     subscriberOption: MediaOption = MediaOption(),
                                     usesDevice: Bool = true,
-                                    handler: ((MediaChannel?, Error?) -> ()))
-    {
+                                    handler: ((MediaChannel?, Error?) -> ())) {
         // TODO:
+    }
+        
+    func connectMediaStream(role: Role, channelId: String,
+                            accessToken: String? = nil,
+                            handler: ((Connection, MediaStream?, Error?) -> ())) {
+        context.connectMediaStream(role, channelId: channelId, accessToken: accessToken, handler: handler)
     }
     
     // MARK: イベントハンドラ
@@ -175,6 +184,12 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         case Connected
         case Disconnecting
         case Disconnected
+        case Ready
+        case PeerOffered
+        case PeerAnswering
+        case PeerAnswered
+        case PeerConnecting
+        case PeerConnected
     }
     
     var conn: Connection!
@@ -185,7 +200,25 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     var onDisconnectedHandler: ((Connection, Error?) -> ())?
     var onSentHandler: ((Connection, Error?) -> ())?
 
+    init(connection: Connection) {
+        self.conn = connection
+    }
+    
+    func validateState() -> Error? {
+        if state == .Disconnected || state == .Disconnecting {
+            return Error.ConnectionDisconnected
+        } else if state != .Ready {
+            return Error.ConnectionBusy
+        } else {
+            return nil
+        }
+    }
+    
     func connect(handler: ((Connection, Error?) -> ())) {
+        if state != .Disconnected {
+            handler(conn, Error.ConnectionBusy)
+            return
+        }
         state = .Connecting
         onConnectedHandler = handler
         webSocket = SRWebSocket(URL: conn.URL)
@@ -194,10 +227,30 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     }
 
     func disconnect(handler: ((Connection, Error?) -> ())) {
+        if let error = validateState() {
+            handler(conn, error)
+            return
+        }
         state = .Disconnecting
         onDisconnectedHandler = handler
         webSocket.close()
         webSocket = nil
+    }
+    
+    func connectMediaStream(role: Role, channelId: String,
+                            accessToken: String? = nil,
+                            handler: ((Connection, MediaStream?, Error?) -> ())) {
+        if let error = validateState() {
+            handler(conn, nil, error)
+            return
+         }
+        
+        // TODO:
+        /*
+         var sigConnect = SignalingConnect(role: SignalingRole.from(stream.role),
+         channel_id: stream.channelId)
+         */
+        
     }
     
     // MARK: SRWebSocketDelegate
