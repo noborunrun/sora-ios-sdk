@@ -152,6 +152,20 @@ struct SignalingConnect {
         self.access_token = access_token
     }
     
+    func data() -> Data {
+        var data = ["role": role.encode(), "channel_id": channel_id]
+        if let tok = access_token {
+            data["access_token"] = tok
+        }
+        if let video = video {
+            data["video"] = video.encode()
+        }
+        if let audio = audio {
+            data["audio"] = audio.encode()
+        }
+        return data
+    }
+    
 }
 
 extension SignalingConnect: JSONEncodable {
