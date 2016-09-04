@@ -66,7 +66,7 @@ public struct Connection {
         context.disconnect(handler)
     }
     
-    public func send(message: Data, handler: ((Connection, Error?) -> ())) {
+    public func send(message: Data, handler: ((Connection, Error?) -> ())?) {
         // TODO:
     }
     
