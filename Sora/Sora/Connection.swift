@@ -94,7 +94,7 @@ public struct Connection {
     var onUpdatedHandler: ((Connection, State) -> ())?
     var onFailedHandler: ((Connection, Error) -> ())?
     var onPingHandler: ((Connection) -> ())?
-
+    
     // シグナリングメッセージ
     public mutating func onReceive(handler: ((Connection, Data) -> ())) {
         onReceiveHandler = handler
@@ -158,7 +158,7 @@ public struct Connection {
     public mutating func onSignalingFailedHandler(handler: ((Connection, SignalingFailed) -> ())) {
         onSignalingFailedHandler = handler
     }
-
+    
     public mutating func onArchiveFinished(handler: ((Connection, MediaChannel, ArchiveFinished) -> ())) {
         onArchiveFinishedHandler = handler
     }
@@ -170,11 +170,11 @@ public struct Connection {
     // MARK: イベントハンドラ: プッシュ通知
     
     var onReceivePushHandler: ((Connection, MediaChannel?, Data) -> ())?
-
+    
     public mutating func onReceivePush(handler: ((Connection, MediaChannel?, Data) -> ())) {
         onReceivePushHandler = handler
     }
-
+    
 }
 
 class ConnectionContext: NSObject, SRWebSocketDelegate {
@@ -199,7 +199,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     var onConnectedHandler: ((Connection, Error?) -> ())?
     var onDisconnectedHandler: ((Connection, Error?) -> ())?
     var onSentHandler: ((Connection, Error?) -> ())?
-
+    
     init(connection: Connection) {
         self.conn = connection
     }
@@ -225,7 +225,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         webSocket.delegate = self
         webSocket.open()
     }
-
+    
     func disconnect(handler: ((Connection, Error?) -> ())) {
         if let error = validateState() {
             handler(conn, error)
