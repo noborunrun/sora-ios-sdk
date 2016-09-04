@@ -72,7 +72,7 @@ class MediaStreamContext {
         onConnectedHandler = handler
         
         // "connect"
-        stream.connection.connectMediaStream(stream.role, channelId: stream.channelId) { (conn, stream, error) in
+        stream.connection.createMediaStream(stream.role, channelId: stream.channelId) { (conn, stream, error) in
             // TODO:
         }
         

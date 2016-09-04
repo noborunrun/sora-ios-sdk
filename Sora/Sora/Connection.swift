@@ -71,19 +71,19 @@ public struct Connection {
     }
     
     // メディアチャネル
-    public func connectMediaChannel(channelId: String,
-                                    accessToken: String? = nil,
-                                    publisherOption: MediaOption = MediaOption(),
-                                    subscriberOption: MediaOption = MediaOption(),
-                                    usesDevice: Bool = true,
-                                    handler: ((MediaChannel?, Error?) -> ())) {
+    public func createMediaChannel(channelId: String,
+                                   accessToken: String? = nil,
+                                   publisherOption: MediaOption = MediaOption(),
+                                   subscriberOption: MediaOption = MediaOption(),
+                                   usesDevice: Bool = true,
+                                   handler: ((MediaChannel?, Error?) -> ())) {
         // TODO:
     }
-        
-    func connectMediaStream(role: Role, channelId: String,
-                            accessToken: String? = nil,
-                            handler: ((Connection, MediaStream?, Error?) -> ())) {
-        context.connectMediaStream(role, channelId: channelId, accessToken: accessToken, handler: handler)
+    
+    func createMediaStream(role: Role, channelId: String,
+                           accessToken: String? = nil,
+                           handler: ((Connection, MediaStream?, Error?) -> ())) {
+        context.createMediaStream(role, channelId: channelId, accessToken: accessToken, handler: handler)
     }
     
     // MARK: イベントハンドラ
@@ -237,9 +237,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         webSocket = nil
     }
     
-    func connectMediaStream(role: Role, channelId: String,
-                            accessToken: String? = nil,
-                            handler: ((Connection, MediaStream?, Error?) -> ())) {
+    func createMediaStream(role: Role, channelId: String,
+                           accessToken: String? = nil,
+                           handler: ((Connection, MediaStream?, Error?) -> ())) {
         if let error = validateState() {
             handler(conn, nil, error)
             return
