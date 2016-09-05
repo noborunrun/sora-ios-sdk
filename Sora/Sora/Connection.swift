@@ -56,11 +56,11 @@ public struct Connection {
     
     // MARK: シグナリング接続
     
-    public func connect(handler: ((Connection, Error?) -> ())) {
+    public func connect(handler: ((Error?) -> ())) {
         context.connect(handler)
     }
     
-    public func disconnect(handler: ((Connection, Error?) -> ())) {
+    public func disconnect(handler: ((Error?) -> ())) {
         context.disconnect(handler)
     }
     
@@ -86,7 +86,7 @@ public struct Connection {
     
     // MARK: イベントハンドラ
     
-    var onReceiveHandler: ((Connection, Data) -> ())?
+    var onReceiveHandler: ((Connection, Message) -> ())?
     var onConnectedHandler: ((Connection) -> ())?
     var onDisconnectedHandler: ((Connection) -> ())?
     var onUpdatedHandler: ((Connection, State) -> ())?
@@ -94,7 +94,7 @@ public struct Connection {
     var onPingHandler: ((Connection) -> ())?
     
     // シグナリングメッセージ
-    public mutating func onReceive(handler: ((Connection, Data) -> ())) {
+    public mutating func onReceive(handler: ((Connection, Message) -> ())) {
         onReceiveHandler = handler
     }
     
@@ -167,9 +167,9 @@ public struct Connection {
     
     // MARK: イベントハンドラ: プッシュ通知
     
-    var onReceivePushHandler: ((Connection, MediaChannel?, Data) -> ())?
+    var onReceivePushHandler: ((Connection, MediaChannel?, Message) -> ())?
     
-    public mutating func onReceivePush(handler: ((Connection, MediaChannel?, Data) -> ())) {
+    public mutating func onReceivePush(handler: ((Connection, MediaChannel?, Message) -> ())) {
         onReceivePushHandler = handler
     }
     
@@ -194,9 +194,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     var webSocket: SRWebSocket!
     var state: State = .Disconnected
     
-    var onConnectedHandler: ((Connection, Error?) -> ())?
-    var onDisconnectedHandler: ((Connection, Error?) -> ())?
-    var onSentHandler: ((Connection, Error?) -> ())?
+    var onConnectedHandler: ((Error?) -> ())?
+    var onDisconnectedHandler: ((Error?) -> ())?
+    var onSentHandler: ((Error?) -> ())?
     
     init(connection: Connection) {
         self.conn = connection
@@ -212,9 +212,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         }
     }
     
-    func connect(handler: ((Connection, Error?) -> ())) {
+    func connect(handler: ((Error?) -> ())) {
         if state != .Disconnected {
-            handler(conn, Error.ConnectionBusy)
+            handler(Error.ConnectionBusy)
             return
         }
         state = .Connecting
@@ -224,9 +224,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         webSocket.open()
     }
     
-    func disconnect(handler: ((Connection, Error?) -> ())) {
+    func disconnect(handler: ((Error?) -> ())) {
         if let error = validateState() {
-            handler(conn, error)
+            handler(error)
             return
         }
         state = .Disconnecting
@@ -279,7 +279,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         if let reason = reason {
             error = Error.WebSocketError(reason)
         }
-        onDisconnectedHandler?(conn, error)
+        onDisconnectedHandler?(error)
     }
     
 }

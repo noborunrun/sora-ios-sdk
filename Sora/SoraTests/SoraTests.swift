@@ -20,7 +20,7 @@ class SoraTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         conn = Sora.Connection(URL: NSURL(string: "ws://127.0.0.1:5000/signaling")!)
-        conn.connect { (conn, error) in
+        conn.connect { (error) in
             if let error = error {
                 print("signaling connecting is failed: ", error)
             } else {
