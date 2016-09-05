@@ -64,8 +64,8 @@ public struct Connection {
         context.disconnect(handler)
     }
     
-    public func send(message: Data, handler: ((Connection, Error?) -> ())?) {
-        // TODO:
+    public func send(message: Message) {
+        context.send(message)
     }
     
     // メディアチャネル
@@ -238,6 +238,10 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     func createMediaStream(role: Role, channelId: String,
                            accessToken: String? = nil,
                            handler: ((Connection, MediaStream?, Error?) -> ())) {
+    func send(message: Message) {
+        webSocket.send(message.JSONData())
+    }
+    
         if let error = validateState() {
             handler(conn, nil, error)
             return
