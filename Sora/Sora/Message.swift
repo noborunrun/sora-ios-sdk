@@ -4,6 +4,20 @@ import Argo
 import Curry
 import Runes
 
+public struct Message {
+    
+    public var data: [String: AnyObject]
+    
+    public init(data: [String: AnyObject] = [:]) {
+        self.data = data
+    }
+    
+    public func JSONData() -> NSData {
+        return try! NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions(rawValue: 0))
+    }
+    
+}
+
 protocol JSONEncodable {
     
     func encode() -> AnyObject
@@ -151,26 +165,8 @@ struct SignalingConnect {
         self.channel_id = channel_id
         self.access_token = access_token
     }
-    
-    func data() -> Data {
-        var data = ["role": role.encode(), "channel_id": channel_id]
-        if let tok = access_token {
-            data["access_token"] = tok
-        }
-        if let video = video {
-            data["video"] = video.encode()
-        }
-        if let audio = audio {
-            data["audio"] = audio.encode()
-        }
-        return data
-    }
-    
-}
 
-extension SignalingConnect: JSONEncodable {
-    
-    func encode() -> AnyObject {
+    func message() -> Message {
         var data = ["type": "connect", "role": role.encode(), "channel_id": channel_id]
         if let value = access_token {
             data["access_token"] = value
@@ -178,7 +174,7 @@ extension SignalingConnect: JSONEncodable {
         if let value = video {
             data["video"] = value.encode()
         }
-        return data
+        return Message(data: data)
     }
     
 }

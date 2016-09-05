@@ -3,8 +3,6 @@ import WebRTC
 import SocketRocket
 import UIKit
 
-public typealias Data = [String: AnyObject]
-
 public enum Error: ErrorType {
     case FailureJSONDecode
     case DuplicatedChannelId

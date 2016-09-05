@@ -31,7 +31,7 @@ public struct APIOperator {
     }
     
     // PushChannel, PushClient, PushUpstream/Downstream
-    public func sendPush(clientId: String?, channelId: String, role: Role?, data: Data,
+    public func sendPush(clientId: String?, channelId: String, role: Role?, message: Message,
                          handler: ((Error?) -> ())) {
         // TODO:
     }
