@@ -12,8 +12,47 @@ public struct Message {
         self.data = data
     }
     
-    public func JSONData() -> NSData {
-        return try! NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions(rawValue: 0))
+    public static func fromJSONData(data: AnyObject) -> Message? {
+        let base: NSData!
+        if data is NSData {
+            base = data as? NSData
+        } else if let data = data as? String {
+            if let data = data.dataUsingEncoding(NSUTF8StringEncoding) {
+                base = data
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+        
+        do {
+            let j = try NSJSONSerialization.JSONObjectWithData(base, options: NSJSONReadingOptions(rawValue: 0))
+            return fromJSONObject(j)
+        } catch _ {
+            return nil
+        }
+    }
+    
+    public static func fromJSONObject(j: AnyObject) -> Message? {
+        if let j = j as? [String: AnyObject] {
+            return Message(data: j)
+        } else {
+            return nil
+        }
+    }
+    
+    public func JSONString() -> String {
+        let JSONData = try! NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions(rawValue: 0))
+        return NSString(data: JSONData, encoding: NSUTF8StringEncoding) as String!
+    }
+    
+    public func type() -> String? {
+        return data["type"] as? String
+    }
+    
+    public func JSON() -> Argo.JSON {
+        return Argo.JSON(data)
     }
     
 }
