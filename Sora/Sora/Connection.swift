@@ -41,10 +41,7 @@ public struct Connection {
         }
         
     }
-    
-    public var defaultConfiguration: RTCConfiguration
-    public var defaultMediaConstraints: RTCMediaConstraints
-    
+
     var webSocket: SRWebSocket?
     var context: ConnectionContext!
     
@@ -52,12 +49,6 @@ public struct Connection {
         self.URL = URL
         state = .Disconnected
         creationTime = NSDate()
-        defaultConfiguration = RTCConfiguration()
-        defaultConfiguration.iceServers = [
-            RTCIceServer(URLStrings: ["stun:stun.l.google.com:19302"],
-                username: nil, credential: nil)]
-        defaultMediaConstraints = RTCMediaConstraints(
-            mandatoryConstraints: nil, optionalConstraints: nil)
         config()
     }
     
@@ -82,12 +73,8 @@ public struct Connection {
     // メディアチャネル
     public func createMediaChannel(channelId: String,
                                    accessToken: String? = nil,
-                                   publisherOption: MediaOption = MediaOption(),
-                                   publisherConfiguration: RTCConfiguration? = nil,
-                                   publisherConstraints: RTCMediaConstraints? = nil,
-                                   subscriberOption: MediaOption = MediaOption(),
-                                   subscriberConfiguration: RTCConfiguration? = nil,
-                                   subscriberConstraints: RTCMediaConstraints? = nil,
+                                   publisherOption: MediaOption? = MediaOption(),
+                                   subscriberOption: MediaOption? = MediaOption(),
                                    usesDevice: Bool = true,
                                    handler: ((MediaChannel?, Error?) -> ())) {
         print("create media streams")
@@ -274,15 +261,19 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     
     func createPeerConnection(role: Role, channelId: String,
                               accessToken: String? = nil,
-                              config: RTCConfiguration,
-                              constraints: RTCMediaConstraints,
+                              mediaOption: MediaOption,
                               handler: ((RTCPeerConnection?, Error?) -> ())) {
         if let error = validateState() {
             handler(nil, error)
             return
         }
         
-        peerConn = peerConnFactory.peerConnectionWithConfiguration(config, constraints: constraints, delegate: PeerConnectionContext(connContext: self))
+        self.mediaOption = mediaOption
+        peerConnDelegate = PeerConnectionContext(connContext: self)
+        peerConn = peerConnFactory.peerConnectionWithConfiguration(
+            mediaOption.configuration,
+            constraints: mediaOption.mediaConstraints,
+            delegate: peerConnDelegate)
         
         // send "connect"
         print("send connect")
