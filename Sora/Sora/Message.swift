@@ -246,12 +246,8 @@ struct SignalingAnswer {
     
     var sdp: String
     
-}
-
-extension SignalingAnswer: JSONEncodable {
-    
-    func encode() -> AnyObject {
-        return ["type": "answer", "sdp": sdp]
+    func message() -> Message {
+        return Message(data: ["type": "answer", "sdp": sdp])
     }
     
 }
