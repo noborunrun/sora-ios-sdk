@@ -3,10 +3,8 @@ import WebRTC
 
 public struct MediaStream {
     
-    public var peerConnection: RTCPeerConnection?
-    public var nativeMediaStream: RTCMediaStream?
-    public var connection: Connection
-    public var option: MediaOption
+    public var peerConnection: RTCPeerConnection!
+    public var mediaOption: MediaOption
     public var creationTime: NSDate
     public var channelId: String
     public var clientId: String?
@@ -14,23 +12,19 @@ public struct MediaStream {
     
     var context: MediaStreamContext!
     
-    init(connection: Connection, role: Role, channelId: String,
-         option: MediaOption = MediaOption()) {
-        self.connection = connection
+    init(peerConnection: RTCPeerConnection, role: Role, channelId: String,
+         mediaOption: MediaOption = MediaOption()) {
+        self.peerConnection = peerConnection
         self.role = role
         self.channelId = channelId
-        self.option = option
+        self.mediaOption = mediaOption
         creationTime = NSDate()
     }
     
     mutating func config() {
         context = MediaStreamContext(stream: self)
     }
-    
-    func connect(handler: (MediaStream?, Error?) -> ()) {
-        context.connect(self, handler: handler)
-    }
-    
+        
     public func disconnect() {
         // TODO:
     }
@@ -46,6 +40,7 @@ public struct MediaStream {
     
 }
 
+// deprecated?
 class MediaStreamContext {
     
     enum State {
@@ -59,22 +54,23 @@ class MediaStreamContext {
     var state: State = .Disconnected
     var conn: Connection!
     
-    var onConnectedHandler: ((MediaStream?, Error?) -> ())?
-    var onDisconnectedHandler: ((MediaStream?, Error?) -> ())?
+    var onConnectedHandler: ((Error?) -> ())?
+    var onDisconnectedHandler: ((Error?) -> ())?
     
     init(stream: MediaStream) {
         self.stream = stream
     }
     
-    func connect(stream: MediaStream, handler: ((MediaStream?, Error?) -> ())) {
+    func connect(handler: ((Error?) -> ())) {
         // TODO:
-        self.stream = stream
         onConnectedHandler = handler
         
         // "connect"
-        stream.connection.createMediaStream(stream.role, channelId: stream.channelId) { (conn, stream, error) in
+        /*
+        stream.connection.createMediaStream(stream.role, channelId: stream.channelId) { (stream, error) in
             // TODO:
         }
+ */
         
     }
     

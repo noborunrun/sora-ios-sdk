@@ -33,79 +33,40 @@ public struct MediaChannel {
     
     public var connection: Connection
     public var channelId: String
+    public var accessToken: String?
     public var creationTime: NSDate
     public var publisher: Publisher?
     public var subscriber: Subscriber?
     
-    var publisherOption: MediaOption
-    var subscriberOption: MediaOption
-    
-    init(connection: Connection, channelId: String,
-         publisherOption: MediaOption, subscriberOption: MediaOption) {
+    init(connection: Connection, channelId: String) {
         self.connection = connection
         self.channelId = channelId
         creationTime = NSDate()
-        self.publisherOption = publisherOption
-        self.subscriberOption = subscriberOption
     }
     
-    func connect(handler: ((MediaChannel?, Error?) -> ())) {
-        
+    public func disconnect() {
+        // TODO:
     }
-    
-    public func disconnect() {}
 
-}
-
-public struct MediaOption {
-    
-    public var videoEnabled: Bool
-    public var audioEnabled: Bool
-    public var configuration: RTCConfiguration
-    public var mediaConstraints: RTCMediaConstraints
-    public var answerMediaConstraints: RTCMediaConstraints
-
-    public static var defaultConfiguration: RTCConfiguration = {
-        () -> RTCConfiguration in
-        let config = RTCConfiguration()
-        config.iceServers = [
-            RTCIceServer(URLStrings: ["stun:stun.l.google.com:19302"],
-                username: nil, credential: nil)]
-        return config
-    }()
-    
-    public static var defaultMediaConstraints: RTCMediaConstraints =
-        RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
-    
-    public init(videoEnabled: Bool = true, audioEnabled: Bool = true,
-                configuration: RTCConfiguration? = nil,
-                mediaConstraints: RTCMediaConstraints? = nil,
-                answerMediaConstraints: RTCMediaConstraints? = nil) {
-        self.videoEnabled = videoEnabled
-        self.audioEnabled = audioEnabled
-        self.configuration = configuration ?? MediaOption.defaultConfiguration
-        self.mediaConstraints = mediaConstraints ?? MediaOption.defaultMediaConstraints
-        self.answerMediaConstraints = answerMediaConstraints ?? MediaOption.defaultMediaConstraints
-    }
-    
-}
-
-public struct Publisher {
-    
-    public var mediaStream: MediaStream
-    public var mediaOption: MediaOption
-    public var videoRenderer: VideoRenderer?
-    
-    public func switchCamera() {
+    public func createPublisher(mediaOption: MediaOption = MediaOption(),
+                                handler: ((Publisher?, Error?) -> ())) {
         // TODO:
     }
     
-}
-
-public struct Subscriber {
-    
-    public var mediaStream: MediaStream
-    public var mediaOption: MediaOption
-    public var videoRenderer: VideoRenderer?
-    
+    public mutating func createSubscriber(mediaOption: MediaOption = MediaOption(),
+                                          handler: ((Subscriber?, Error?) -> ())) {
+        // TODO:
+        print("create subscriber")
+        connection.createMediaStream(Role.Downstream, channelId: channelId,
+                          accessToken: accessToken, mediaOption: mediaOption)
+        {
+            (mediaStream, error) in
+            if let error = error {
+                handler(nil, error)
+                return
+            }
+            self.subscriber = Subscriber(connection: self.connection, mediaStream: mediaStream!, mediaOption: mediaOption)
+            handler(self.subscriber, nil)
+        }
+    }
 }

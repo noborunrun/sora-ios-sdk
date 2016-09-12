@@ -16,7 +16,8 @@ public enum Error: ErrorType {
     case ConnectWaitTimeout
     case ConnectionDisconnected
     case ConnectionBusy
-    case WebSocketError(String)
+    case WebSocketClose(Int, String)
+    case WebSocketError(NSError)
     case PeerConnectionError(NSError)
 }
 
@@ -70,36 +71,34 @@ public struct Connection {
         context.send(message)
     }
     
+    public func isReady() -> Bool {
+        return context.state == .Ready
+    }
+    
     // メディアチャネル
-    public func createMediaChannel(channelId: String,
-                                   accessToken: String? = nil,
-                                   publisherOption: MediaOption? = MediaOption(),
-                                   subscriberOption: MediaOption? = MediaOption(),
-                                   usesDevice: Bool = true,
-                                   handler: ((MediaChannel?, Error?) -> ())) {
-        print("create media streams")
-        context.createPeerConnection(
-            Role.Downstream, channelId: channelId,
-            accessToken: accessToken,
-            config: publisherConfiguration ?? defaultConfiguration,
-            constraints: publisherConstraints ?? defaultMediaConstraints) {
-                (peerConn, error) in
-                print("on peer connection open: ", error)
-        }
-        
-        /*
-        print("create media channel")
-        let channel = MediaChannel(connection: self, channelId: channelId,
-            publisherOption: publisherOption, subscriberOption: subscriberOption)
-        var weakSelf = self
-        channel.connect { (error) in
-            print("create media channel handler")
-            if error == nil {
-                weakSelf.mediaChannels.append(channel)
+    public func createMediaChannel(channelId: String) -> MediaChannel {
+        return MediaChannel(connection: self, channelId: channelId)
+    }
+    
+    func createMediaStream(role: Role, channelId: String, accessToken: String?,
+                           mediaOption: MediaOption,
+                           handler: ((MediaStream?, Error?) -> ())) {
+        context.createPeerConnection(role, channelId: channelId,
+                                     accessToken: accessToken,
+                                     mediaOption: mediaOption)
+        {
+            (peerConn, error) in
+            print("on peer connection open: ", error)
+            if let error = error {
+                handler(nil, error)
+                return
             }
-            handler(channel, error)
+            let stream = MediaStream(peerConnection: peerConn!,
+                                     role: role,
+                                     channelId: channelId,
+                                     mediaOption: mediaOption)
+            handler(stream, nil)
         }
-         */
     }
     
     // MARK: イベントハンドラ
@@ -210,9 +209,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     var conn: Connection!
     var webSocket: SRWebSocket!
     var state: State = .Disconnected
-    var peerConn: RTCPeerConnection?
     var peerConnFactory: RTCPeerConnectionFactory
-    
+    var peerConnContext: PeerConnectionContext!
+
     var onConnectedHandler: ((Error?) -> ())?
     var onDisconnectedHandler: ((Error?) -> ())?
     var onSentHandler: ((Error?) -> ())?
@@ -256,25 +255,22 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     }
     
     func send(message: Message) {
-        webSocket.send(message.JSONString())
+        let j = message.JSONString()
+        print("WebSocket send ", j)
+        webSocket.send(j)
     }
-    
+
     func createPeerConnection(role: Role, channelId: String,
-                              accessToken: String? = nil,
-                              mediaOption: MediaOption,
-                              handler: ((RTCPeerConnection?, Error?) -> ())) {
+                              accessToken: String?, mediaOption: MediaOption,
+                              handler: ((RTCPeerConnection!, Error?) -> ())) {
         if let error = validateState() {
             handler(nil, error)
             return
         }
         
-        self.mediaOption = mediaOption
-        peerConnDelegate = PeerConnectionContext(connContext: self)
-        peerConn = peerConnFactory.peerConnectionWithConfiguration(
-            mediaOption.configuration,
-            constraints: mediaOption.mediaConstraints,
-            delegate: peerConnDelegate)
-        
+        peerConnContext = PeerConnectionContext(connContext: self, factory: peerConnFactory, mediaOption: mediaOption, handler: handler)
+        peerConnContext.createPeerConnection()
+
         // send "connect"
         print("send connect")
         state = .PeerConnecting
@@ -290,8 +286,8 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     }
     
     func webSocket(webSocket: SRWebSocket!, didFailWithError error: NSError!) {
-        // TODO:
         print("webSocket:didFailWithError:")
+        onConnectedHandler?(Error.WebSocketError(error))
     }
     
     func webSocket(webSocket: SRWebSocket!, didReceivePong pongPayload: NSData!) {
@@ -305,22 +301,38 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         if let message = Message.fromJSONData(message) {
             conn.onReceiveHandler?(message)
             let json = message.JSON()
+            print("received message type: ", message.type())
             switch message.type() {
             case "offer"?:
                 if let offer = SignalingOffer.decode(json).value {
                     print("peer offered")
                     state = .PeerOffered
                     let sdp = offer.sessionDescription()
-                    peerConn!.setRemoteDescription(sdp) {
+                    peerConnContext.peerConn.setRemoteDescription(sdp) {
                         (error: NSError?) in
                         if let error = error {
                             self.conn.onFailedHandler?(Error.PeerConnectionError(error))
                             return
                         }
-
-                        // TODO:
+                        
                         print("create answer")
                         self.state = .PeerAnswering
+                        self.peerConnContext.peerConn.answerForConstraints(self.peerConnContext.mediaOption.answerMediaConstraints) {
+                            (sdp, error) in
+                            if let error = error {
+                                self.conn.onFailedHandler?(Error.PeerConnectionError(error))
+                                return
+                            }
+                            print("generate answer: ", sdp)
+
+                            print("set local description")
+                            self.peerConnContext.peerConn.setLocalDescription(sdp!) {
+                                (error) in
+                                print("send answer")
+                                let answer = SignalingAnswer(sdp: sdp!.sdp)
+                                self.send(answer.message())
+                            }
+                        }
                     }
                 }
             default:
@@ -333,7 +345,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         print("webSocket:didCloseWithCode:", code)
         var error: Error? = nil
         if let reason = reason {
-            error = Error.WebSocketError(reason)
+            error = Error.WebSocketClose(code, reason)
         }
         onDisconnectedHandler?(error)
     }
@@ -343,17 +355,33 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
 class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     
     var connContext: ConnectionContext
+    var factory: RTCPeerConnectionFactory
+    var peerConn: RTCPeerConnection!
+    var mediaOption: MediaOption
+    var onConnectedHandler: ((RTCPeerConnection!, Error?) -> ())
     
-    init(connContext: ConnectionContext) {
+    init(connContext: ConnectionContext, factory: RTCPeerConnectionFactory,
+         mediaOption: MediaOption, handler: ((RTCPeerConnection!, Error?) -> ())) {
         self.connContext = connContext
+        self.factory = factory
+        self.mediaOption = mediaOption
+        onConnectedHandler = handler
+    }
+    
+    func createPeerConnection() {
+        peerConn = factory.peerConnectionWithConfiguration(
+            mediaOption.configuration,
+            constraints: mediaOption.mediaConstraints,
+            delegate: self)
     }
     
     func peerConnection(peerConnection: RTCPeerConnection,
-                               didChangeSignalingState stateChanged: RTCSignalingState) {
-        print("peerConnection:didChangeSignalingState:")
+                        didChangeSignalingState stateChanged: RTCSignalingState) {
+        print("peerConnection:didChangeSignalingState:", stateChanged.rawValue)
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection, didAddStream stream: RTCMediaStream) {
+    func peerConnection(peerConnection: RTCPeerConnection,
+                        didAddStream stream: RTCMediaStream) {
         print("peerConnection:didAddStream:")
     }
     
@@ -368,7 +396,14 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     
     func peerConnection(peerConnection: RTCPeerConnection,
                         didChangeIceConnectionState newState: RTCIceConnectionState) {
-        print("peerConnection:didChangeIceConnectionState:")
+        print("peerConnection:didChangeIceConnectionState:", newState.rawValue)
+        switch newState {
+        case .Connected:
+            connContext.state = .PeerConnected
+            onConnectedHandler(peerConnection, nil)
+        default:
+            break
+        }
     }
     
     func peerConnection(peerConnection: RTCPeerConnection,
