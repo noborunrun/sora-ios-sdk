@@ -25,15 +25,8 @@ public enum AudioCodec {
 
 public struct MediaChannel {
     
-    enum State {
-        case Connected
-        case Disconnected
-        case Disconnecting
-    }
-    
     public var connection: Connection
     public var channelId: String
-    public var accessToken: String?
     public var creationTime: NSDate
     public var mediaPublisher: MediaPublisher?
     public var mediaSubscriber: MediaSubscriber?
@@ -45,28 +38,48 @@ public struct MediaChannel {
     }
     
     public func disconnect() {
-        // TODO:
+        mediaPublisher?.disconnect()
+        mediaSubscriber?.disconnect()
     }
     
-    public func createMediaPublisher(mediaOption: MediaOption = MediaOption(),
-                                     handler: ((MediaPublisher?, Error?) -> ())) {
+    public mutating func createMediaPublisher(mediaOption: MediaOption = MediaOption(),
+                                              accessToken: String? = nil,
+                                              handler: ((MediaPublisher?, Error?) -> ())) {
         // TODO:
-    }
-    
-    public mutating func createMediaSubscriber(mediaOption: MediaOption = MediaOption(),
-                                               handler: ((MediaSubscriber?, Error?) -> ())) {
-        // TODO:
-        print("create subscriber")
+        print("create publisher")
         connection.createMediaStream(Role.Downstream, channelId: channelId,
-                          accessToken: accessToken, mediaOption: mediaOption)
+                                     accessToken: accessToken, mediaOption: mediaOption)
         {
             (mediaStream, error) in
             if let error = error {
                 handler(nil, error)
                 return
             }
-            self.mediaSubscriber = MediaSubscriber(connection: self.connection, mediaStream: mediaStream!, mediaOption: mediaOption)
+            self.mediaPublisher = MediaPublisher(connection: self.connection,
+                                                 mediaStream: mediaStream!,
+                                                 mediaOption: mediaOption)
+            handler(self.mediaPublisher, nil)
+        }
+    }
+    
+    public mutating func createMediaSubscriber(mediaOption: MediaOption = MediaOption(),
+                                               accessToken: String? = nil,
+                                               handler: ((MediaSubscriber?, Error?) -> ())) {
+        // TODO:
+        print("create subscriber")
+        connection.createMediaStream(Role.Downstream, channelId: channelId,
+                                     accessToken: accessToken, mediaOption: mediaOption)
+        {
+            (mediaStream, error) in
+            if let error = error {
+                handler(nil, error)
+                return
+            }
+            self.mediaSubscriber = MediaSubscriber(connection: self.connection,
+                                                   mediaStream: mediaStream!,
+                                                   mediaOption: mediaOption)
             handler(self.mediaSubscriber, nil)
         }
     }
+    
 }

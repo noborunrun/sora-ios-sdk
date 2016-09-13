@@ -46,6 +46,10 @@ public class MediaConnection {
         self.mediaStream = mediaStream
         self.mediaOption = mediaOption
     }
+ 
+    public func disconnect() {
+        mediaStream.disconnect()
+    }
     
 }
 

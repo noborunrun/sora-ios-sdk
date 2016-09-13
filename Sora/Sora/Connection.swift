@@ -93,11 +93,10 @@ public struct Connection {
                 handler(nil, error)
                 return
             }
-            let stream = MediaStream(peerConnection: peerConn!,
-                                     role: role,
-                                     channelId: channelId,
-                                     mediaOption: mediaOption)
-            handler(stream, nil)
+            let mediaStream = MediaStream.new(peerConn!, role: role,
+                                              channelId: channelId,
+                                              mediaOption: mediaOption)
+            handler(mediaStream, nil)
         }
     }
     
@@ -203,7 +202,6 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         case PeerAnswering
         case PeerAnswered
         case PeerConnecting
-        case PeerConnected
     }
     
     var conn: Connection!
@@ -399,7 +397,8 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
         print("peerConnection:didChangeIceConnectionState:", newState.rawValue)
         switch newState {
         case .Connected:
-            connContext.state = .PeerConnected
+            print("ice connection connected")
+            connContext.state = .Ready
             onConnectedHandler(peerConnection, nil)
         default:
             break
@@ -414,6 +413,7 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     func peerConnection(peerConnection: RTCPeerConnection,
                         didGenerateIceCandidate candidate: RTCIceCandidate) {
         print("peerConnection:didGenerateIceCandidate:")
+        connContext.send(SignalingICECandidate(candidate: candidate.sdp).message())
     }
     
     func peerConnection(peerConnection: RTCPeerConnection,

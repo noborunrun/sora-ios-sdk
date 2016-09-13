@@ -331,6 +331,16 @@ extension SignalingAudio: Decodable {
     
 }
 
+struct SignalingICECandidate {
+    
+    var candidate: String
+    
+    func message() -> Message {
+        return Message(data: ["type": "candidate", "candidate": candidate])
+    }
+    
+}
+
 struct SignalingPong {
     // no properties
 }
