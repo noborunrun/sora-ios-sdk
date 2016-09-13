@@ -42,7 +42,7 @@
 		918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; };
 		91B1D6421D756C0D00112A4E /* MediaChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D6411D756C0D00112A4E /* MediaChannel.swift */; };
 		91B1D6441D75D8CC00112A4E /* APIOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D6431D75D8CC00112A4E /* APIOperator.swift */; };
-		91B1D6461D75E11F00112A4E /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D6451D75E11F00112A4E /* VideoView.swift */; };
+		91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D6451D75E11F00112A4E /* VideoRenderer.swift */; };
 		91C465591D633A1E00AD9C28 /* Runes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; };
 		91C4655A1D633A1E00AD9C28 /* Curry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C465581D633A1E00AD9C28 /* Curry.framework */; };
 		91C4655B1D633A3D00AD9C28 /* Runes.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -111,7 +111,7 @@
 		91B1D63F1D756AF800112A4E /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		91B1D6411D756C0D00112A4E /* MediaChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChannel.swift; sourceTree = "<group>"; };
 		91B1D6431D75D8CC00112A4E /* APIOperator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIOperator.swift; sourceTree = "<group>"; };
-		91B1D6451D75E11F00112A4E /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
+		91B1D6451D75E11F00112A4E /* VideoRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoRenderer.swift; sourceTree = "<group>"; };
 		91C465571D633A1E00AD9C28 /* Runes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Runes.framework; path = Carthage/Build/iOS/Runes.framework; sourceTree = "<group>"; };
 		91C465581D633A1E00AD9C28 /* Curry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Curry.framework; path = Carthage/Build/iOS/Curry.framework; sourceTree = "<group>"; };
 		91C4655D1D6376AC00AD9C28 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
@@ -201,7 +201,7 @@
 				91192F731D598E4600F92D78 /* Message.swift */,
 				91B1D63F1D756AF800112A4E /* Notifications.swift */,
 				9182018C1D58623400178E2B /* OldConnection.swift */,
-				91B1D6451D75E11F00112A4E /* VideoView.swift */,
+				91B1D6451D75E11F00112A4E /* VideoRenderer.swift */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
@@ -376,7 +376,7 @@
 				91E098841D799389004CF024 /* MediaStream.swift in Sources */,
 				91B1D6441D75D8CC00112A4E /* APIOperator.swift in Sources */,
 				91E69B671D77536A004124C3 /* Notifications.swift in Sources */,
-				91B1D6461D75E11F00112A4E /* VideoView.swift in Sources */,
+				91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */,
 				91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */,
 				91192F741D598E4600F92D78 /* Message.swift in Sources */,
 				91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */,
