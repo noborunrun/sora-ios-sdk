@@ -301,6 +301,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
             let json = message.JSON()
             print("received message type: ", message.type())
             switch message.type() {
+            case "ping"?:
+                webSocket.send(SignalingPong().encode())
+                
             case "offer"?:
                 if let offer = SignalingOffer.decode(json).value {
                     print("peer offered")
