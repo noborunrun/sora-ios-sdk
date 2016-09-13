@@ -35,8 +35,8 @@ public struct MediaChannel {
     public var channelId: String
     public var accessToken: String?
     public var creationTime: NSDate
-    public var publisher: Publisher?
-    public var subscriber: Subscriber?
+    public var mediaPublisher: MediaPublisher?
+    public var mediaSubscriber: MediaSubscriber?
     
     init(connection: Connection, channelId: String) {
         self.connection = connection
@@ -47,14 +47,14 @@ public struct MediaChannel {
     public func disconnect() {
         // TODO:
     }
-
-    public func createPublisher(mediaOption: MediaOption = MediaOption(),
-                                handler: ((Publisher?, Error?) -> ())) {
+    
+    public func createMediaPublisher(mediaOption: MediaOption = MediaOption(),
+                                     handler: ((MediaPublisher?, Error?) -> ())) {
         // TODO:
     }
     
-    public mutating func createSubscriber(mediaOption: MediaOption = MediaOption(),
-                                          handler: ((Subscriber?, Error?) -> ())) {
+    public mutating func createMediaSubscriber(mediaOption: MediaOption = MediaOption(),
+                                               handler: ((MediaSubscriber?, Error?) -> ())) {
         // TODO:
         print("create subscriber")
         connection.createMediaStream(Role.Downstream, channelId: channelId,
@@ -65,8 +65,8 @@ public struct MediaChannel {
                 handler(nil, error)
                 return
             }
-            self.subscriber = Subscriber(connection: self.connection, mediaStream: mediaStream!, mediaOption: mediaOption)
-            handler(self.subscriber, nil)
+            self.mediaSubscriber = MediaSubscriber(connection: self.connection, mediaStream: mediaStream!, mediaOption: mediaOption)
+            handler(self.mediaSubscriber, nil)
         }
     }
 }

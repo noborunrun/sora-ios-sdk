@@ -28,7 +28,7 @@ class SoraTests: XCTestCase {
             }
             print("signaling connection is open")
             var channel = self.conn.createMediaChannel("sora")
-            channel.createSubscriber {
+            channel.createMediaSubscriber {
                 (subscriber, error) in
                 
                 if let error = error {

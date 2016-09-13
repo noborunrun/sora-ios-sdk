@@ -49,7 +49,7 @@ public class MediaConnection {
     
 }
 
-public class Publisher: MediaConnection {
+public class MediaPublisher: MediaConnection {
     
     public func switchCamera() {
         // TODO:
@@ -57,6 +57,6 @@ public class Publisher: MediaConnection {
     
 }
 
-public class Subscriber: MediaConnection {
+public class MediaSubscriber: MediaConnection {
     
 }
