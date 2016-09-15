@@ -16,10 +16,9 @@ class SoraTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        let exp = expectationWithDescription("complete")
+    func testConnecting() {
+        let exp = expectationWithDescription("connecting")
+        var result = false
         conn = Sora.Connection(URL: NSURL(string: "ws://127.0.0.1:5000/signaling")!)
         conn.connect { (error) in
             if let error = error {
@@ -35,13 +34,16 @@ class SoraTests: XCTestCase {
                     print("media channel could not connect: ", error)
                     return
                 }
+                result = true
+                subscriber!.disconnect()
                 exp.fulfill()
                 print("media channel connected")
             }
         }
         waitForExpectationsWithTimeout(5) {
             (error) in
-            print("completed")
+            XCTAssert(error == nil)
+            XCTAssert(result)
         }
     }
     
