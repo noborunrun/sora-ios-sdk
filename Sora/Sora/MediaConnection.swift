@@ -34,34 +34,14 @@ public struct MediaOption {
     
 }
 
-class VideoRendererSupport: NSObject, RTCVideoRenderer {
-    
-    var videoRenderer: VideoRenderer
-    
-    init(videoRenderer: VideoRenderer) {
-        self.videoRenderer = videoRenderer
-    }
-    
-    func setSize(size: CGSize) {
-        videoRenderer.onChangedSize(size)
-    }
-    
-    func renderFrame(frame: RTCVideoFrame?) {
-        if let frame = frame {
-            let frame = VideoFrame(nativeVideoFrame: frame)
-            videoRenderer.renderVideoFrame(frame)
-        }
-    }
- 
-}
-
 public class MediaConnection {
     
     public var connection: Connection
     public var mediaStream: MediaStream
     public var mediaOption: MediaOption
     
-    var videoRenderers: [String: (VideoRenderer, VideoRendererSupport)] = [:]
+    public var videoRenderers: [VideoRenderer] = []
+    var videoRendererSupports: [VideoRendererSupport] = []
     
     init(connection: Connection, mediaStream: MediaStream, mediaOption: MediaOption) {
         self.connection = connection
@@ -69,20 +49,19 @@ public class MediaConnection {
         self.mediaOption = mediaOption
     }
  
-    public func getVideoRenderer(name: String) -> VideoRenderer? {
-        if let (videoRenderer, _) = videoRenderers[name] {
-            return videoRenderer
-        } else {
-            return nil
-        }
+    public func addVideoRenderer(videoRenderer: VideoRenderer,
+                                 trackId: String? = nil) -> Int {
+        videoRenderers.append(videoRenderer)
+        let support = VideoRendererSupport(videoRenderer: videoRenderer, trackId: trackId)
+        videoRendererSupports.append(support)
+        mediaStream.addVideoRendererSupport(support)
+        return videoRenderers.count - 1
     }
     
-    public func setVideoRenderer(name: String, videoRenderer: VideoRenderer) {
-        videoRenderers[name] = (videoRenderer, VideoRendererSupport(videoRenderer: videoRenderer))
-    }
-    
-    public func removeVideoRenderer(name: String) {
-        videoRenderers.removeValueForKey(name)
+    public func removeVideoRenderer(index: Int) {
+        videoRenderers.removeAtIndex(index)
+        let support = videoRendererSupports.removeAtIndex(index)
+        mediaStream.removeVideoRendererSupport(support)
     }
     
     public func disconnect() {

@@ -8,6 +8,30 @@ public protocol VideoRenderer {
     
 }
 
+
+class VideoRendererSupport: NSObject, RTCVideoRenderer {
+    
+    var videoRenderer: VideoRenderer
+    var trackId: String?
+    
+    init(videoRenderer: VideoRenderer, trackId: String?) {
+        self.videoRenderer = videoRenderer
+        self.trackId = trackId
+    }
+    
+    func setSize(size: CGSize) {
+        videoRenderer.onChangedSize(size)
+    }
+    
+    func renderFrame(frame: RTCVideoFrame?) {
+        if let frame = frame {
+            let frame = VideoFrame(nativeVideoFrame: frame)
+            videoRenderer.renderVideoFrame(frame)
+        }
+    }
+    
+}
+
 public struct VideoFrame {
     
     public var width: Int {

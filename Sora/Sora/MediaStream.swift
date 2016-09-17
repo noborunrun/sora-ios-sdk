@@ -17,23 +17,29 @@ public struct MediaStream {
     
     var context: MediaStreamContext!
     var state: State
+    var videoRendererSupports: [VideoRendererSupport] = []
+    var nativeMediaStreams: [RTCMediaStream] = []
     
     static func new(peerConnection: RTCPeerConnection, role: Role, channelId: String,
-                    mediaOption: MediaOption = MediaOption()) -> MediaStream {
+                    mediaOption: MediaOption = MediaOption(),
+                    nativeMediaStreams: [RTCMediaStream]) -> MediaStream {
         var mediaStream = MediaStream(peerConnection: peerConnection,
                                       role: role, channelId: channelId,
-                                      mediaOption: mediaOption)
+                                      mediaOption: mediaOption,
+                                      nativeMediaStreams: nativeMediaStreams)
         mediaStream.context = MediaStreamContext(mediaStream: mediaStream)
         peerConnection.delegate = mediaStream.context
         return mediaStream
     }
     
     private init(peerConnection: RTCPeerConnection, role: Role, channelId: String,
-         mediaOption: MediaOption = MediaOption()) {
+         mediaOption: MediaOption = MediaOption(),
+         nativeMediaStreams: [RTCMediaStream]) {
         self.peerConnection = peerConnection
         self.role = role
         self.channelId = channelId
         self.mediaOption = mediaOption
+        self.nativeMediaStreams = nativeMediaStreams
         state = .Connected
         creationTime = NSDate()
     }
@@ -45,6 +51,44 @@ public struct MediaStream {
     
     public func isDisconnected() -> Bool {
         return state == .Disconnected
+    }
+    
+    mutating func addVideoRendererSupport(support: VideoRendererSupport) {
+        videoRendererSupports.append(support)
+        for stream in nativeMediaStreams {
+            addVideoRenderer(support, stream: stream)
+        }
+    }
+    
+    func addVideoRenderer(support: VideoRendererSupport, stream: RTCMediaStream) {
+        if let trackId = support.trackId {
+            for track in stream.videoTracks {
+                if track.trackId == trackId {
+                    track.addRenderer(support)
+                }
+            }
+        } else if stream.videoTracks.count > 0 {
+            stream.videoTracks[0].addRenderer(support)
+        }
+    }
+    
+    mutating func removeVideoRendererSupport(support: VideoRendererSupport) {
+        videoRendererSupports = videoRendererSupports.filter { e in return e == support }
+        for stream in nativeMediaStreams {
+            removeVideoRenderer(support, stream: stream)
+        }
+    }
+    
+    func removeVideoRenderer(support: VideoRendererSupport, stream: RTCMediaStream) {
+        if let trackId = support.trackId {
+            for track in stream.videoTracks {
+                if track.trackId == trackId {
+                    track.removeRenderer(support)
+                }
+            }
+        } else if stream.videoTracks.count > 0 {
+            stream.videoTracks[0].removeRenderer(support)
+        }
     }
     
     // MARK: イベントハンドラ
