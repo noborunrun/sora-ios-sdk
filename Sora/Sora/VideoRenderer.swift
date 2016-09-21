@@ -4,7 +4,7 @@ import WebRTC
 public protocol VideoRenderer {
     
     func onChangedSize(size: CGSize)
-    func renderVideoFrame(videoFrame: VideoFrame) -> ()
+    func renderVideoFrame(videoFrame: VideoFrame?)
     
 }
 
@@ -27,6 +27,8 @@ class VideoRendererSupport: NSObject, RTCVideoRenderer {
         if let frame = frame {
             let frame = VideoFrame(nativeVideoFrame: frame)
             videoRenderer.renderVideoFrame(frame)
+        } else {
+            videoRenderer.renderVideoFrame(nil)
         }
     }
     
@@ -83,6 +85,7 @@ public class VideoView: UIView, VideoRenderer {
     lazy var nativeVideoView: RTCEAGLVideoView = {
         let view = RTCEAGLVideoView(frame: self.frame)
         self.addSubview(view)
+        self.setNeedsDisplay()
         return view
     }()
     
@@ -90,8 +93,13 @@ public class VideoView: UIView, VideoRenderer {
         nativeVideoView.setSize(size)
     }
     
-    public func renderVideoFrame(frame: VideoFrame) {
-        nativeVideoView.renderFrame(frame.nativeVideoFrame)
+    public func renderVideoFrame(frame: VideoFrame?) {
+        nativeVideoView.renderFrame(frame?.nativeVideoFrame)
     }
 
+    public override func drawRect(frame: CGRect) {
+        super.drawRect(frame)
+        nativeVideoView.drawRect(frame)
+    }
+    
 }

@@ -51,6 +51,7 @@ public class MediaConnection {
  
     public func addVideoRenderer(videoRenderer: VideoRenderer,
                                  trackId: String? = nil) -> Int {
+        print("add video renderer", videoRenderer)
         videoRenderers.append(videoRenderer)
         let support = VideoRendererSupport(videoRenderer: videoRenderer, trackId: trackId)
         videoRendererSupports.append(support)
