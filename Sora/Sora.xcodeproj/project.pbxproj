@@ -105,7 +105,6 @@
 		91192F731D598E4600F92D78 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		914CE92F1D5F0C390013E795 /* Argo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Argo.framework; path = Carthage/Build/iOS/Argo.framework; sourceTree = "<group>"; };
 		91577A021D85CB1700A5AF9F /* MediaConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaConnection.swift; sourceTree = "<group>"; };
-		9182018C1D58623400178E2B /* OldConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldConnection.swift; sourceTree = "<group>"; };
 		9182018F1D58668E00178E2B /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		918201901D58668E00178E2B /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = Carthage/Build/iOS/WebRTC.framework; sourceTree = "<group>"; };
 		918201911D58668E00178E2B /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
@@ -202,7 +201,6 @@
 				91E098831D799389004CF024 /* MediaStream.swift */,
 				91192F731D598E4600F92D78 /* Message.swift */,
 				91B1D63F1D756AF800112A4E /* Notifications.swift */,
-				9182018C1D58623400178E2B /* OldConnection.swift */,
 				91B1D6451D75E11F00112A4E /* VideoRenderer.swift */,
 				91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */,
 			);
