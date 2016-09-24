@@ -55,6 +55,7 @@
 		91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DB5E9D1D6F43A5007744BF /* Connection.swift */; };
 		91E098841D799389004CF024 /* MediaStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E098831D799389004CF024 /* MediaStream.swift */; };
 		91E69B671D77536A004124C3 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D63F1D756AF800112A4E /* Notifications.swift */; };
+		91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +125,7 @@
 		91C7B0A81D5463EA006F5FA2 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		91DB5E9D1D6F43A5007744BF /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		91E098831D799389004CF024 /* MediaStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaStream.swift; sourceTree = "<group>"; };
+		91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoFrame.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +204,7 @@
 				91B1D63F1D756AF800112A4E /* Notifications.swift */,
 				9182018C1D58623400178E2B /* OldConnection.swift */,
 				91B1D6451D75E11F00112A4E /* VideoRenderer.swift */,
+				91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */,
 				91192F741D598E4600F92D78 /* Message.swift in Sources */,
 				91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */,
+				91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */,
 				91B1D6421D756C0D00112A4E /* MediaChannel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -101,6 +101,18 @@ public struct Connection {
         }
     }
     
+    func createVideoCaptureSource(mediaConstraints: RTCMediaConstraints)
+        -> RTCAVFoundationVideoSource {
+        return context.peerConnFactory
+            .avFoundationVideoSourceWithConstraints(mediaConstraints)
+    }
+    
+    func createVideoCaptureTrack(videoSource: RTCVideoSource, trackId: String)
+        -> RTCVideoTrack {
+        return context.peerConnFactory.videoTrackWithSource(videoSource,
+                                                            trackId: trackId)
+    }
+    
     // MARK: イベントハンドラ
     
     var onReceiveHandler: ((Message) -> ())?

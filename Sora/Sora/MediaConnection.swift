@@ -8,6 +8,7 @@ public struct MediaOption {
     public var configuration: RTCConfiguration
     public var mediaConstraints: RTCMediaConstraints
     public var answerMediaConstraints: RTCMediaConstraints
+    public var videoCaptureSourceConstraints: RTCMediaConstraints
     
     public static var defaultConfiguration: RTCConfiguration = {
         () -> RTCConfiguration in
@@ -24,12 +25,14 @@ public struct MediaOption {
     public init(videoEnabled: Bool = true, audioEnabled: Bool = true,
                 configuration: RTCConfiguration? = nil,
                 mediaConstraints: RTCMediaConstraints? = nil,
-                answerMediaConstraints: RTCMediaConstraints? = nil) {
+                answerMediaConstraints: RTCMediaConstraints? = nil,
+                videoCaptureSourceConstraints: RTCMediaConstraints? = nil) {
         self.videoEnabled = videoEnabled
         self.audioEnabled = audioEnabled
         self.configuration = configuration ?? MediaOption.defaultConfiguration
         self.mediaConstraints = mediaConstraints ?? MediaOption.defaultMediaConstraints
         self.answerMediaConstraints = answerMediaConstraints ?? MediaOption.defaultMediaConstraints
+        self.videoCaptureSourceConstraints = videoCaptureSourceConstraints ?? MediaOption.defaultMediaConstraints
     }
     
 }
@@ -71,10 +74,41 @@ public class MediaConnection {
     
 }
 
+public enum VideoPreset {
+    case VGA
+    // TODO: etc.
+}
+
 public class MediaPublisher: MediaConnection {
     
+    public var videoPreset: VideoPreset =  VideoPreset.VGA
+
+    public var videoCaptureTrack: RTCVideoTrack
+    public var videoCaptureSource: RTCAVFoundationVideoSource
+
+    public var canUseBackCamera: Bool {
+        get { return videoCaptureSource.canUseBackCamera }
+    }
+    
+    public var captureSession: AVCaptureSession {
+        get { return videoCaptureSource.captureSession }
+    }
+    
+    override init(connection: Connection, mediaStream: MediaStream,
+                  mediaOption: MediaOption) {
+        self.videoCaptureSource = connection.createVideoCaptureSource(mediaOption.videoCaptureSourceConstraints)
+        self.videoCaptureTrack = connection.createVideoCaptureTrack(
+            self.videoCaptureSource, trackId: "main")
+        videoCaptureSource.useBackCamera = false
+        for stream in mediaStream.nativeMediaStreams {
+            stream.addVideoTrack(videoCaptureTrack)
+        }
+        super.init(connection: connection, mediaStream: mediaStream,
+                   mediaOption: mediaOption)
+    }
+    
     public func switchCamera() {
-        // TODO:
+        videoCaptureSource.useBackCamera = true
     }
     
 }

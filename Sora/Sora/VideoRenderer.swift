@@ -8,7 +8,6 @@ public protocol VideoRenderer {
     
 }
 
-
 class VideoRendererSupport: NSObject, RTCVideoRenderer {
     
     var videoRenderer: VideoRenderer
@@ -25,7 +24,7 @@ class VideoRendererSupport: NSObject, RTCVideoRenderer {
     
     func renderFrame(frame: RTCVideoFrame?) {
         if let frame = frame {
-            let frame = VideoFrame(nativeVideoFrame: frame)
+            let frame = RemoteVideoFrame(nativeVideoFrame: frame)
             videoRenderer.renderVideoFrame(frame)
         } else {
             videoRenderer.renderVideoFrame(nil)
@@ -34,55 +33,9 @@ class VideoRendererSupport: NSObject, RTCVideoRenderer {
     
 }
 
-public struct VideoFrame {
-    
-    public var width: Int {
-        get { return nativeVideoFrame.width }
-    }
-    
-    public var height: Int {
-        get { return nativeVideoFrame.height }
-    }
-    
-    public var timestamp: CMTime {
-        get { return CMTimeMake(nativeVideoFrame.timeStamp, 1000000000) }
-    }
-    
-    public var yPlane: UInt8 {
-        get { return nativeVideoFrame.yPlane.memory }
-    }
-    
-    public var uPlane: UInt8 {
-        get { return nativeVideoFrame.uPlane.memory }
-    }
-    
-    public var vPlane: UInt8 {
-        get { return nativeVideoFrame.vPlane.memory }
-    }
-    
-    public var yPitch: Int32 {
-        get { return nativeVideoFrame.yPitch }
-    }
-
-    public var uPitch: Int32 {
-        get { return nativeVideoFrame.uPitch }
-    }
-
-    public var vPitch: Int32 {
-        get { return nativeVideoFrame.vPitch }
-    }
-
-    public var nativeVideoFrame: RTCVideoFrame
-    
-    init(nativeVideoFrame: RTCVideoFrame) {
-        self.nativeVideoFrame = nativeVideoFrame
-    }
-    
-}
-
 public class VideoView: UIView, VideoRenderer {
 
-    lazy var nativeVideoView: RTCEAGLVideoView = {
+    lazy var remoteVideoView: RTCEAGLVideoView = {
         let view = RTCEAGLVideoView(frame: self.frame)
         self.addSubview(view)
         self.setNeedsDisplay()
@@ -90,16 +43,25 @@ public class VideoView: UIView, VideoRenderer {
     }()
     
     public func onChangedSize(size: CGSize) {
-        nativeVideoView.setSize(size)
+        remoteVideoView.setSize(size)
     }
     
     public func renderVideoFrame(frame: VideoFrame?) {
-        nativeVideoView.renderFrame(frame?.nativeVideoFrame)
+        if let frame = frame {
+            if let handle = frame.videoFrameHandle {
+                switch handle {
+                case .WebRTC(let frame):
+                    remoteVideoView.renderFrame(frame)
+                }
+            }
+        } else {
+            remoteVideoView.renderFrame(nil)
+        }
     }
 
     public override func drawRect(frame: CGRect) {
         super.drawRect(frame)
-        nativeVideoView.drawRect(frame)
+        remoteVideoView.drawRect(frame)
     }
     
 }
