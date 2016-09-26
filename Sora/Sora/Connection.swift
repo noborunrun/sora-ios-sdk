@@ -43,6 +43,10 @@ public struct Connection {
         
     }
 
+    public var peerConnectionFactory: RTCPeerConnectionFactory {
+        get { return context.peerConnFactory }
+    }
+    
     var webSocket: SRWebSocket?
     var context: ConnectionContext!
     
@@ -84,20 +88,26 @@ public struct Connection {
         return MediaChannel(connection: self, channelId: channelId)
     }
     
-    func createMediaStream(role: Role, channelId: String, accessToken: String?,
-                           mediaOption: MediaOption,
-                           handler: ((MediaStream?, Error?) -> ())) {
-        context.createPeerConnection(role, channelId: channelId,
+    func createMediaUpstream(channelId: String, accessToken: String?,
+                             mediaOption: MediaOption,
+                             streamId: String,
+                             handler: ((MediaStream?, Error?) -> ())) {
+        context.createPeerConnection(Role.Upstream, channelId: channelId,
                                      accessToken: accessToken,
                                      mediaOption: mediaOption)
         {
-            (peerConn, streams, error) in
+            (peerConn, downstreams, error) in
             print("on peer connection open: ", error)
             if let error = error {
                 handler(nil, error)
                 return
             }
-            let mediaStream = MediaStream.new(peerConn!, role: role,
+            
+            let localStream =
+                self.context.peerConnFactory.mediaStreamWithStreamId(streamId)
+            peerConn!.addStream(localStream)
+            let streams = [localStream]
+            let mediaStream = MediaStream.new(peerConn!, role: Role.Upstream,
                                               channelId: channelId,
                                               mediaOption: mediaOption,
                                               nativeMediaStreams: streams)
@@ -105,16 +115,26 @@ public struct Connection {
         }
     }
     
-    func createVideoCaptureSource(mediaConstraints: RTCMediaConstraints)
-        -> RTCAVFoundationVideoSource {
-        return context.peerConnFactory
-            .avFoundationVideoSourceWithConstraints(mediaConstraints)
-    }
-    
-    func createVideoCaptureTrack(videoSource: RTCVideoSource, trackId: String)
-        -> RTCVideoTrack {
-        return context.peerConnFactory.videoTrackWithSource(videoSource,
-                                                            trackId: trackId)
+    func createMediaDownstream(channelId: String, accessToken: String?,
+                               mediaOption: MediaOption,
+                               handler: ((MediaStream?, Error?) -> ())) {
+        context.createPeerConnection(Role.Downstream, channelId: channelId,
+                                     accessToken: accessToken,
+                                     mediaOption: mediaOption)
+        {
+            (peerConn, downstreams, error) in
+            print("on peer connection open: ", error)
+            if let error = error {
+                handler(nil, error)
+                return
+            }
+            
+            let mediaStream = MediaStream.new(peerConn!, role: Role.Downstream,
+                                              channelId: channelId,
+                                              mediaOption: mediaOption,
+                                              nativeMediaStreams: downstreams)
+            handler(mediaStream, nil)
+        }
     }
     
     // MARK: イベントハンドラ

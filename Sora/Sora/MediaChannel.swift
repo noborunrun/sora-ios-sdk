@@ -42,22 +42,31 @@ public struct MediaChannel {
         mediaSubscriber?.disconnect()
     }
     
-    public mutating func createMediaPublisher(mediaOption: MediaOption = MediaOption(),
-                                              accessToken: String? = nil,
-                                              handler: ((MediaPublisher?, Error?) -> ())) {
+    public mutating func createMediaPublisher(
+        mediaOption: MediaOption = MediaOption(),
+        accessToken: String? = nil,
+        videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
+        handler: ((MediaPublisher?, Error?) -> ()))
+    {
         // TODO:
         print("create publisher")
-        connection.createMediaStream(Role.Downstream, channelId: channelId,
-                                     accessToken: accessToken, mediaOption: mediaOption)
+        connection.createMediaUpstream(channelId,
+                                       accessToken: accessToken,
+                                       mediaOption: mediaOption,
+                                       streamId: "main")
         {
             (mediaStream, error) in
             if let error = error {
                 handler(nil, error)
                 return
             }
+
+            let constraints = videoCaptureSourceMediaConstraints ??
+                RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
             self.mediaPublisher = MediaPublisher(connection: self.connection,
                                                  mediaStream: mediaStream!,
-                                                 mediaOption: mediaOption)
+                                                 mediaOption: mediaOption,
+                                                 videoCaptureSourceMediaConstraints: constraints)
             handler(self.mediaPublisher, nil)
         }
     }
@@ -67,8 +76,8 @@ public struct MediaChannel {
                                                handler: ((MediaSubscriber?, Error?) -> ())) {
         // TODO:
         print("create subscriber")
-        connection.createMediaStream(Role.Downstream, channelId: channelId,
-                                     accessToken: accessToken, mediaOption: mediaOption)
+        connection.createMediaDownstream(channelId, accessToken: accessToken,
+                                         mediaOption: mediaOption)
         {
             (mediaStream, error) in
             if let error = error {

@@ -8,7 +8,6 @@ public struct MediaOption {
     public var configuration: RTCConfiguration
     public var mediaConstraints: RTCMediaConstraints
     public var answerMediaConstraints: RTCMediaConstraints
-    public var videoCaptureSourceConstraints: RTCMediaConstraints
     
     public static var defaultConfiguration: RTCConfiguration = {
         () -> RTCConfiguration in
@@ -25,14 +24,12 @@ public struct MediaOption {
     public init(videoEnabled: Bool = true, audioEnabled: Bool = true,
                 configuration: RTCConfiguration? = nil,
                 mediaConstraints: RTCMediaConstraints? = nil,
-                answerMediaConstraints: RTCMediaConstraints? = nil,
-                videoCaptureSourceConstraints: RTCMediaConstraints? = nil) {
+                answerMediaConstraints: RTCMediaConstraints? = nil) {
         self.videoEnabled = videoEnabled
         self.audioEnabled = audioEnabled
         self.configuration = configuration ?? MediaOption.defaultConfiguration
         self.mediaConstraints = mediaConstraints ?? MediaOption.defaultMediaConstraints
         self.answerMediaConstraints = answerMediaConstraints ?? MediaOption.defaultMediaConstraints
-        self.videoCaptureSourceConstraints = videoCaptureSourceConstraints ?? MediaOption.defaultMediaConstraints
     }
     
 }
@@ -94,11 +91,13 @@ public class MediaPublisher: MediaConnection {
         get { return videoCaptureSource.captureSession }
     }
     
-    override init(connection: Connection, mediaStream: MediaStream,
-                  mediaOption: MediaOption) {
-        self.videoCaptureSource = connection.createVideoCaptureSource(mediaOption.videoCaptureSourceConstraints)
-        self.videoCaptureTrack = connection.createVideoCaptureTrack(
-            self.videoCaptureSource, trackId: "main")
+    init(connection: Connection, mediaStream: MediaStream,
+         mediaOption: MediaOption,
+         videoCaptureSourceMediaConstraints: RTCMediaConstraints) {
+        videoCaptureSource = connection.peerConnectionFactory
+            .avFoundationVideoSourceWithConstraints(videoCaptureSourceMediaConstraints)
+        videoCaptureTrack = connection.peerConnectionFactory
+            .videoTrackWithSource(videoCaptureSource, trackId: "main")
         videoCaptureSource.useBackCamera = false
         for stream in mediaStream.nativeMediaStreams {
             stream.addVideoTrack(videoCaptureTrack)
