@@ -71,6 +71,10 @@ public struct Connection {
         context.send(message)
     }
     
+    public func send(messageable: Messageable) {
+        context.send(messageable.message())
+    }
+    
     public func isReady() -> Bool {
         return context.state == .Ready
     }
@@ -271,6 +275,10 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         webSocket.send(j)
     }
 
+    func send(messageable: Messageable) {
+        self.send(messageable.message())
+    }
+    
     func createPeerConnection(role: Role, channelId: String,
                               accessToken: String?, mediaOption: MediaOption,
                               handler: ((RTCPeerConnection!, [RTCMediaStream], Error?) -> ())) {
@@ -286,7 +294,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         print("send connect")
         state = .PeerConnecting
         let sigConnect = SignalingConnect(role: SignalingRole.from(role), channel_id: channelId)
-        send(sigConnect.message())
+        send(sigConnect)
     }
     
     // MARK: SRWebSocketDelegate
@@ -344,7 +352,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                                 (error) in
                                 print("send answer")
                                 let answer = SignalingAnswer(sdp: sdp!.sdp)
-                                self.send(answer.message())
+                                self.send(answer)
                             }
                         }
                     }
@@ -434,7 +442,7 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     func peerConnection(peerConnection: RTCPeerConnection,
                         didGenerateIceCandidate candidate: RTCIceCandidate) {
         print("peerConnection:didGenerateIceCandidate:")
-        connContext.send(SignalingICECandidate(candidate: candidate.sdp).message())
+        connContext.send(SignalingICECandidate(candidate: candidate.sdp))
     }
     
     func peerConnection(peerConnection: RTCPeerConnection,

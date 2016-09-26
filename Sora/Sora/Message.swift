@@ -57,6 +57,20 @@ public struct Message {
     
 }
 
+extension Message: Messageable {
+    
+    public func message() -> Message {
+        return self
+    }
+    
+}
+
+public protocol Messageable {
+
+    func message() -> Message
+    
+}
+
 protocol JSONEncodable {
     
     func encode() -> AnyObject
@@ -205,6 +219,10 @@ struct SignalingConnect {
         self.access_token = access_token
     }
 
+}
+
+extension SignalingConnect: Messageable {
+    
     func message() -> Message {
         var data = ["type": "connect", "role": role.encode(), "channel_id": channel_id]
         if let value = access_token {
@@ -246,6 +264,10 @@ struct SignalingAnswer {
     
     var sdp: String
     
+}
+
+extension SignalingAnswer: Messageable {
+
     func message() -> Message {
         return Message(data: ["type": "answer", "sdp": sdp])
     }
@@ -335,6 +357,10 @@ struct SignalingICECandidate {
     
     var candidate: String
     
+}
+
+extension SignalingICECandidate: Messageable {
+    
     func message() -> Message {
         return Message(data: ["type": "candidate", "candidate": candidate])
     }
@@ -342,13 +368,12 @@ struct SignalingICECandidate {
 }
 
 struct SignalingPong {
-    // no properties
 }
 
-extension SignalingPong: JSONEncodable {
+extension SignalingPong: Messageable {
     
-    func encode() -> AnyObject {
-        return ["type": "pong"]
+    func message() -> Message {
+        return Message(data: ["type": "pong"])
     }
     
 }
