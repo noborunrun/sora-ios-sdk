@@ -323,7 +323,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
             print("received message type: ", message.type())
             switch message.type() {
             case "ping"?:
-                webSocket.send(SignalingPong().encode())
+                self.send(SignalingPong())
                 
             case "offer"?:
                 if let offer = SignalingOffer.decode(json).value {
