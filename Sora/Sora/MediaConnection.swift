@@ -76,38 +76,50 @@ public enum VideoPreset {
     // TODO: etc.
 }
 
+public struct MediaCapturer {
+    
+    public var videoCaptureTrack: RTCVideoTrack
+    public var videoCaptureSource: RTCAVFoundationVideoSource
+    public var audioCaptureTrack: RTCAudioTrack
+    
+    init(factory: RTCPeerConnectionFactory,
+         videoCaptureSourceMediaConstraints: RTCMediaConstraints) {
+        videoCaptureSource = factory
+            .avFoundationVideoSourceWithConstraints(videoCaptureSourceMediaConstraints)
+        videoCaptureTrack = factory
+            .videoTrackWithSource(videoCaptureSource, trackId: "main")
+        audioCaptureTrack = factory.audioTrackWithTrackId("main")
+    }
+    
+}
+
 public class MediaPublisher: MediaConnection {
     
     public var videoPreset: VideoPreset =  VideoPreset.VGA
-
-    public var videoCaptureTrack: RTCVideoTrack
-    public var videoCaptureSource: RTCAVFoundationVideoSource
+    public var mediaCapturer: MediaCapturer
 
     public var canUseBackCamera: Bool {
-        get { return videoCaptureSource.canUseBackCamera }
+        get { return mediaCapturer.videoCaptureSource.canUseBackCamera }
     }
     
     public var captureSession: AVCaptureSession {
-        get { return videoCaptureSource.captureSession }
+        get { return mediaCapturer.videoCaptureSource.captureSession }
     }
     
     init(connection: Connection, mediaStream: MediaStream,
-         mediaOption: MediaOption,
-         videoCaptureSourceMediaConstraints: RTCMediaConstraints) {
-        videoCaptureSource = connection.peerConnectionFactory
-            .avFoundationVideoSourceWithConstraints(videoCaptureSourceMediaConstraints)
-        videoCaptureTrack = connection.peerConnectionFactory
-            .videoTrackWithSource(videoCaptureSource, trackId: "main")
-        videoCaptureSource.useBackCamera = false
+         mediaOption: MediaOption, mediaCapturer: MediaCapturer) {
+        self.mediaCapturer = mediaCapturer
+        mediaCapturer.videoCaptureSource.useBackCamera = false
         for stream in mediaStream.nativeMediaStreams {
-            stream.addVideoTrack(videoCaptureTrack)
+            stream.addVideoTrack(mediaCapturer.videoCaptureTrack)
+            stream.addAudioTrack(mediaCapturer.audioCaptureTrack)
         }
         super.init(connection: connection, mediaStream: mediaStream,
                    mediaOption: mediaOption)
     }
     
     public func switchCamera() {
-        videoCaptureSource.useBackCamera = true
+        mediaCapturer.videoCaptureSource.useBackCamera = true
     }
     
 }

@@ -55,18 +55,16 @@ public struct MediaChannel {
                                        mediaOption: mediaOption,
                                        streamId: "main")
         {
-            (mediaStream, error) in
+            (mediaStream, mediaCapturer, error) in
             if let error = error {
                 handler(nil, error)
                 return
             }
 
-            let constraints = videoCaptureSourceMediaConstraints ??
-                RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
             self.mediaPublisher = MediaPublisher(connection: self.connection,
                                                  mediaStream: mediaStream!,
                                                  mediaOption: mediaOption,
-                                                 videoCaptureSourceMediaConstraints: constraints)
+                                                 mediaCapturer: mediaCapturer!)
             handler(self.mediaPublisher, nil)
         }
     }
