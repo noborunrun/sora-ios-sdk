@@ -238,11 +238,24 @@ extension SignalingConnect: Messageable {
 
 struct SignalingOffer {
     
+    struct Configuration {
+        
+        struct IceServer {
+            var urls: [String]
+            var credential: String
+            var username: String
+        }
+        
+        var iceServers: [IceServer]
+        var iceTransportPolicy: String
+        
+    }
+    
     var type: String
     var client_id: String
     var sdp: String
-    //var Enable: [String: String]?
-    
+    var config: Configuration?
+
     func sessionDescription() -> RTCSessionDescription {
         return RTCSessionDescription(type: RTCSdpType.Offer, sdp: sdp)
     }
@@ -256,6 +269,28 @@ extension SignalingOffer: Decodable {
             <^> j <| "type"
             <*> j <| "client_id"
             <*> j <| "sdp"
+            <*> j <|? "config"
+    }
+    
+}
+
+extension SignalingOffer.Configuration: Decodable {
+    
+    static func decode(j: JSON) -> Decoded<SignalingOffer.Configuration> {
+        return curry(SignalingOffer.Configuration.init)
+            <^> j <|| "iceServers"
+            <*> j <| "iceTransportPolicy"
+    }
+    
+}
+
+extension SignalingOffer.Configuration.IceServer: Decodable {
+    
+    static func decode(j: JSON) -> Decoded<SignalingOffer.Configuration.IceServer> {
+        return curry(SignalingOffer.Configuration.IceServer.init)
+            <^> j <|| "urls"
+            <*> j <| "credential"
+            <*> j <| "username"
     }
     
 }

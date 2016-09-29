@@ -110,10 +110,6 @@ public class MediaPublisher: MediaConnection {
          mediaOption: MediaOption, mediaCapturer: MediaCapturer) {
         self.mediaCapturer = mediaCapturer
         mediaCapturer.videoCaptureSource.useBackCamera = false
-        for stream in mediaStream.nativeMediaStreams {
-            stream.addVideoTrack(mediaCapturer.videoCaptureTrack)
-            stream.addAudioTrack(mediaCapturer.audioCaptureTrack)
-        }
         super.init(connection: connection, mediaStream: mediaStream,
                    mediaOption: mediaOption)
     }

@@ -12,6 +12,7 @@ public enum Error: ErrorType {
     case UnknownVideoCodecType
     case FailureSDPParse
     case FailureMissingSDP
+    case FailureSetConfiguration(RTCConfiguration)
     case UnknownType
     case ConnectWaitTimeout
     case ConnectionDisconnected
@@ -326,6 +327,8 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
             upstream = peerConnFactory.mediaStreamWithStreamId("main")
             let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
             mediaCapturer = MediaCapturer(factory: peerConnFactory, videoCaptureSourceMediaConstraints: constraints)
+            upstream!.addVideoTrack(mediaCapturer!.videoCaptureTrack)
+            upstream!.addAudioTrack(mediaCapturer!.audioCaptureTrack)
             peerConnContext.peerConn.addStream(upstream!)
         }
     }
@@ -361,6 +364,33 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
             case "offer"?:
                 if let offer = SignalingOffer.decode(json).value {
                     print("peer offered")
+                    
+                    if let config = offer.config {
+                        print("offer config:", config)
+                        let peerConfig = RTCConfiguration()
+                        
+                        switch config.iceTransportPolicy {
+                        case "relay":
+                            peerConfig.iceTransportPolicy = .Relay
+                        default:
+                            print("unsupported iceTransportPolicy:",
+                                  config.iceTransportPolicy)
+                            break
+                        }
+                        
+                        for serverConfig in config.iceServers {
+                            let server = RTCIceServer(URLStrings: serverConfig.urls,
+                                                      username: serverConfig.username,
+                                                      credential: serverConfig.credential)
+                            peerConfig.iceServers = [server]
+                        }
+                        if !peerConnContext.peerConn.setConfiguration(peerConfig) {
+                            onConnectedHandler?(Error.FailureSetConfiguration(peerConfig))
+                            state = .Ready
+                            return
+                        }
+                    }
+                    
                     state = .PeerOffered
                     let sdp = offer.sessionDescription()
                     peerConnContext.peerConn.setRemoteDescription(sdp) {
