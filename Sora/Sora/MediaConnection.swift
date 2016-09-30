@@ -93,6 +93,11 @@ public struct MediaCapturer {
     
 }
 
+public enum CameraPosition {
+    case Front
+    case Back
+}
+
 public class MediaPublisher: MediaConnection {
     
     public var videoPreset: VideoPreset =  VideoPreset.VGA
@@ -114,8 +119,16 @@ public class MediaPublisher: MediaConnection {
                    mediaOption: mediaOption)
     }
     
-    public func switchCamera() {
-        mediaCapturer.videoCaptureSource.useBackCamera = true
+    public func switchCamera(position: CameraPosition? = nil) {
+        switch position {
+        case nil:
+            mediaCapturer.videoCaptureSource.useBackCamera =
+                !mediaCapturer.videoCaptureSource.useBackCamera
+        case CameraPosition.Front?:
+            mediaCapturer.videoCaptureSource.useBackCamera = false
+        case CameraPosition.Back?:
+            mediaCapturer.videoCaptureSource.useBackCamera = true
+        }
     }
     
 }
