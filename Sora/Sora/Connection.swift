@@ -17,6 +17,7 @@ public enum Error: ErrorType {
     case ConnectWaitTimeout
     case ConnectionDisconnected
     case ConnectionBusy
+    case MultipleDownstreams
     case WebSocketClose(Int, String)
     case WebSocketError(NSError)
     case PeerConnectionError(NSError)
@@ -97,16 +98,18 @@ public struct Connection {
                                      accessToken: accessToken,
                                      mediaOption: mediaOption)
         {
-            (peerConn, upstream, downstreams, mediaCapturer, error) in
+            (peerConn, upstream, downstream, mediaCapturer, error) in
             print("on peer connection open: ", error)
             if let error = error {
                 handler(nil, nil, error)
                 return
             }
-            let mediaStream = MediaStream.new(peerConn!, role: Role.Upstream,
+            assert(upstream != nil, "upstream is nil")
+            let mediaStream = MediaStream.new(peerConn!,
+                                              role: Role.Upstream,
                                               channelId: channelId,
                                               mediaOption: mediaOption,
-                                              nativeMediaStreams: [upstream!])
+                                              nativeMediaStream: upstream!)
             handler(mediaStream, mediaCapturer, nil)
         }
     }
@@ -118,17 +121,18 @@ public struct Connection {
                                      accessToken: accessToken,
                                      mediaOption: mediaOption)
         {
-            (peerConn, upstream, downstreams, mediaCapturer, error) in
+            (peerConn, upstream, downstream, mediaCapturer, error) in
             print("on peer connection open: ", error)
             if let error = error {
                 handler(nil, error)
                 return
             }
             
-            let mediaStream = MediaStream.new(peerConn!, role: Role.Downstream,
+            let mediaStream = MediaStream.new(peerConn!,
+                                              role: Role.Downstream,
                                               channelId: channelId,
                                               mediaOption: mediaOption,
-                                              nativeMediaStreams: downstreams)
+                                              nativeMediaStream: downstream!)
             handler(mediaStream, nil)
         }
     }
@@ -300,16 +304,16 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     
     func createPeerConnection(role: Role, channelId: String,
                               accessToken: String?, mediaOption: MediaOption,
-                              handler: ((RTCPeerConnection!, RTCMediaStream?, [RTCMediaStream], MediaCapturer?, Error?) -> ())) {
+                              handler: ((RTCPeerConnection!, RTCMediaStream?, RTCMediaStream?, MediaCapturer?, Error?) -> ())) {
         if let error = validateState() {
-            handler(nil, nil, [], nil, error)
+            handler(nil, nil, nil, nil, error)
             return
         }
         
         self.role = role
         peerConnContext = PeerConnectionContext(connContext: self, factory: peerConnFactory, mediaOption: mediaOption) {
-            (peerConn, downstreams, error) in
-            handler(peerConn, self.upstream, downstreams, self.mediaCapturer, error)
+            (peerConn, downstream, error) in
+            handler(peerConn, self.upstream, downstream, self.mediaCapturer, error)
         }
         peerConnContext.createPeerConnection()
         prepareUpstream()
@@ -324,7 +328,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     func prepareUpstream() {
         if role == Role.Upstream {
             print("create media capturer")
-            upstream = peerConnFactory.mediaStreamWithStreamId("main")
+            upstream = peerConnFactory.mediaStreamWithStreamId(MediaStream.defaultStreamId)
             let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
             mediaCapturer = MediaCapturer(factory: peerConnFactory, videoCaptureSourceMediaConstraints: constraints)
             upstream!.addVideoTrack(mediaCapturer!.videoCaptureTrack)
@@ -351,7 +355,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     
     func webSocket(webSocket: SRWebSocket!, didReceiveMessage message: AnyObject!) {
         // TODO:
-        print("webSocket:didReceiveMessage:")
+        print("webSocket:didReceiveMessage:", message)
         
         if let message = Message.fromJSONData(message) {
             conn.onReceiveHandler?(message)
@@ -375,7 +379,8 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                         default:
                             print("unsupported iceTransportPolicy:",
                                   config.iceTransportPolicy)
-                            break
+                            state = .Ready
+                            return
                         }
                         
                         for serverConfig in config.iceServers {
@@ -384,7 +389,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                                                       credential: serverConfig.credential)
                             peerConfig.iceServers = [server]
                         }
+                        
                         if !peerConnContext.peerConn.setConfiguration(peerConfig) {
+                            print("failed setting configuration sent by offer")
                             onConnectedHandler?(Error.FailureSetConfiguration(peerConfig))
                             state = .Ready
                             return
@@ -442,14 +449,14 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     var connContext: ConnectionContext
     var factory: RTCPeerConnectionFactory
     var peerConn: RTCPeerConnection!
-    var mediaStreams: [RTCMediaStream] = []
+    var downstream: RTCMediaStream?
     var mediaOption: MediaOption
-    var onConnectedHandler: ((RTCPeerConnection!, [RTCMediaStream], Error?) -> ())
+    var onConnectedHandler: ((RTCPeerConnection!, RTCMediaStream?, Error?) -> ())
     
     init(connContext: ConnectionContext,
          factory: RTCPeerConnectionFactory,
          mediaOption: MediaOption,
-         handler: ((RTCPeerConnection!, [RTCMediaStream], Error?) -> ()))
+         handler: ((RTCPeerConnection!, RTCMediaStream?, Error?) -> ()))
     {
         self.connContext = connContext
         self.factory = factory
@@ -472,13 +479,20 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     func peerConnection(peerConnection: RTCPeerConnection,
                         didAddStream stream: RTCMediaStream) {
         print("peerConnection:didAddStream:")
-        mediaStreams.append(stream)
+        if downstream != nil {
+            peerConnection.close()
+            onConnectedHandler(nil, nil, Error.MultipleDownstreams)
+            return
+        }
+        downstream = stream
     }
     
     func peerConnection(peerConnection: RTCPeerConnection,
                         didRemoveStream stream: RTCMediaStream) {
         print("peerConnection:didRemoveStream:")
-        mediaStreams = mediaStreams.filter { e in return e == stream }
+        if downstream == stream {
+            downstream = nil
+        }
     }
     
     func peerConnectionShouldNegotiate(peerConnection: RTCPeerConnection) {
@@ -492,7 +506,7 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
         case .Connected:
             print("ice connection connected")
             connContext.state = .Ready
-            onConnectedHandler(peerConnection, mediaStreams, nil)
+            onConnectedHandler(peerConnection, downstream, nil)
         default:
             break
         }

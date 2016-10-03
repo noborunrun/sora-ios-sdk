@@ -11,11 +11,9 @@ public protocol VideoRenderer {
 class VideoRendererSupport: NSObject, RTCVideoRenderer {
     
     var videoRenderer: VideoRenderer
-    var trackId: String?
     
-    init(videoRenderer: VideoRenderer, trackId: String?) {
+    init(videoRenderer: VideoRenderer) {
         self.videoRenderer = videoRenderer
-        self.trackId = trackId
     }
     
     func setSize(size: CGSize) {

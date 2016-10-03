@@ -8,6 +8,10 @@ public struct MediaStream {
         case Disconnected
     }
     
+    static var defaultStreamId: String = "mainStream"
+    static var defaultVideoTrackId: String = "mainVideo"
+    static var defaultAudioTrackId: String = "mainAudio"
+
     public var peerConnection: RTCPeerConnection
     public var mediaOption: MediaOption
     public var creationTime: NSDate
@@ -17,16 +21,16 @@ public struct MediaStream {
     
     var context: MediaStreamContext!
     var state: State
-    var videoRendererSupports: [VideoRendererSupport] = []
-    var nativeMediaStreams: [RTCMediaStream] = []
+    var videoRendererSupport: VideoRendererSupport?
+    var nativeMediaStream: RTCMediaStream
     
     static func new(peerConnection: RTCPeerConnection, role: Role, channelId: String,
                     mediaOption: MediaOption = MediaOption(),
-                    nativeMediaStreams: [RTCMediaStream]) -> MediaStream {
+                    nativeMediaStream: RTCMediaStream) -> MediaStream {
         var mediaStream = MediaStream(peerConnection: peerConnection,
                                       role: role, channelId: channelId,
                                       mediaOption: mediaOption,
-                                      nativeMediaStreams: nativeMediaStreams)
+                                      nativeMediaStream: nativeMediaStream)
         mediaStream.context = MediaStreamContext(mediaStream: mediaStream)
         peerConnection.delegate = mediaStream.context
         return mediaStream
@@ -34,12 +38,12 @@ public struct MediaStream {
     
     private init(peerConnection: RTCPeerConnection, role: Role, channelId: String,
          mediaOption: MediaOption = MediaOption(),
-         nativeMediaStreams: [RTCMediaStream]) {
+         nativeMediaStream: RTCMediaStream) {
         self.peerConnection = peerConnection
         self.role = role
         self.channelId = channelId
         self.mediaOption = mediaOption
-        self.nativeMediaStreams = nativeMediaStreams
+        self.nativeMediaStream = nativeMediaStream
         state = .Connected
         creationTime = NSDate()
     }
@@ -53,41 +57,17 @@ public struct MediaStream {
         return state == .Disconnected
     }
     
-    mutating func addVideoRendererSupport(support: VideoRendererSupport) {
-        videoRendererSupports.append(support)
-        for stream in nativeMediaStreams {
-            addVideoRenderer(support, stream: stream)
+    mutating func setVideoRenderer(videoRenderer: VideoRenderer?) {
+        if nativeMediaStream.videoTracks.isEmpty {
+            return
         }
-    }
-    
-    func addVideoRenderer(support: VideoRendererSupport, stream: RTCMediaStream) {
-        if let trackId = support.trackId {
-            for track in stream.videoTracks {
-                if track.trackId == trackId {
-                    track.addRenderer(support)
-                }
-            }
-        } else if stream.videoTracks.count > 0 {
-            stream.videoTracks[0].addRenderer(support)
-        }
-    }
-    
-    mutating func removeVideoRendererSupport(support: VideoRendererSupport) {
-        videoRendererSupports = videoRendererSupports.filter { e in return e == support }
-        for stream in nativeMediaStreams {
-            removeVideoRenderer(support, stream: stream)
-        }
-    }
-    
-    func removeVideoRenderer(support: VideoRendererSupport, stream: RTCMediaStream) {
-        if let trackId = support.trackId {
-            for track in stream.videoTracks {
-                if track.trackId == trackId {
-                    track.removeRenderer(support)
-                }
-            }
-        } else if stream.videoTracks.count > 0 {
-            stream.videoTracks[0].removeRenderer(support)
+        
+        let videoTrack = nativeMediaStream.videoTracks[0]
+        if let renderer = videoRenderer {
+            videoRendererSupport = VideoRendererSupport(videoRenderer: renderer)
+            videoTrack.addRenderer(videoRendererSupport!)
+        } else if let support = videoRendererSupport {
+            videoTrack.removeRenderer(support)
         }
     }
     

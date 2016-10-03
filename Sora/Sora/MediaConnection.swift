@@ -40,29 +40,18 @@ public class MediaConnection {
     public var mediaStream: MediaStream
     public var mediaOption: MediaOption
     
-    public var videoRenderers: [VideoRenderer] = []
-    var videoRendererSupports: [VideoRendererSupport] = []
+    public var videoRenderer: VideoRenderer? {
+        
+        willSet {
+            self.mediaStream.setVideoRenderer(newValue)
+        }
+        
+    }
     
     init(connection: Connection, mediaStream: MediaStream, mediaOption: MediaOption) {
         self.connection = connection
         self.mediaStream = mediaStream
         self.mediaOption = mediaOption
-    }
- 
-    public func addVideoRenderer(videoRenderer: VideoRenderer,
-                                 trackId: String? = nil) -> Int {
-        print("add video renderer", videoRenderer)
-        videoRenderers.append(videoRenderer)
-        let support = VideoRendererSupport(videoRenderer: videoRenderer, trackId: trackId)
-        videoRendererSupports.append(support)
-        mediaStream.addVideoRendererSupport(support)
-        return videoRenderers.count - 1
-    }
-    
-    public func removeVideoRenderer(index: Int) {
-        videoRenderers.removeAtIndex(index)
-        let support = videoRendererSupports.removeAtIndex(index)
-        mediaStream.removeVideoRendererSupport(support)
     }
     
     public func disconnect() {
@@ -82,13 +71,18 @@ public struct MediaCapturer {
     public var videoCaptureSource: RTCAVFoundationVideoSource
     public var audioCaptureTrack: RTCAudioTrack
     
+    static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
+    static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
+
     init(factory: RTCPeerConnectionFactory,
          videoCaptureSourceMediaConstraints: RTCMediaConstraints) {
         videoCaptureSource = factory
             .avFoundationVideoSourceWithConstraints(videoCaptureSourceMediaConstraints)
         videoCaptureTrack = factory
-            .videoTrackWithSource(videoCaptureSource, trackId: "main")
-        audioCaptureTrack = factory.audioTrackWithTrackId("main")
+            .videoTrackWithSource(videoCaptureSource,
+                                  trackId: MediaCapturer.defaultVideoCaptureTrackId)
+        audioCaptureTrack = factory
+            .audioTrackWithTrackId(MediaCapturer.defaultAudioCaptureTrackId)
     }
     
 }
