@@ -2,34 +2,6 @@ import XCTest
 import WebRTC
 @testable import Sora
 
-class SoraConnectionTestDelegate: ConnectionDelegate {
-    
-    func didFail(connection: Connection, error: NSError) {
-        
-    }
-    
-    func didChangeState(connection: Connection, state: Connection.State) {
-        
-    }
-    
-    func didSendSignalingConnect(connection: Connection, message: Signaling.Connect) {
-        
-    }
-    
-    func didReceiveSignalingOffer(connection: Connection, message: Signaling.Offer) {
-        
-    }
-    
-    func didSendSignalingAnswer(connection: Connection, message: Signaling.Answer) {
-    
-    }
-    
-    func didSendCandidate(connection: Connection, candidate: RTCIceCandidate) {
-        
-    }
-
-}
-
 class SoraTests: XCTestCase {
     
     var conn: Connection!
@@ -44,17 +16,34 @@ class SoraTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        conn = Connection(URL: NSURL(string: "ws://127.0.0.1:5000/signaling")!,
-                          config: nil, constraints: nil)
-        conn.delegate = SoraConnectionTestDelegate()
-        let message = Signaling.Connect(role: Signaling.Role.Downstream,
-                                        channelId: "sora",
-                                        accessToken: nil)
-        conn.open(message) { (error: NSError?) -> () in
-            print("connection open", error)
+    func testConnecting() {
+        let exp = expectationWithDescription("connecting")
+        var result = false
+        conn = Sora.Connection(URL: NSURL(string: "ws://127.0.0.1:5000/signaling")!)
+        conn.connect { (error) in
+            if let error = error {
+                print("signaling connecting is failed: ", error)
+                return
+            }
+            print("signaling connection is open")
+            var channel = self.conn.createMediaChannel("sora")
+            channel.createMediaSubscriber {
+                (subscriber, error) in
+                
+                if let error = error {
+                    print("media channel could not connect: ", error)
+                    return
+                }
+                result = true
+                subscriber!.disconnect()
+                exp.fulfill()
+                print("media channel connected")
+            }
+        }
+        waitForExpectationsWithTimeout(5) {
+            (error) in
+            XCTAssert(error == nil)
+            XCTAssert(result)
         }
     }
     

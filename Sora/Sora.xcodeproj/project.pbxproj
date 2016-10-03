@@ -25,6 +25,7 @@
 		914CE9301D5F0C390013E795 /* Argo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; };
 		914CE9311D5F0C490013E795 /* Argo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; };
 		914CE9321D5F0C530013E795 /* Argo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 914CE92F1D5F0C390013E795 /* Argo.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		91577A031D85CB1700A5AF9F /* MediaConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91577A021D85CB1700A5AF9F /* MediaConnection.swift */; };
 		916C1EB11D65FE9800B00943 /* WebRTC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		916C1EB21D65FEA600B00943 /* Runes.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		916C1EB31D65FEA600B00943 /* Curry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465581D633A1E00AD9C28 /* Curry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -36,10 +37,12 @@
 		91715A841D5DF24B0004C995 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91715A851D5DF2570004C995 /* WebRTC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91715A861D5DF25B0004C995 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9182018D1D58623400178E2B /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9182018C1D58623400178E2B /* Connection.swift */; };
 		918201921D58668E00178E2B /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; };
 		918201931D58668E00178E2B /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
 		918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; };
+		91B1D6421D756C0D00112A4E /* MediaChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D6411D756C0D00112A4E /* MediaChannel.swift */; };
+		91B1D6441D75D8CC00112A4E /* APIOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D6431D75D8CC00112A4E /* APIOperator.swift */; };
+		91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D6451D75E11F00112A4E /* VideoRenderer.swift */; };
 		91C465591D633A1E00AD9C28 /* Runes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; };
 		91C4655A1D633A1E00AD9C28 /* Curry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C465581D633A1E00AD9C28 /* Curry.framework */; };
 		91C4655B1D633A3D00AD9C28 /* Runes.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91C465571D633A1E00AD9C28 /* Runes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -49,6 +52,10 @@
 		91C7B0941D54636A006F5FA2 /* Sora.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C7B0891D54636A006F5FA2 /* Sora.framework */; };
 		91C7B0991D54636A006F5FA2 /* SoraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C7B0981D54636A006F5FA2 /* SoraTests.swift */; };
 		91C7B0A91D5463EA006F5FA2 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 91C7B0A81D5463EA006F5FA2 /* Cartfile */; };
+		91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DB5E9D1D6F43A5007744BF /* Connection.swift */; };
+		91E098841D799389004CF024 /* MediaStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E098831D799389004CF024 /* MediaStream.swift */; };
+		91E69B671D77536A004124C3 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D63F1D756AF800112A4E /* Notifications.swift */; };
+		91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,10 +104,14 @@
 /* Begin PBXFileReference section */
 		91192F731D598E4600F92D78 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		914CE92F1D5F0C390013E795 /* Argo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Argo.framework; path = Carthage/Build/iOS/Argo.framework; sourceTree = "<group>"; };
-		9182018C1D58623400178E2B /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		91577A021D85CB1700A5AF9F /* MediaConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaConnection.swift; sourceTree = "<group>"; };
 		9182018F1D58668E00178E2B /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		918201901D58668E00178E2B /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = Carthage/Build/iOS/WebRTC.framework; sourceTree = "<group>"; };
 		918201911D58668E00178E2B /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
+		91B1D63F1D756AF800112A4E /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		91B1D6411D756C0D00112A4E /* MediaChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChannel.swift; sourceTree = "<group>"; };
+		91B1D6431D75D8CC00112A4E /* APIOperator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIOperator.swift; sourceTree = "<group>"; };
+		91B1D6451D75E11F00112A4E /* VideoRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoRenderer.swift; sourceTree = "<group>"; };
 		91C465571D633A1E00AD9C28 /* Runes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Runes.framework; path = Carthage/Build/iOS/Runes.framework; sourceTree = "<group>"; };
 		91C465581D633A1E00AD9C28 /* Curry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Curry.framework; path = Carthage/Build/iOS/Curry.framework; sourceTree = "<group>"; };
 		91C4655D1D6376AC00AD9C28 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
@@ -111,6 +122,9 @@
 		91C7B0981D54636A006F5FA2 /* SoraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoraTests.swift; sourceTree = "<group>"; };
 		91C7B09A1D54636A006F5FA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91C7B0A81D5463EA006F5FA2 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		91DB5E9D1D6F43A5007744BF /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		91E098831D799389004CF024 /* MediaStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaStream.swift; sourceTree = "<group>"; };
+		91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoFrame.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,9 +193,16 @@
 			children = (
 				91C7B08C1D54636A006F5FA2 /* Sora.h */,
 				91C7B08E1D54636A006F5FA2 /* Info.plist */,
-				9182018C1D58623400178E2B /* Connection.swift */,
-				91192F731D598E4600F92D78 /* Message.swift */,
+				91B1D6431D75D8CC00112A4E /* APIOperator.swift */,
+				91DB5E9D1D6F43A5007744BF /* Connection.swift */,
 				91C4655D1D6376AC00AD9C28 /* JSON.swift */,
+				91B1D6411D756C0D00112A4E /* MediaChannel.swift */,
+				91577A021D85CB1700A5AF9F /* MediaConnection.swift */,
+				91E098831D799389004CF024 /* MediaStream.swift */,
+				91192F731D598E4600F92D78 /* Message.swift */,
+				91B1D63F1D756AF800112A4E /* Notifications.swift */,
+				91B1D6451D75E11F00112A4E /* VideoRenderer.swift */,
+				91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
@@ -352,9 +373,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91577A031D85CB1700A5AF9F /* MediaConnection.swift in Sources */,
+				91E098841D799389004CF024 /* MediaStream.swift in Sources */,
+				91B1D6441D75D8CC00112A4E /* APIOperator.swift in Sources */,
+				91E69B671D77536A004124C3 /* Notifications.swift in Sources */,
+				91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */,
 				91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */,
-				9182018D1D58623400178E2B /* Connection.swift in Sources */,
 				91192F741D598E4600F92D78 /* Message.swift in Sources */,
+				91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */,
+				91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */,
+				91B1D6421D756C0D00112A4E /* MediaChannel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +462,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "49e345ee-1e24-4cef-9228-9df5fc1f7525";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -476,6 +505,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "49e345ee-1e24-4cef-9228-9df5fc1f7525";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -498,6 +528,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Sora/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -522,6 +553,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Sora/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
