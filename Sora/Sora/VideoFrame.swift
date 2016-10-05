@@ -3,7 +3,7 @@ import CoreMedia
 import WebRTC
 
 public enum VideoFrameHandle {
-    case WebRTC(RTCVideoFrame)
+    case webRTC(RTCVideoFrame)
 }
 
 public protocol VideoFrame {
@@ -20,7 +20,7 @@ struct RemoteVideoFrame: VideoFrame {
     var nativeVideoFrame: RTCVideoFrame
     
     var videoFrameHandle: VideoFrameHandle? {
-        get { return VideoFrameHandle.WebRTC(nativeVideoFrame) }
+        get { return VideoFrameHandle.webRTC(nativeVideoFrame) }
     }
 
     var width: Int {

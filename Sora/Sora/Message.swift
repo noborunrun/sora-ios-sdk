@@ -1,23 +1,21 @@
 import Foundation
 import WebRTC
-import Argo
-import Curry
-import Runes
+import Unbox
 
 public struct Message {
     
-    public var data: [String: AnyObject]
+    public var data: [String: Any]
     
-    public init(data: [String: AnyObject] = [:]) {
+    public init(data: [String: Any] = [:]) {
         self.data = data
     }
     
-    public static func fromJSONData(data: AnyObject) -> Message? {
-        let base: NSData!
-        if data is NSData {
-            base = data as? NSData
+    public static func fromJSONData(_ data: Any) -> Message? {
+        let base: Data!
+        if data is Data {
+            base = data as? Data
         } else if let data = data as? String {
-            if let data = data.dataUsingEncoding(NSUTF8StringEncoding) {
+            if let data = data.data(using: String.Encoding.utf8) {
                 base = data
             } else {
                 return nil
@@ -27,15 +25,15 @@ public struct Message {
         }
         
         do {
-            let j = try NSJSONSerialization.JSONObjectWithData(base, options: NSJSONReadingOptions(rawValue: 0))
-            return fromJSONObject(j)
+            let j = try JSONSerialization.jsonObject(with: base, options: JSONSerialization.ReadingOptions(rawValue: 0))
+            return fromJSONObject(j as Any)
         } catch _ {
             return nil
         }
     }
     
-    public static func fromJSONObject(j: AnyObject) -> Message? {
-        if let j = j as? [String: AnyObject] {
+    public static func fromJSONObject(_ j: Any) -> Message? {
+        if let j = j as? [String: Any] {
             return Message(data: j)
         } else {
             return nil
@@ -43,8 +41,8 @@ public struct Message {
     }
     
     public func JSONString() -> String {
-        let JSONData = try! NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions(rawValue: 0))
-        return NSString(data: JSONData, encoding: NSUTF8StringEncoding) as String!
+        let JSONData = try! JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions(rawValue: 0))
+        return NSString(data: JSONData, encoding: String.Encoding.utf8.rawValue) as String!
     }
     
     public func type() -> String? {
@@ -73,24 +71,24 @@ public protocol Messageable {
 
 protocol JSONEncodable {
     
-    func encode() -> AnyObject
+    func encode() -> Any
     
 }
 
 enum Enable<T: JSONEncodable>: JSONEncodable {
     
-    case Default(T)
-    case Enable(T)
-    case Disable
+    case `default`(T)
+    case enable(T)
+    case disable
     
-    func encode() -> AnyObject {
+    func encode() -> Any {
         switch self {
-        case .Default(let value):
+        case .default(let value):
             return value.encode()
-        case .Enable(let value):
+        case .enable(let value):
             return value.encode()
-        case .Disable:
-            return "false"
+        case .disable:
+            return "false" as Any
         }
     }
     
@@ -98,27 +96,27 @@ enum Enable<T: JSONEncodable>: JSONEncodable {
 
 enum SignalingRole {
     
-    case Upstream
-    case Downstream
+    case upstream
+    case downstream
     
-    static func from(role: Role) -> SignalingRole {
+    static func from(_ role: Role) -> SignalingRole {
         switch role {
-        case .Upstream:
-            return Upstream
-        case .Downstream:
-            return Downstream
+        case .upstream:
+            return upstream
+        case .downstream:
+            return downstream
         }
     }
 }
 
 extension SignalingRole: JSONEncodable {
     
-    func encode() -> AnyObject {
+    func encode() -> Any {
         switch self {
-        case .Upstream:
-            return "upstream"
-        case .Downstream:
-            return "downstream"
+        case .upstream:
+            return "upstream" as Any
+        case .downstream:
+            return "downstream" as Any
         }
     }
     
@@ -126,22 +124,22 @@ extension SignalingRole: JSONEncodable {
 
 enum SignalingVideoCodec {
     
-    case VP8
-    case VP9
-    case H264
+    case vp8
+    case vp9
+    case h264
     
 }
 
 extension SignalingVideoCodec: JSONEncodable {
     
-    func encode() -> AnyObject {
+    func encode() -> Any {
         switch self {
-        case .VP8:
-            return "VP8"
-        case .VP9:
-            return "VP9"
-        case .H264:
-            return "h264"
+        case .vp8:
+            return "VP8" as Any
+        case .vp9:
+            return "VP9" as Any
+        case .h264:
+            return "h264" as Any
         }
         
     }
@@ -150,19 +148,19 @@ extension SignalingVideoCodec: JSONEncodable {
 
 enum SignalingAudioCodec {
     
-    case OPUS
-    case PCMU
+    case opus
+    case pcmu
     
 }
 
 extension SignalingAudioCodec: JSONEncodable {
     
-    func encode() -> AnyObject {
+    func encode() -> Any {
         switch self {
-        case .OPUS:
-            return "OPUS"
-        case .PCMU:
-            return "PCMU"
+        case .opus:
+            return "OPUS" as Any
+        case .pcmu:
+            return "PCMU" as Any
         }
         
     }
@@ -178,12 +176,12 @@ struct SignalingVideo {
 
 extension SignalingVideo: JSONEncodable {
     
-    func encode() -> AnyObject {
+    func encode() -> Any {
         var data = ["codec_type": codec_type.encode()]
         if let value = bit_rate {
-            data["bit_rate"] = value
+            data["bit_rate"] = value as Any?
         }
-        return data
+        return data as Any
     }
     
 }
@@ -196,7 +194,7 @@ struct SignalingAudio {
 
 extension SignalingAudio: JSONEncodable {
     
-    func encode() -> AnyObject {
+    func encode() -> Any {
         return ["codec_type": codec_type.encode()]
     }
     
@@ -224,14 +222,14 @@ struct SignalingConnect {
 extension SignalingConnect: Messageable {
     
     func message() -> Message {
-        var data = ["type": "connect", "role": role.encode(), "channel_id": channel_id]
+        var data = ["type": "connect", "role": role.encode(), "channel_id": channel_id] as [String : Any]
         if let value = access_token {
             data["access_token"] = value
         }
         if let value = video {
             data["video"] = value.encode()
         }
-        return Message(data: data)
+        return Message(data: data as [String : Any])
     }
     
 }
@@ -257,14 +255,14 @@ struct SignalingOffer {
     var config: Configuration?
 
     func sessionDescription() -> RTCSessionDescription {
-        return RTCSessionDescription(type: RTCSdpType.Offer, sdp: sdp)
+        return RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp)
     }
     
 }
 
 extension SignalingOffer: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingOffer> {
+    static func decode(_ j: JSON) -> Decoded<SignalingOffer> {
         return curry(SignalingOffer.init)
             <^> j <| "type"
             <*> j <| "client_id"
@@ -276,7 +274,7 @@ extension SignalingOffer: Decodable {
 
 extension SignalingOffer.Configuration: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingOffer.Configuration> {
+    static func decode(_ j: JSON) -> Decoded<SignalingOffer.Configuration> {
         return curry(SignalingOffer.Configuration.init)
             <^> j <|| "iceServers"
             <*> j <| "iceTransportPolicy"
@@ -286,7 +284,7 @@ extension SignalingOffer.Configuration: Decodable {
 
 extension SignalingOffer.Configuration.IceServer: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingOffer.Configuration.IceServer> {
+    static func decode(_ j: JSON) -> Decoded<SignalingOffer.Configuration.IceServer> {
         return curry(SignalingOffer.Configuration.IceServer.init)
             <^> j <|| "urls"
             <*> j <| "credential"
@@ -304,14 +302,14 @@ struct SignalingAnswer {
 extension SignalingAnswer: Messageable {
 
     func message() -> Message {
-        return Message(data: ["type": "answer", "sdp": sdp])
+        return Message(data: ["type": "answer" as Any, "sdp": sdp as Any])
     }
     
 }
 
 extension SignalingRole: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingRole> {
+    static func decode(_ j: JSON) -> Decoded<SignalingRole> {
         switch j {
         case let .String(dest):
             switch dest {
@@ -331,7 +329,7 @@ extension SignalingRole: Decodable {
 
 extension SignalingVideoCodec: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingVideoCodec> {
+    static func decode(_ j: JSON) -> Decoded<SignalingVideoCodec> {
         switch j {
         case let .String(name):
             switch name {
@@ -353,7 +351,7 @@ extension SignalingVideoCodec: Decodable {
 
 extension SignalingVideo: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingVideo> {
+    static func decode(_ j: JSON) -> Decoded<SignalingVideo> {
         return curry(SignalingVideo.init)
             <^> j <|? "bit_rate"
             <*> j <| "codec_type"
@@ -363,7 +361,7 @@ extension SignalingVideo: Decodable {
 
 extension SignalingAudioCodec: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingAudioCodec> {
+    static func decode(_ j: JSON) -> Decoded<SignalingAudioCodec> {
         switch j {
         case let .String(name):
             switch name {
@@ -381,7 +379,7 @@ extension SignalingAudioCodec: Decodable {
 
 extension SignalingAudio: Decodable {
     
-    static func decode(j: JSON) -> Decoded<SignalingAudio> {
+    static func decode(_ j: JSON) -> Decoded<SignalingAudio> {
         return curry(SignalingAudio.init)
             <^> j <| "codec_type"
     }
@@ -397,7 +395,7 @@ struct SignalingICECandidate {
 extension SignalingICECandidate: Messageable {
     
     func message() -> Message {
-        return Message(data: ["type": "candidate", "candidate": candidate])
+        return Message(data: ["type": "candidate" as Any, "candidate": candidate as Any])
     }
     
 }
@@ -408,7 +406,7 @@ struct SignalingPong {
 extension SignalingPong: Messageable {
     
     func message() -> Message {
-        return Message(data: ["type": "pong"])
+        return Message(data: ["type": "pong" as Any])
     }
     
 }

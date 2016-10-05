@@ -13,7 +13,7 @@ public struct MediaOption {
         () -> RTCConfiguration in
         let config = RTCConfiguration()
         config.iceServers = [
-            RTCIceServer(URLStrings: ["stun:stun.l.google.com:19302"],
+            RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"],
                 username: nil, credential: nil)]
         return config
     }()
@@ -34,13 +34,13 @@ public struct MediaOption {
     
 }
 
-public class MediaConnection {
+open class MediaConnection {
     
-    public var connection: Connection
-    public var mediaStream: MediaStream
-    public var mediaOption: MediaOption
+    open var connection: Connection
+    open var mediaStream: MediaStream
+    open var mediaOption: MediaOption
     
-    public var videoRenderer: VideoRenderer? {
+    open var videoRenderer: VideoRenderer? {
         
         willSet {
             self.mediaStream.setVideoRenderer(newValue)
@@ -54,14 +54,14 @@ public class MediaConnection {
         self.mediaOption = mediaOption
     }
     
-    public func disconnect() {
+    open func disconnect() {
         mediaStream.disconnect()
     }
     
 }
 
 public enum VideoPreset {
-    case VGA
+    case vga
     // TODO: etc.
 }
 
@@ -77,31 +77,31 @@ public struct MediaCapturer {
     init(factory: RTCPeerConnectionFactory,
          videoCaptureSourceMediaConstraints: RTCMediaConstraints) {
         videoCaptureSource = factory
-            .avFoundationVideoSourceWithConstraints(videoCaptureSourceMediaConstraints)
+            .avFoundationVideoSource(with: videoCaptureSourceMediaConstraints)
         videoCaptureTrack = factory
-            .videoTrackWithSource(videoCaptureSource,
+            .videoTrack(with: videoCaptureSource,
                                   trackId: MediaCapturer.defaultVideoCaptureTrackId)
         audioCaptureTrack = factory
-            .audioTrackWithTrackId(MediaCapturer.defaultAudioCaptureTrackId)
+            .audioTrack(withTrackId: MediaCapturer.defaultAudioCaptureTrackId)
     }
     
 }
 
 public enum CameraPosition {
-    case Front
-    case Back
+    case front
+    case back
 }
 
-public class MediaPublisher: MediaConnection {
+open class MediaPublisher: MediaConnection {
     
-    public var videoPreset: VideoPreset =  VideoPreset.VGA
-    public var mediaCapturer: MediaCapturer
+    open var videoPreset: VideoPreset =  VideoPreset.vga
+    open var mediaCapturer: MediaCapturer
 
-    public var canUseBackCamera: Bool {
+    open var canUseBackCamera: Bool {
         get { return mediaCapturer.videoCaptureSource.canUseBackCamera }
     }
     
-    public var captureSession: AVCaptureSession {
+    open var captureSession: AVCaptureSession {
         get { return mediaCapturer.videoCaptureSource.captureSession }
     }
     
@@ -113,20 +113,20 @@ public class MediaPublisher: MediaConnection {
                    mediaOption: mediaOption)
     }
     
-    public func switchCamera(position: CameraPosition? = nil) {
+    open func switchCamera(_ position: CameraPosition? = nil) {
         switch position {
         case nil:
             mediaCapturer.videoCaptureSource.useBackCamera =
                 !mediaCapturer.videoCaptureSource.useBackCamera
-        case CameraPosition.Front?:
+        case CameraPosition.front?:
             mediaCapturer.videoCaptureSource.useBackCamera = false
-        case CameraPosition.Back?:
+        case CameraPosition.back?:
             mediaCapturer.videoCaptureSource.useBackCamera = true
         }
     }
     
 }
 
-public class MediaSubscriber: MediaConnection {
+open class MediaSubscriber: MediaConnection {
     
 }

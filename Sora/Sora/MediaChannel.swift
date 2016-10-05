@@ -3,23 +3,23 @@ import WebRTC
 
 public enum Role {
     
-    case Upstream
-    case Downstream
+    case upstream
+    case downstream
     
 }
 
 public enum VideoCodec {
     
-    case VP8
-    case VP9
-    case H264
+    case vp8
+    case vp9
+    case h264
     
 }
 
 public enum AudioCodec {
     
-    case OPUS
-    case PCMU
+    case opus
+    case pcmu
         
 }
 
@@ -27,14 +27,14 @@ public struct MediaChannel {
     
     public var connection: Connection
     public var channelId: String
-    public var creationTime: NSDate
+    public var creationTime: Date
     public var mediaPublisher: MediaPublisher?
     public var mediaSubscriber: MediaSubscriber?
     
     init(connection: Connection, channelId: String) {
         self.connection = connection
         self.channelId = channelId
-        creationTime = NSDate()
+        creationTime = Date()
     }
     
     public func disconnect() {
@@ -43,13 +43,14 @@ public struct MediaChannel {
     }
     
     public mutating func createMediaPublisher(
-        mediaOption: MediaOption = MediaOption(),
+        _ mediaOption: MediaOption = MediaOption(),
         accessToken: String? = nil,
         videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
-        handler: ((MediaPublisher?, Error?) -> ()))
+        handler: @escaping ((MediaPublisher?, Error?) -> ()))
     {
         // TODO:
         print("create publisher")
+        var weakSelf = self
         connection.createMediaUpstream(channelId,
                                        accessToken: accessToken,
                                        mediaOption: mediaOption,
@@ -60,20 +61,22 @@ public struct MediaChannel {
                 handler(nil, error)
                 return
             }
-
-            self.mediaPublisher = MediaPublisher(connection: self.connection,
-                                                 mediaStream: mediaStream!,
-                                                 mediaOption: mediaOption,
-                                                 mediaCapturer: mediaCapturer!)
-            handler(self.mediaPublisher, nil)
+            
+            weakSelf.mediaPublisher = MediaPublisher(
+                connection: weakSelf.connection,
+                mediaStream: mediaStream!,
+                mediaOption: mediaOption,
+                mediaCapturer: mediaCapturer!)
+            handler(weakSelf.mediaPublisher, nil)
         }
     }
     
-    public mutating func createMediaSubscriber(mediaOption: MediaOption = MediaOption(),
+    public mutating func createMediaSubscriber(_ mediaOption: MediaOption = MediaOption(),
                                                accessToken: String? = nil,
-                                               handler: ((MediaSubscriber?, Error?) -> ())) {
+                                               handler: @escaping ((MediaSubscriber?, Error?) -> ())) {
         // TODO:
         print("create subscriber")
+        var weakSelf = self
         connection.createMediaDownstream(channelId, accessToken: accessToken,
                                          mediaOption: mediaOption)
         {
@@ -82,10 +85,11 @@ public struct MediaChannel {
                 handler(nil, error)
                 return
             }
-            self.mediaSubscriber = MediaSubscriber(connection: self.connection,
-                                                   mediaStream: mediaStream!,
-                                                   mediaOption: mediaOption)
-            handler(self.mediaSubscriber, nil)
+            weakSelf.mediaSubscriber = MediaSubscriber(
+                connection: weakSelf.connection,
+                mediaStream: mediaStream!,
+                mediaOption: mediaOption)
+            handler(weakSelf.mediaSubscriber, nil)
         }
     }
     
