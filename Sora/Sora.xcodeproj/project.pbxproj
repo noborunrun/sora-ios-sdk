@@ -314,17 +314,18 @@
 /* Begin PBXShellScriptBuildPhase section */
 		91192F751D59BB9200F92D78 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
-			);
-			outputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SocketRocket.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebRTC.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Unbox.framework",
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "carthage copy-frameworks";
 		};

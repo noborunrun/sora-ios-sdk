@@ -13,7 +13,7 @@ struct JSONBuilder {
 }
 
 /*
-public protocol JSONEncodable {
+open protocol JSONEncodable {
     
     func JSONString() -> String
     

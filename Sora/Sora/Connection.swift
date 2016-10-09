@@ -20,7 +20,7 @@ public enum ConnectionError: Error {
     case multipleDownstreams
     case webSocketClose(Int, String)
     case webSocketError(Error)
-    case peerConnectionError(NSError)
+    case peerConnectionError(Error)
 }
 
 public struct Connection {
@@ -293,9 +293,12 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     }
     
     func send(_ message: Message) {
-        let j = message.JSONString()
+        let j = message.JSON()
+        let data = try! JSONSerialization.data(withJSONObject: j,
+                                               options: JSONSerialization.WritingOptions(rawValue: 0))
+        let msg = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String!
         print("WebSocket send ", j)
-        webSocket.send(j)
+        webSocket.send(msg)
     }
 
     func send(_ messageable: Messageable) {
@@ -360,70 +363,76 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         if let message = Message.fromJSONData(message) {
             conn.onReceiveHandler?(message)
             let json = message.JSON()
-            print("received message type: ", message.type())
-            switch message.type() {
-            case "ping"?:
+            print("received message type: ", message.type)
+            switch message.type {
+            case .ping?:
                 self.send(SignalingPong())
                 
-            case "offer"?:
-                if let offer = SignalingOffer.decode(json).value {
-                    print("peer offered")
+            case .offer?:
+                let offer: SignalingOffer!
+                do {
+                    offer = Optional.some(try unbox(dictionary: json))
+                } catch {
+                    print("parse fail")
+                    state = .ready
+                    return
+                }
+                print("peer offered")
+                
+                if let config = offer.config {
+                    print("offer config:", config)
+                    let peerConfig = RTCConfiguration()
                     
-                    if let config = offer.config {
-                        print("offer config:", config)
-                        let peerConfig = RTCConfiguration()
-                        
-                        switch config.iceTransportPolicy {
-                        case "relay":
-                            peerConfig.iceTransportPolicy = .relay
-                        default:
-                            print("unsupported iceTransportPolicy:",
-                                  config.iceTransportPolicy)
-                            state = .ready
-                            return
-                        }
-                        
-                        for serverConfig in config.iceServers {
-                            let server = RTCIceServer(URLStrings: serverConfig.urls,
-                                                      username: serverConfig.username,
-                                                      credential: serverConfig.credential)
-                            peerConfig.iceServers = [server]
-                        }
-                        
-                        if !peerConnContext.peerConn.setConfiguration(peerConfig) {
-                            print("failed setting configuration sent by offer")
-                            onConnectedHandler?(ConnectionError.failureSetConfiguration(peerConfig))
-                            state = .ready
-                            return
-                        }
+                    switch config.iceTransportPolicy {
+                    case "relay":
+                        peerConfig.iceTransportPolicy = .relay
+                    default:
+                        print("unsupported iceTransportPolicy:",
+                              config.iceTransportPolicy)
+                        state = .ready
+                        return
                     }
                     
-                    state = .peerOffered
-                    let sdp = offer.sessionDescription()
-                    peerConnContext.peerConn.setRemoteDescription(sdp) {
-                        (error: NSError?) in
+                    for serverConfig in config.iceServers {
+                        let server = RTCIceServer(urlStrings: serverConfig.urls,
+                                                  username: serverConfig.username,
+                                                  credential: serverConfig.credential)
+                        peerConfig.iceServers = [server]
+                    }
+                    
+                    if !peerConnContext.peerConn.setConfiguration(peerConfig) {
+                        print("failed setting configuration sent by offer")
+                        onConnectedHandler?(ConnectionError.failureSetConfiguration(peerConfig))
+                        state = .ready
+                        return
+                    }
+                }
+                
+                state = .peerOffered
+                let sdp = offer.sessionDescription()
+                peerConnContext.peerConn.setRemoteDescription(sdp) {
+                    (error: Error?) in
+                    if let error = error {
+                        self.conn.onFailedHandler?(ConnectionError.peerConnectionError(error))
+                        return
+                    }
+                    
+                    print("create answer")
+                    self.state = .peerAnswering
+                    self.peerConnContext.peerConn.answer(for: self.peerConnContext.mediaOption.answerMediaConstraints) {
+                        (sdp, error) in
                         if let error = error {
-                            self.conn.onFailedHandler?(ConnectionError.PeerConnectionError(error))
+                            self.conn.onFailedHandler?(ConnectionError.peerConnectionError(error))
                             return
                         }
+                        print("generate answer: ", sdp)
                         
-                        print("create answer")
-                        self.state = .PeerAnswering
-                        self.peerConnContext.peerConn.answerForConstraints(self.peerConnContext.mediaOption.answerMediaConstraints) {
-                            (sdp, error) in
-                            if let error = error {
-                                self.conn.onFailedHandler?(ConnectionError.PeerConnectionError(error))
-                                return
-                            }
-                            print("generate answer: ", sdp)
-
-                            print("set local description")
-                            self.peerConnContext.peerConn.setLocalDescription(sdp!) {
-                                (error) in
-                                print("send answer")
-                                let answer = SignalingAnswer(sdp: sdp!.sdp)
-                                self.send(answer)
-                            }
+                        print("set local description")
+                        self.peerConnContext.peerConn.setLocalDescription(sdp!) {
+                            (error) in
+                            print("send answer")
+                            let answer = SignalingAnswer(sdp: sdp!.sdp)
+                            self.send(answer)
                         }
                     }
                 }
