@@ -4,8 +4,8 @@ import WebRTC
 public struct MediaStream {
     
     enum State {
-        case Connected
-        case Disconnected
+        case connected
+        case disconnected
     }
     
     static var defaultStreamId: String = "mainStream"
@@ -14,7 +14,7 @@ public struct MediaStream {
 
     public var peerConnection: RTCPeerConnection
     public var mediaOption: MediaOption
-    public var creationTime: NSDate
+    public var creationTime: Date
     public var channelId: String
     public var clientId: String?
     public var role: Role
@@ -24,7 +24,7 @@ public struct MediaStream {
     var videoRendererSupport: VideoRendererSupport?
     var nativeMediaStream: RTCMediaStream
     
-    static func new(peerConnection: RTCPeerConnection, role: Role, channelId: String,
+    static func new(_ peerConnection: RTCPeerConnection, role: Role, channelId: String,
                     mediaOption: MediaOption = MediaOption(),
                     nativeMediaStream: RTCMediaStream) -> MediaStream {
         var mediaStream = MediaStream(peerConnection: peerConnection,
@@ -36,7 +36,7 @@ public struct MediaStream {
         return mediaStream
     }
     
-    private init(peerConnection: RTCPeerConnection, role: Role, channelId: String,
+    fileprivate init(peerConnection: RTCPeerConnection, role: Role, channelId: String,
          mediaOption: MediaOption = MediaOption(),
          nativeMediaStream: RTCMediaStream) {
         self.peerConnection = peerConnection
@@ -44,20 +44,20 @@ public struct MediaStream {
         self.channelId = channelId
         self.mediaOption = mediaOption
         self.nativeMediaStream = nativeMediaStream
-        state = .Connected
-        creationTime = NSDate()
+        state = .connected
+        creationTime = Date()
     }
     
     mutating func disconnect() {
         peerConnection.close()
-        state = .Disconnected
+        state = .disconnected
     }
     
     public func isDisconnected() -> Bool {
-        return state == .Disconnected
+        return state == .disconnected
     }
     
-    mutating func setVideoRenderer(videoRenderer: VideoRenderer?) {
+    mutating func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
         if nativeMediaStream.videoTracks.isEmpty {
             return
         }
@@ -65,9 +65,9 @@ public struct MediaStream {
         let videoTrack = nativeMediaStream.videoTracks[0]
         if let renderer = videoRenderer {
             videoRendererSupport = VideoRendererSupport(videoRenderer: renderer)
-            videoTrack.addRenderer(videoRendererSupport!)
+            videoTrack.add(videoRendererSupport!)
         } else if let support = videoRendererSupport {
-            videoTrack.removeRenderer(support)
+            videoTrack.remove(support)
         }
     }
     
@@ -76,7 +76,7 @@ public struct MediaStream {
     var onConnectedHandler: ((MediaStream?, Error?) -> ())?
     var onDisconnectedHandler: ((MediaStream?, Error?) -> ())?
     
-    public mutating func onDisconnected(handler: ((MediaStream?, Error?) -> ())) {
+    public mutating func onDisconnected(_ handler: @escaping ((MediaStream?, Error?) -> ())) {
         onDisconnectedHandler = handler
     }
     
@@ -90,30 +90,30 @@ class MediaStreamContext: NSObject, RTCPeerConnectionDelegate {
         self.mediaStream = mediaStream
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection,
-                        didChangeSignalingState stateChanged: RTCSignalingState) {
+    func peerConnection(_ peerConnection: RTCPeerConnection,
+                        didChange stateChanged: RTCSignalingState) {
         print("peerConnection:didChangeSignalingState:", stateChanged.rawValue)
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection,
-                        didAddStream stream: RTCMediaStream) {
+    func peerConnection(_ peerConnection: RTCPeerConnection,
+                        didAdd stream: RTCMediaStream) {
         print("peerConnection:didAddStream:")
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection,
-                        didRemoveStream stream: RTCMediaStream) {
+    func peerConnection(_ peerConnection: RTCPeerConnection,
+                        didRemove stream: RTCMediaStream) {
         print("peerConnection:didRemoveStream:")
     }
     
-    func peerConnectionShouldNegotiate(peerConnection: RTCPeerConnection) {
+    func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
         print("peerConnectionShouldNegotiate:")
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection,
-                        didChangeIceConnectionState newState: RTCIceConnectionState) {
+    func peerConnection(_ peerConnection: RTCPeerConnection,
+                        didChange newState: RTCIceConnectionState) {
         print("peerConnection:didChangeIceConnectionState:", newState.rawValue)
         switch newState {
-        case .Disconnected:
+        case .disconnected:
             print("ice connection disconnected")
             mediaStream.disconnect()
         default:
@@ -121,23 +121,23 @@ class MediaStreamContext: NSObject, RTCPeerConnectionDelegate {
         }
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection,
-                        didChangeIceGatheringState newState: RTCIceGatheringState) {
+    func peerConnection(_ peerConnection: RTCPeerConnection,
+                        didChange newState: RTCIceGatheringState) {
         print("peerConnection:didChangeIceGatheringState:")
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection,
-                        didGenerateIceCandidate candidate: RTCIceCandidate) {
+    func peerConnection(_ peerConnection: RTCPeerConnection,
+                        didGenerate candidate: RTCIceCandidate) {
         print("peerConnection:didGenerateIceCandidate:")
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection,
-                        didRemoveIceCandidates candidates: [RTCIceCandidate]) {
+    func peerConnection(_ peerConnection: RTCPeerConnection,
+                        didRemove candidates: [RTCIceCandidate]) {
         print("peerConnection:didRemoveIceCandidates:")
     }
     
-    func peerConnection(peerConnection: RTCPeerConnection,
-                        didOpenDataChannel dataChannel: RTCDataChannel) {
+    func peerConnection(_ peerConnection: RTCPeerConnection,
+                        didOpen dataChannel: RTCDataChannel) {
         print("peerConnection:didOpenDataChannel:")
     }
     

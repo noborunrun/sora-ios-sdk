@@ -5,15 +5,15 @@ struct JSONBuilder {
     var values: [String: AnyObject]
     
     func generate() -> String {
-        return try! String(data: NSJSONSerialization.dataWithJSONObject(self.values,
-            options: NSJSONWritingOptions(rawValue: 0)),
-                           encoding: NSUTF8StringEncoding)!
+        return try! String(data: JSONSerialization.data(withJSONObject: self.values,
+            options: JSONSerialization.WritingOptions(rawValue: 0)),
+                           encoding: String.Encoding.utf8)!
     }
     
 }
 
 /*
-public protocol JSONEncodable {
+open protocol JSONEncodable {
     
     func JSONString() -> String
     

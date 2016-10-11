@@ -1,23 +1,33 @@
 import Foundation
 import WebRTC
-import Argo
-import Curry
-import Runes
+import Unbox
 
 public struct Message {
     
-    public var data: [String: AnyObject]
+    public enum `Type`: String {
+        case connect = "connect"
+        case offer = "offer"
+        case answer = "answer"
+        case candidate = "candidate"
+        case ping = "ping"
+        case pong = "pong"
+        case stats = "stats"
+    }
     
-    public init(data: [String: AnyObject] = [:]) {
+    public var type: Type?
+    public var data: [String: Any]
+    
+    public init(type: Type, data: [String: Any] = [:]) {
+        self.type = type
         self.data = data
     }
     
-    public static func fromJSONData(data: AnyObject) -> Message? {
-        let base: NSData!
-        if data is NSData {
-            base = data as? NSData
+    public static func fromJSONData(_ data: Any) -> Message? {
+        let base: Data!
+        if data is Data {
+            base = data as? Data
         } else if let data = data as? String {
-            if let data = data.dataUsingEncoding(NSUTF8StringEncoding) {
+            if let data = data.data(using: String.Encoding.utf8) {
                 base = data
             } else {
                 return nil
@@ -27,40 +37,35 @@ public struct Message {
         }
         
         do {
-            let j = try NSJSONSerialization.JSONObjectWithData(base, options: NSJSONReadingOptions(rawValue: 0))
-            return fromJSONObject(j)
+            let j = try JSONSerialization.jsonObject(with: base, options: JSONSerialization.ReadingOptions(rawValue: 0))
+            return fromJSONObject(j as Any)
         } catch _ {
             return nil
         }
     }
     
-    public static func fromJSONObject(j: AnyObject) -> Message? {
-        if let j = j as? [String: AnyObject] {
-            return Message(data: j)
+    public static func fromJSONObject(_ j: Any) -> Message? {
+        if let j = j as? [String: Any] {
+            if let type = j["type"] as? String {
+                if let type = Type(rawValue: type) {
+                    return Message(type: type, data: j)
+                } else {
+                    print("invalid type:", type)
+                    return nil
+                }
+            } else {
+                print("'type' is not found")
+                return nil
+            }
         } else {
             return nil
         }
     }
     
-    public func JSONString() -> String {
-        let JSONData = try! NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions(rawValue: 0))
-        return NSString(data: JSONData, encoding: NSUTF8StringEncoding) as String!
-    }
-    
-    public func type() -> String? {
-        return data["type"] as? String
-    }
-    
-    public func JSON() -> Argo.JSON {
-        return Argo.JSON(data)
-    }
-    
-}
-
-extension Message: Messageable {
-    
-    public func message() -> Message {
-        return self
+    public func JSON() -> [String: Any] {
+        var json: [String: Any] = self.data
+        json["type"] = type?.rawValue
+        return json
     }
     
 }
@@ -73,99 +78,70 @@ public protocol Messageable {
 
 protocol JSONEncodable {
     
-    func encode() -> AnyObject
+    func encode() -> Any
     
 }
 
 enum Enable<T: JSONEncodable>: JSONEncodable {
     
-    case Default(T)
-    case Enable(T)
-    case Disable
+    case `default`(T)
+    case enable(T)
+    case disable
     
-    func encode() -> AnyObject {
+    func encode() -> Any {
         switch self {
-        case .Default(let value):
+        case .default(let value):
             return value.encode()
-        case .Enable(let value):
+        case .enable(let value):
             return value.encode()
-        case .Disable:
-            return "false"
+        case .disable:
+            return "false" as Any
         }
     }
     
 }
 
-enum SignalingRole {
+enum SignalingRole: String, UnboxableEnum {
     
-    case Upstream
-    case Downstream
+    case upstream
+    case downstream
     
-    static func from(role: Role) -> SignalingRole {
+    static func from(_ role: Role) -> SignalingRole {
         switch role {
-        case .Upstream:
-            return Upstream
-        case .Downstream:
-            return Downstream
+        case .upstream:
+            return upstream
+        case .downstream:
+            return downstream
         }
     }
+    
 }
 
 extension SignalingRole: JSONEncodable {
     
-    func encode() -> AnyObject {
+    func encode() -> Any {
         switch self {
-        case .Upstream:
-            return "upstream"
-        case .Downstream:
-            return "downstream"
+        case .upstream:
+            return "upstream" as Any
+        case .downstream:
+            return "downstream" as Any
         }
     }
     
 }
 
-enum SignalingVideoCodec {
+enum SignalingVideoCodec: String, UnboxableEnum {
     
-    case VP8
-    case VP9
-    case H264
-    
-}
-
-extension SignalingVideoCodec: JSONEncodable {
-    
-    func encode() -> AnyObject {
-        switch self {
-        case .VP8:
-            return "VP8"
-        case .VP9:
-            return "VP9"
-        case .H264:
-            return "h264"
-        }
-        
-    }
+    case vp8 = "VP8"
+    case vp9 = "VP9"
+    case h264 = "H264"
     
 }
 
-enum SignalingAudioCodec {
+enum SignalingAudioCodec: String, UnboxableEnum {
     
-    case OPUS
-    case PCMU
-    
-}
-
-extension SignalingAudioCodec: JSONEncodable {
-    
-    func encode() -> AnyObject {
-        switch self {
-        case .OPUS:
-            return "OPUS"
-        case .PCMU:
-            return "PCMU"
-        }
-        
-    }
+    case opus = "OPUS"
+    case pcmu = "PCMU"
     
 }
 
@@ -178,12 +154,12 @@ struct SignalingVideo {
 
 extension SignalingVideo: JSONEncodable {
     
-    func encode() -> AnyObject {
-        var data = ["codec_type": codec_type.encode()]
+    func encode() -> Any {
+        var data = ["codec_type": codec_type.rawValue]
         if let value = bit_rate {
-            data["bit_rate"] = value
+            data["bit_rate"] = value.description
         }
-        return data
+        return data as Any
     }
     
 }
@@ -196,8 +172,8 @@ struct SignalingAudio {
 
 extension SignalingAudio: JSONEncodable {
     
-    func encode() -> AnyObject {
-        return ["codec_type": codec_type.encode()]
+    func encode() -> Any {
+        return ["codec_type": codec_type.rawValue]
     }
     
 }
@@ -224,14 +200,15 @@ struct SignalingConnect {
 extension SignalingConnect: Messageable {
     
     func message() -> Message {
-        var data = ["type": "connect", "role": role.encode(), "channel_id": channel_id]
+        var data = ["role": role.encode(),
+                    "channel_id": channel_id] as [String : Any]
         if let value = access_token {
             data["access_token"] = value
         }
         if let value = video {
             data["video"] = value.encode()
         }
-        return Message(data: data)
+        return Message(type: .connect, data: data as [String : Any])
     }
     
 }
@@ -251,46 +228,41 @@ struct SignalingOffer {
         
     }
     
-    var type: String
     var client_id: String
     var sdp: String
     var config: Configuration?
 
     func sessionDescription() -> RTCSessionDescription {
-        return RTCSessionDescription(type: RTCSdpType.Offer, sdp: sdp)
+        return RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp)
     }
     
 }
 
-extension SignalingOffer: Decodable {
+extension SignalingOffer: Unboxable {
     
-    static func decode(j: JSON) -> Decoded<SignalingOffer> {
-        return curry(SignalingOffer.init)
-            <^> j <| "type"
-            <*> j <| "client_id"
-            <*> j <| "sdp"
-            <*> j <|? "config"
+    init(unboxer: Unboxer) throws {
+        client_id = try unboxer.unbox(key: "client_id")
+        sdp = try unboxer.unbox(key: "sdp")
+        config = unboxer.unbox(key: "config")
     }
     
 }
 
-extension SignalingOffer.Configuration: Decodable {
+extension SignalingOffer.Configuration: Unboxable {
     
-    static func decode(j: JSON) -> Decoded<SignalingOffer.Configuration> {
-        return curry(SignalingOffer.Configuration.init)
-            <^> j <|| "iceServers"
-            <*> j <| "iceTransportPolicy"
+    init(unboxer: Unboxer) throws {
+        iceServers = try unboxer.unbox(key: "iceServers")
+        iceTransportPolicy = try unboxer.unbox(key: "iceTransportPolicy")
     }
     
 }
 
-extension SignalingOffer.Configuration.IceServer: Decodable {
-    
-    static func decode(j: JSON) -> Decoded<SignalingOffer.Configuration.IceServer> {
-        return curry(SignalingOffer.Configuration.IceServer.init)
-            <^> j <|| "urls"
-            <*> j <| "credential"
-            <*> j <| "username"
+extension SignalingOffer.Configuration.IceServer: Unboxable {
+
+    init(unboxer: Unboxer) throws {
+        urls = try unboxer.unbox(key: "urls")
+        credential = try unboxer.unbox(key: "credential")
+        username = try unboxer.unbox(key: "username")
     }
     
 }
@@ -304,86 +276,24 @@ struct SignalingAnswer {
 extension SignalingAnswer: Messageable {
 
     func message() -> Message {
-        return Message(data: ["type": "answer", "sdp": sdp])
+        return Message(type: .answer, data: ["sdp": sdp as Any])
     }
     
 }
 
-extension SignalingRole: Decodable {
+extension SignalingVideo: Unboxable {
     
-    static func decode(j: JSON) -> Decoded<SignalingRole> {
-        switch j {
-        case let .String(dest):
-            switch dest {
-            case "upstream":
-                return pure(.Upstream)
-            case "downstream":
-                return pure(.Downstream)
-            default:
-                return .typeMismatch("invalid destination", actual: dest)
-            }
-        default:
-            return .typeMismatch("String", actual: j)
-        }
+    init(unboxer: Unboxer) throws {
+        bit_rate = unboxer.unbox(key: "bit_rate")
+        codec_type = try unboxer.unbox(key: "codec_type")
     }
     
 }
 
-extension SignalingVideoCodec: Decodable {
+extension SignalingAudio: Unboxable {
     
-    static func decode(j: JSON) -> Decoded<SignalingVideoCodec> {
-        switch j {
-        case let .String(name):
-            switch name {
-            case "VP8":
-                return pure(.VP8)
-            case "VP9":
-                return pure(.VP9)
-            case "H264":
-                return pure(.H264)
-            default:
-                return .typeMismatch("invalid video codec type", actual: name)
-            }
-        default:
-            return .typeMismatch("String", actual: j)
-        }
-    }
-    
-}
-
-extension SignalingVideo: Decodable {
-    
-    static func decode(j: JSON) -> Decoded<SignalingVideo> {
-        return curry(SignalingVideo.init)
-            <^> j <|? "bit_rate"
-            <*> j <| "codec_type"
-    }
-    
-}
-
-extension SignalingAudioCodec: Decodable {
-    
-    static func decode(j: JSON) -> Decoded<SignalingAudioCodec> {
-        switch j {
-        case let .String(name):
-            switch name {
-            case "OPUS":
-                return pure(.OPUS)
-            default:
-                return .typeMismatch("invalid audio codec type", actual: name)
-            }
-        default:
-            return .typeMismatch("String", actual: j)
-        }
-    }
-    
-}
-
-extension SignalingAudio: Decodable {
-    
-    static func decode(j: JSON) -> Decoded<SignalingAudio> {
-        return curry(SignalingAudio.init)
-            <^> j <| "codec_type"
+    init(unboxer: Unboxer) throws {
+        codec_type = try unboxer.unbox(key: "codec_type")
     }
     
 }
@@ -397,7 +307,8 @@ struct SignalingICECandidate {
 extension SignalingICECandidate: Messageable {
     
     func message() -> Message {
-        return Message(data: ["type": "candidate", "candidate": candidate])
+        return Message(type: .candidate,
+                       data: ["candidate": candidate as Any])
     }
     
 }
@@ -408,7 +319,7 @@ struct SignalingPong {
 extension SignalingPong: Messageable {
     
     func message() -> Message {
-        return Message(data: ["type": "pong"])
+        return Message(type: .pong)
     }
     
 }

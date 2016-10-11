@@ -15,39 +15,39 @@ public struct APIOperator {
         public var audioCodec: AudioCodec?
     }
     
-    public var URL: NSURL
+    public var URL: Foundation.URL
     
     // DisconnectChannel, Disconnect
-    public func disconnectChannels(clientId: String?,
+    public func disconnectChannels(_ clientId: String?,
                                    channelId: String,
-                                   handler: ((Error?) -> ())) {
+                                   handler: ((ConnectionError?) -> ())) {
         // TODO:
     }
     
     // ListAllConnections, ListConnections
-    public func getConnections(channelId: String?,
+    public func getConnections(_ channelId: String?,
                                handler: (([Connection], Error?) -> ())) {
         // TODO:
     }
     
     // PushChannel, PushClient, PushUpstream/Downstream
-    public func sendPush(clientId: String?, channelId: String, role: Role?, message: Message,
-                         handler: ((Error?) -> ())) {
+    public func sendPush(_ clientId: String?, channelId: String, role: Role?, message: Message,
+                         handler: ((ConnectionError?) -> ())) {
         // TODO:
     }
     
     // StartRecording
-    public func startRecording(handler: (Error?) -> ()) {
+    public func startRecording(_ handler: (ConnectionError?) -> ()) {
         // TODO:
     }
     
     // StopRecording
-    public func stopRecording(handler: (Error?) -> ()) {
+    public func stopRecording(_ handler: (ConnectionError?) -> ()) {
         // TODO:
     }
     
     // ListRecording
-    public func getRecordings(handler: ([Recording], Error?) -> ()) {
+    public func getRecordings(_ handler: ([Recording], Error?) -> ()) {
         // TODO:
     }
     
