@@ -34,7 +34,9 @@ class VideoRendererSupport: NSObject, RTCVideoRenderer {
 open class VideoView: UIView, VideoRenderer {
 
     lazy var remoteVideoView: RTCEAGLVideoView = {
-        let view = RTCEAGLVideoView(frame: self.frame)
+        let view = RTCEAGLVideoView(frame: CGRect(x: 0, y: 0,
+                                                  width: self.frame.width,
+                                                  height: self.frame.height))
         self.addSubview(view)
         self.setNeedsDisplay()
         return view
@@ -42,6 +44,7 @@ open class VideoView: UIView, VideoRenderer {
     
     open func onChangedSize(_ size: CGSize) {
         remoteVideoView.setSize(size)
+        self.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
     }
     
     open func renderVideoFrame(_ frame: VideoFrame?) {
