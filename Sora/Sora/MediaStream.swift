@@ -73,10 +73,10 @@ public struct MediaStream {
     
     // MARK: イベントハンドラ
     
-    var onConnectedHandler: ((MediaStream?, Error?) -> ())?
-    var onDisconnectedHandler: ((MediaStream?, Error?) -> ())?
+    var onConnectedHandler: ((MediaStream?, Error?) -> Void)?
+    var onDisconnectedHandler: ((MediaStream?, Error?) -> Void)?
     
-    public mutating func onDisconnected(_ handler: @escaping ((MediaStream?, Error?) -> ())) {
+    public mutating func onDisconnected(_ handler: @escaping ((MediaStream?, Error?) -> Void)) {
         onDisconnectedHandler = handler
     }
     

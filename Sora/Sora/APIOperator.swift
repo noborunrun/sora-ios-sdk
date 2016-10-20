@@ -20,34 +20,34 @@ public struct APIOperator {
     // DisconnectChannel, Disconnect
     public func disconnectChannels(_ clientId: String?,
                                    channelId: String,
-                                   handler: ((ConnectionError?) -> ())) {
+                                   handler: ((ConnectionError?) -> Void)) {
         // TODO:
     }
     
     // ListAllConnections, ListConnections
     public func getConnections(_ channelId: String?,
-                               handler: (([Connection], Error?) -> ())) {
+                               handler: (([Connection], Error?) -> Void)) {
         // TODO:
     }
     
     // PushChannel, PushClient, PushUpstream/Downstream
     public func sendPush(_ clientId: String?, channelId: String, role: Role?, message: Message,
-                         handler: ((ConnectionError?) -> ())) {
+                         handler: ((ConnectionError?) -> Void)) {
         // TODO:
     }
     
     // StartRecording
-    public func startRecording(_ handler: (ConnectionError?) -> ()) {
+    public func startRecording(_ handler: (ConnectionError?) -> Void) {
         // TODO:
     }
     
     // StopRecording
-    public func stopRecording(_ handler: (ConnectionError?) -> ()) {
+    public func stopRecording(_ handler: (ConnectionError?) -> Void) {
         // TODO:
     }
     
     // ListRecording
-    public func getRecordings(_ handler: ([Recording], Error?) -> ()) {
+    public func getRecordings(_ handler: ([Recording], Error?) -> Void) {
         // TODO:
     }
     

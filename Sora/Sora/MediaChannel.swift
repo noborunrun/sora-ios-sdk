@@ -46,7 +46,7 @@ public struct MediaChannel {
         _ mediaOption: MediaOption = MediaOption(),
         accessToken: String? = nil,
         videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
-        handler: @escaping ((MediaPublisher?, Error?) -> ()))
+        handler: @escaping ((MediaPublisher?, Error?) -> Void))
     {
         // TODO:
         print("create publisher")
@@ -73,7 +73,7 @@ public struct MediaChannel {
     
     public mutating func createMediaSubscriber(_ mediaOption: MediaOption = MediaOption(),
                                                accessToken: String? = nil,
-                                               handler: @escaping ((MediaSubscriber?, Error?) -> ())) {
+                                               handler: @escaping ((MediaSubscriber?, Error?) -> Void)) {
         // TODO:
         print("create subscriber")
         var weakSelf = self

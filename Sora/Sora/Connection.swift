@@ -65,11 +65,11 @@ public struct Connection {
     
     // MARK: シグナリング接続
     
-    public func connect(_ handler: @escaping ((ConnectionError?) -> ())) {
+    public func connect(_ handler: @escaping ((ConnectionError?) -> Void)) {
         context.connect(handler)
     }
     
-    public func disconnect(_ handler: @escaping ((ConnectionError?) -> ())) {
+    public func disconnect(_ handler: @escaping ((ConnectionError?) -> Void)) {
         context.disconnect(handler)
     }
     
@@ -93,7 +93,7 @@ public struct Connection {
     func createMediaUpstream(_ channelId: String, accessToken: String?,
                              mediaOption: MediaOption,
                              streamId: String,
-                             handler: @escaping ((MediaStream?, MediaCapturer?, Error?) -> ())) {
+                             handler: @escaping ((MediaStream?, MediaCapturer?, Error?) -> Void)) {
         context.createPeerConnection(Role.upstream, channelId: channelId,
                                      accessToken: accessToken,
                                      mediaOption: mediaOption)
@@ -116,7 +116,7 @@ public struct Connection {
     
     func createMediaDownstream(_ channelId: String, accessToken: String?,
                                mediaOption: MediaOption,
-                               handler: @escaping ((MediaStream?, Error?) -> ())) {
+                               handler: @escaping ((MediaStream?, Error?) -> Void)) {
         context.createPeerConnection(Role.downstream, channelId: channelId,
                                      accessToken: accessToken,
                                      mediaOption: mediaOption)
@@ -139,90 +139,90 @@ public struct Connection {
     
     // MARK: イベントハンドラ
     
-    var onReceiveHandler: ((Message) -> ())?
-    var onConnectedHandler: (() -> ())?
-    var onDisconnectedHandler: (() -> ())?
-    var onUpdatedHandler: ((State) -> ())?
-    var onFailedHandler: ((ConnectionError) -> ())?
-    var onPingHandler: (() -> ())?
+    var onReceiveHandler: ((Message) -> Void)?
+    var onConnectedHandler: ((Void) -> Void)?
+    var onDisconnectedHandler: ((Void) -> Void)?
+    var onUpdatedHandler: ((State) -> Void)?
+    var onFailedHandler: ((ConnectionError) -> Void)?
+    var onPingHandler: ((Void) -> Void)?
     
     // シグナリングメッセージ
-    public mutating func onReceive(_ handler: @escaping ((Message) -> ())) {
+    public mutating func onReceive(_ handler: @escaping ((Message) -> Void)) {
         onReceiveHandler = handler
     }
     
     // 接続
-    public mutating func onConnected(_ handler: @escaping (() -> ())) {
+    public mutating func onConnected(_ handler: @escaping ((Void) -> Void)) {
         onConnectedHandler = handler
     }
     
-    public mutating func onDisconnected(_ handler: @escaping (() -> ())) {
+    public mutating func onDisconnected(_ handler: @escaping ((Void) -> Void)) {
         onDisconnectedHandler = handler
     }
     
-    public mutating func onUpdated(_ handler: @escaping ((State) -> ())) {
+    public mutating func onUpdated(_ handler: @escaping ((State) -> Void)) {
         onUpdatedHandler = handler
     }
     
-    public mutating func onFailed(_ handler: @escaping ((ConnectionError) -> ())) {
+    public mutating func onFailed(_ handler: @escaping ((ConnectionError) -> Void)) {
         onFailedHandler = handler
     }
     
-    public mutating func onPing(_ handler: @escaping (() -> ())) {
+    public mutating func onPing(_ handler: @escaping ((Void) -> Void)) {
         onPingHandler = handler
     }
     
     // MARK: イベントハンドラ: メディアチャネル
     
-    var onDisconnectMediaChannelHandler: ((MediaChannel) -> ())?
-    var onMediaChannelFailedHandler: ((MediaChannel, Error) -> ())?
+    var onDisconnectMediaChannelHandler: ((MediaChannel) -> Void)?
+    var onMediaChannelFailedHandler: ((MediaChannel, Error) -> Void)?
     
-    public mutating func onDisconnectMediaChannel(_ handler: @escaping ((MediaChannel) -> ())) {
+    public mutating func onDisconnectMediaChannel(_ handler: @escaping ((MediaChannel) -> Void)) {
         onDisconnectMediaChannelHandler = handler
     }
     
-    public mutating func onMediaChannelFailed(_ handler: @escaping ((MediaChannel, Error) -> ())) {
+    public mutating func onMediaChannelFailed(_ handler: @escaping ((MediaChannel, Error) -> Void)) {
         onMediaChannelFailedHandler = handler
     }
     
     // MARK: イベントハンドラ: Web フック
     
-    var onSignalingConnectedHandler: ((SignalingConnected) -> ())?
-    var onSignalingCompletedHandler: ((SignalingCompleted) -> ())?
-    var onSignalingDisconnectedHandler: ((SignalingDisconnected) -> ())?
-    var onSignalingFailedHandler: ((SignalingFailed) -> ())?
-    var onArchiveFinishedHandler: ((MediaChannel, ArchiveFinished) -> ())?
-    var onArchiveFailedHandler: ((MediaChannel, ArchiveFailed) -> ())?
+    var onSignalingConnectedHandler: ((SignalingConnected) -> Void)?
+    var onSignalingCompletedHandler: ((SignalingCompleted) -> Void)?
+    var onSignalingDisconnectedHandler: ((SignalingDisconnected) -> Void)?
+    var onSignalingFailedHandler: ((SignalingFailed) -> Void)?
+    var onArchiveFinishedHandler: ((MediaChannel, ArchiveFinished) -> Void)?
+    var onArchiveFailedHandler: ((MediaChannel, ArchiveFailed) -> Void)?
     
-    public mutating func onSignalingConnected(_ handler: @escaping ((SignalingConnected) -> ())) {
+    public mutating func onSignalingConnected(_ handler: @escaping ((SignalingConnected) -> Void)) {
         onSignalingConnectedHandler = handler
     }
     
-    public mutating func onSignalingCompleted(_ handler: @escaping ((SignalingCompleted) -> ())) {
+    public mutating func onSignalingCompleted(_ handler: @escaping ((SignalingCompleted) -> Void)) {
         onSignalingCompletedHandler = handler
     }
     
-    public mutating func onSignalingDisconnected(_ handler: @escaping ((SignalingDisconnected) -> ())) {
+    public mutating func onSignalingDisconnected(_ handler: @escaping ((SignalingDisconnected) -> Void)) {
         onSignalingDisconnectedHandler = handler
     }
     
-    public mutating func onSignalingFailedHandler(_ handler: @escaping ((SignalingFailed) -> ())) {
+    public mutating func onSignalingFailedHandler(_ handler: @escaping ((SignalingFailed) -> Void)) {
         onSignalingFailedHandler = handler
     }
     
-    public mutating func onArchiveFinished(_ handler: @escaping ((MediaChannel, ArchiveFinished) -> ())) {
+    public mutating func onArchiveFinished(_ handler: @escaping ((MediaChannel, ArchiveFinished) -> Void)) {
         onArchiveFinishedHandler = handler
     }
     
-    public mutating func onArchiveFailed(_ handler: @escaping ((MediaChannel, ArchiveFailed) -> ())) {
+    public mutating func onArchiveFailed(_ handler: @escaping ((MediaChannel, ArchiveFailed) -> Void)) {
         onArchiveFailedHandler = handler
     }
     
     // MARK: イベントハンドラ: プッシュ通知
     
-    var onReceivePushHandler: ((MediaChannel?, Message) -> ())?
+    var onReceivePushHandler: ((MediaChannel?, Message) -> Void)?
     
-    public mutating func onReceivePush(_ handler: @escaping ((MediaChannel?, Message) -> ())) {
+    public mutating func onReceivePush(_ handler: @escaping ((MediaChannel?, Message) -> Void)) {
         onReceivePushHandler = handler
     }
     
@@ -250,9 +250,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     var upstream: RTCMediaStream?
     var mediaCapturer: MediaCapturer?
 
-    var onConnectedHandler: ((ConnectionError?) -> ())?
-    var onDisconnectedHandler: ((ConnectionError?) -> ())?
-    var onSentHandler: ((ConnectionError?) -> ())?
+    var onConnectedHandler: ((ConnectionError?) -> Void)?
+    var onDisconnectedHandler: ((ConnectionError?) -> Void)?
+    var onSentHandler: ((ConnectionError?) -> Void)?
     
     init(connection: Connection) {
         self.conn = connection
@@ -269,7 +269,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         }
     }
     
-    func connect(_ handler: @escaping ((ConnectionError?) -> ())) {
+    func connect(_ handler: @escaping ((ConnectionError?) -> Void)) {
         if state != .disconnected {
             handler(ConnectionError.connectionBusy)
             return
@@ -281,7 +281,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         webSocket.open()
     }
     
-    func disconnect(_ handler: @escaping ((ConnectionError?) -> ())) {
+    func disconnect(_ handler: @escaping ((ConnectionError?) -> Void)) {
         if let error = validateState() {
             handler(error)
             return
@@ -307,7 +307,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     
     func createPeerConnection(_ role: Role, channelId: String,
                               accessToken: String?, mediaOption: MediaOption,
-                              handler: @escaping ((RTCPeerConnection?, RTCMediaStream?, RTCMediaStream?, MediaCapturer?, Error?) -> ())) {
+                              handler: @escaping ((RTCPeerConnection?, RTCMediaStream?, RTCMediaStream?, MediaCapturer?, Error?) -> Void)) {
         if let error = validateState() {
             handler(nil, nil, nil, nil, error)
             return
@@ -460,12 +460,12 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     var peerConn: RTCPeerConnection!
     var downstream: RTCMediaStream?
     var mediaOption: MediaOption
-    var onConnectedHandler: ((RTCPeerConnection?, RTCMediaStream?, Error?) -> ())
+    var onConnectedHandler: ((RTCPeerConnection?, RTCMediaStream?, Error?) -> Void)
     
     init(connContext: ConnectionContext,
          factory: RTCPeerConnectionFactory,
          mediaOption: MediaOption,
-         handler: @escaping ((RTCPeerConnection?, RTCMediaStream?, Error?) -> ()))
+         handler: @escaping ((RTCPeerConnection?, RTCMediaStream?, Error?) -> Void))
     {
         self.connContext = connContext
         self.factory = factory
