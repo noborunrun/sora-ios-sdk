@@ -23,7 +23,7 @@ public enum AudioCodec {
         
 }
 
-public struct MediaChannel {
+public class MediaChannel {
     
     public var connection: Connection
     public var channelId: String
@@ -42,7 +42,7 @@ public struct MediaChannel {
         mediaSubscriber?.disconnect()
     }
     
-    public mutating func createMediaPublisher(
+    public func createMediaPublisher(
         _ mediaOption: MediaOption = MediaOption(),
         accessToken: String? = nil,
         videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
@@ -50,7 +50,6 @@ public struct MediaChannel {
     {
         // TODO:
         print("create publisher")
-        var weakSelf = self
         connection.createMediaUpstream(channelId,
                                        accessToken: accessToken,
                                        mediaOption: mediaOption,
@@ -62,21 +61,20 @@ public struct MediaChannel {
                 return
             }
             
-            weakSelf.mediaPublisher = MediaPublisher(
-                connection: weakSelf.connection,
+            self.mediaPublisher = MediaPublisher(
+                connection: self.connection,
                 mediaStream: mediaStream!,
                 mediaOption: mediaOption,
                 mediaCapturer: mediaCapturer!)
-            handler(weakSelf.mediaPublisher, nil)
+            handler(self.mediaPublisher, nil)
         }
     }
     
-    public mutating func createMediaSubscriber(_ mediaOption: MediaOption = MediaOption(),
-                                               accessToken: String? = nil,
-                                               handler: @escaping ((MediaSubscriber?, Error?) -> Void)) {
+    public func createMediaSubscriber(_ mediaOption: MediaOption = MediaOption(),
+                                      accessToken: String? = nil,
+                                      handler: @escaping ((MediaSubscriber?, Error?) -> Void)) {
         // TODO:
         print("create subscriber")
-        var weakSelf = self
         connection.createMediaDownstream(channelId, accessToken: accessToken,
                                          mediaOption: mediaOption)
         {
@@ -85,11 +83,11 @@ public struct MediaChannel {
                 handler(nil, error)
                 return
             }
-            weakSelf.mediaSubscriber = MediaSubscriber(
-                connection: weakSelf.connection,
+            self.mediaSubscriber = MediaSubscriber(
+                connection: self.connection,
                 mediaStream: mediaStream!,
                 mediaOption: mediaOption)
-            handler(weakSelf.mediaSubscriber, nil)
+            handler(self.mediaSubscriber, nil)
         }
     }
     

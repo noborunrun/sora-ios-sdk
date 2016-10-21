@@ -23,7 +23,7 @@ public enum ConnectionError: Error {
     case peerConnectionError(Error)
 }
 
-public struct Connection {
+public class Connection {
     
     public enum State {
         case connected
@@ -59,7 +59,7 @@ public struct Connection {
         config()
     }
     
-    mutating func config() {
+    func config() {
         context = ConnectionContext(connection: self)
     }
     
@@ -147,28 +147,28 @@ public struct Connection {
     var onPingHandler: ((Void) -> Void)?
     
     // シグナリングメッセージ
-    public mutating func onReceive(_ handler: @escaping ((Message) -> Void)) {
+    public func onReceive(_ handler: @escaping ((Message) -> Void)) {
         onReceiveHandler = handler
     }
     
     // 接続
-    public mutating func onConnected(_ handler: @escaping ((Void) -> Void)) {
+    public func onConnected(_ handler: @escaping ((Void) -> Void)) {
         onConnectedHandler = handler
     }
     
-    public mutating func onDisconnected(_ handler: @escaping ((Void) -> Void)) {
+    public func onDisconnected(_ handler: @escaping ((Void) -> Void)) {
         onDisconnectedHandler = handler
     }
     
-    public mutating func onUpdated(_ handler: @escaping ((State) -> Void)) {
+    public func onUpdated(_ handler: @escaping ((State) -> Void)) {
         onUpdatedHandler = handler
     }
     
-    public mutating func onFailed(_ handler: @escaping ((ConnectionError) -> Void)) {
+    public func onFailed(_ handler: @escaping ((ConnectionError) -> Void)) {
         onFailedHandler = handler
     }
     
-    public mutating func onPing(_ handler: @escaping ((Void) -> Void)) {
+    public func onPing(_ handler: @escaping ((Void) -> Void)) {
         onPingHandler = handler
     }
     
@@ -177,11 +177,11 @@ public struct Connection {
     var onDisconnectMediaChannelHandler: ((MediaChannel) -> Void)?
     var onMediaChannelFailedHandler: ((MediaChannel, Error) -> Void)?
     
-    public mutating func onDisconnectMediaChannel(_ handler: @escaping ((MediaChannel) -> Void)) {
+    public func onDisconnectMediaChannel(_ handler: @escaping ((MediaChannel) -> Void)) {
         onDisconnectMediaChannelHandler = handler
     }
     
-    public mutating func onMediaChannelFailed(_ handler: @escaping ((MediaChannel, Error) -> Void)) {
+    public func onMediaChannelFailed(_ handler: @escaping ((MediaChannel, Error) -> Void)) {
         onMediaChannelFailedHandler = handler
     }
     
@@ -194,27 +194,27 @@ public struct Connection {
     var onArchiveFinishedHandler: ((MediaChannel, ArchiveFinished) -> Void)?
     var onArchiveFailedHandler: ((MediaChannel, ArchiveFailed) -> Void)?
     
-    public mutating func onSignalingConnected(_ handler: @escaping ((SignalingConnected) -> Void)) {
+    public func onSignalingConnected(_ handler: @escaping ((SignalingConnected) -> Void)) {
         onSignalingConnectedHandler = handler
     }
     
-    public mutating func onSignalingCompleted(_ handler: @escaping ((SignalingCompleted) -> Void)) {
+    public func onSignalingCompleted(_ handler: @escaping ((SignalingCompleted) -> Void)) {
         onSignalingCompletedHandler = handler
     }
     
-    public mutating func onSignalingDisconnected(_ handler: @escaping ((SignalingDisconnected) -> Void)) {
+    public func onSignalingDisconnected(_ handler: @escaping ((SignalingDisconnected) -> Void)) {
         onSignalingDisconnectedHandler = handler
     }
     
-    public mutating func onSignalingFailedHandler(_ handler: @escaping ((SignalingFailed) -> Void)) {
+    public func onSignalingFailedHandler(_ handler: @escaping ((SignalingFailed) -> Void)) {
         onSignalingFailedHandler = handler
     }
     
-    public mutating func onArchiveFinished(_ handler: @escaping ((MediaChannel, ArchiveFinished) -> Void)) {
+    public func onArchiveFinished(_ handler: @escaping ((MediaChannel, ArchiveFinished) -> Void)) {
         onArchiveFinishedHandler = handler
     }
     
-    public mutating func onArchiveFailed(_ handler: @escaping ((MediaChannel, ArchiveFailed) -> Void)) {
+    public func onArchiveFailed(_ handler: @escaping ((MediaChannel, ArchiveFailed) -> Void)) {
         onArchiveFailedHandler = handler
     }
     
@@ -222,7 +222,7 @@ public struct Connection {
     
     var onReceivePushHandler: ((MediaChannel?, Message) -> Void)?
     
-    public mutating func onReceivePush(_ handler: @escaping ((MediaChannel?, Message) -> Void)) {
+    public func onReceivePush(_ handler: @escaping ((MediaChannel?, Message) -> Void)) {
         onReceivePushHandler = handler
     }
     

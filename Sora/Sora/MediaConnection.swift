@@ -1,7 +1,7 @@
 import Foundation
 import WebRTC
 
-public struct MediaOption {
+public class MediaOption {
     
     public var videoEnabled: Bool
     public var audioEnabled: Bool
@@ -34,13 +34,13 @@ public struct MediaOption {
     
 }
 
-open class MediaConnection {
+public class MediaConnection {
     
-    open var connection: Connection
-    open var mediaStream: MediaStream
-    open var mediaOption: MediaOption
+    public var connection: Connection
+    public var mediaStream: MediaStream
+    public var mediaOption: MediaOption
     
-    open var videoRenderer: VideoRenderer? {
+    public var videoRenderer: VideoRenderer? {
         
         willSet {
             self.mediaStream.setVideoRenderer(newValue)
@@ -54,7 +54,7 @@ open class MediaConnection {
         self.mediaOption = mediaOption
     }
     
-    open func disconnect() {
+    public func disconnect() {
         mediaStream.disconnect()
     }
     
@@ -65,7 +65,7 @@ public enum VideoPreset {
     // TODO: etc.
 }
 
-public struct MediaCapturer {
+public class MediaCapturer {
     
     public var videoCaptureTrack: RTCVideoTrack
     public var videoCaptureSource: RTCAVFoundationVideoSource
@@ -92,16 +92,16 @@ public enum CameraPosition {
     case back
 }
 
-open class MediaPublisher: MediaConnection {
+public class MediaPublisher: MediaConnection {
     
-    open var videoPreset: VideoPreset =  VideoPreset.vga
-    open var mediaCapturer: MediaCapturer
+    public var videoPreset: VideoPreset =  VideoPreset.vga
+    public var mediaCapturer: MediaCapturer
 
-    open var canUseBackCamera: Bool {
+    public var canUseBackCamera: Bool {
         get { return mediaCapturer.videoCaptureSource.canUseBackCamera }
     }
     
-    open var captureSession: AVCaptureSession {
+    public var captureSession: AVCaptureSession {
         get { return mediaCapturer.videoCaptureSource.captureSession }
     }
     
@@ -113,7 +113,7 @@ open class MediaPublisher: MediaConnection {
                    mediaOption: mediaOption)
     }
     
-    open func switchCamera(_ position: CameraPosition? = nil) {
+    public func switchCamera(_ position: CameraPosition? = nil) {
         switch position {
         case nil:
             mediaCapturer.videoCaptureSource.useBackCamera =
@@ -127,6 +127,6 @@ open class MediaPublisher: MediaConnection {
     
 }
 
-open class MediaSubscriber: MediaConnection {
+public class MediaSubscriber: MediaConnection {
     
 }

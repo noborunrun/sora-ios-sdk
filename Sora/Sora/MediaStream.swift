@@ -1,7 +1,7 @@
 import Foundation
 import WebRTC
 
-public struct MediaStream {
+public class MediaStream {
     
     enum State {
         case connected
@@ -27,7 +27,7 @@ public struct MediaStream {
     static func new(_ peerConnection: RTCPeerConnection, role: Role, channelId: String,
                     mediaOption: MediaOption = MediaOption(),
                     nativeMediaStream: RTCMediaStream) -> MediaStream {
-        var mediaStream = MediaStream(peerConnection: peerConnection,
+        let mediaStream = MediaStream(peerConnection: peerConnection,
                                       role: role, channelId: channelId,
                                       mediaOption: mediaOption,
                                       nativeMediaStream: nativeMediaStream)
@@ -48,7 +48,7 @@ public struct MediaStream {
         creationTime = Date()
     }
     
-    mutating func disconnect() {
+    func disconnect() {
         peerConnection.close()
         state = .disconnected
     }
@@ -57,7 +57,7 @@ public struct MediaStream {
         return state == .disconnected
     }
     
-    mutating func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
+    func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
         if nativeMediaStream.videoTracks.isEmpty {
             return
         }
@@ -76,7 +76,7 @@ public struct MediaStream {
     var onConnectedHandler: ((MediaStream?, Error?) -> Void)?
     var onDisconnectedHandler: ((MediaStream?, Error?) -> Void)?
     
-    public mutating func onDisconnected(_ handler: @escaping ((MediaStream?, Error?) -> Void)) {
+    public func onDisconnected(_ handler: @escaping ((MediaStream?, Error?) -> Void)) {
         onDisconnectedHandler = handler
     }
     
