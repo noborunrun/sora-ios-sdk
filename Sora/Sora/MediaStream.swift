@@ -70,7 +70,7 @@ public class MediaStream {
             videoTrack.remove(support)
         }
     }
-    
+
     // MARK: イベントハンドラ
     
     var onConnectedHandler: ((MediaStream?, Error?) -> Void)?
@@ -78,6 +78,24 @@ public class MediaStream {
     
     public func onDisconnected(_ handler: @escaping ((MediaStream?, Error?) -> Void)) {
         onDisconnectedHandler = handler
+    }
+    
+    var onAvailableHandler: ((Int) -> Void)?
+    var connectionTimer: Timer?
+    
+    @available(iOS 10.0, *)
+    public func onAvailable(handler: @escaping ((Int) -> Void)) {
+        onAvailableHandler = handler
+        connectionTimer?.invalidate()
+        connectionTimer = Timer(timeInterval: 1, repeats: true) {
+            timer in
+            if self.state == .connected {
+                let diff = Date(timeIntervalSinceNow: 0).timeIntervalSince(self.creationTime)
+                handler(Int(diff))
+            }
+        }
+        RunLoop.main.add(connectionTimer!, forMode: .commonModes)
+        RunLoop.main.run()
     }
     
 }
