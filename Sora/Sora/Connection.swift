@@ -349,7 +349,15 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         print("webSocket:didFailWithError:")
-        onConnectedHandler?(ConnectionError.webSocketError(error))
+        let connError = ConnectionError.webSocketError(error)
+        switch state {
+        case .connecting:
+            onConnectedHandler?(connError)
+        case .disconnecting:
+            onDisconnectedHandler?(connError)
+        default:
+            break
+        }
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didReceivePong pongPayload: Data!) {
@@ -444,11 +452,14 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     
     func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
         print("webSocket:didCloseWithCode:", code)
-        var error: Error? = nil
-        if let reason = reason {
-            error = ConnectionError.webSocketClose(code, reason)
+        switch state {
+        case .connecting:
+            onConnectedHandler?(nil)
+        case .disconnecting:
+            onDisconnectedHandler?(nil)
+        default:
+            break
         }
-        onDisconnectedHandler?(error as! ConnectionError?)
     }
     
 }
