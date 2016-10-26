@@ -49,6 +49,7 @@ public class MediaStream {
     }
     
     func disconnect() {
+        connectionTimer?.invalidate()
         peerConnection.close()
         state = .disconnected
     }

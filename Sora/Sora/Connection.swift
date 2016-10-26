@@ -70,6 +70,9 @@ public class Connection {
     }
     
     public func disconnect(_ handler: @escaping ((ConnectionError?) -> Void)) {
+        for channel in mediaChannels {
+            channel.disconnect()
+        }
         context.disconnect(handler)
     }
     
@@ -87,7 +90,9 @@ public class Connection {
     
     // メディアチャネル
     public func createMediaChannel(_ channelId: String) -> MediaChannel {
-        return MediaChannel(connection: self, channelId: channelId)
+        let channel = MediaChannel(connection: self, channelId: channelId)
+        mediaChannels.append(channel)
+        return channel
     }
     
     func createMediaUpstream(_ channelId: String, accessToken: String?,
