@@ -44,7 +44,6 @@ public class VideoView: UIView, VideoRenderer {
     
     public func onChangedSize(_ size: CGSize) {
         remoteVideoView.setSize(size)
-        self.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
     }
     
     public func renderVideoFrame(_ frame: VideoFrame?) {
