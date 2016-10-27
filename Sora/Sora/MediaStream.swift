@@ -51,6 +51,7 @@ public class MediaStream {
     func disconnect() {
         connectionTimer?.invalidate()
         peerConnection.close()
+        videoRendererSupport = nil
         state = .disconnected
     }
     
