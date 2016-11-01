@@ -36,6 +36,7 @@ public class Connection {
     public var clientId: String?
     public var creationTime: Date
     public var mediaChannels: [MediaChannel] = []
+    public var eventLog: EventLog = EventLog()
     
     public var state: State = .disconnected {
         
@@ -279,6 +280,10 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
             handler(ConnectionError.connectionBusy)
             return
         }
+        
+        conn.eventLog.mark(event:
+            Event(type: .WebSocket,
+                  comment: String(format: "open %@", conn.URL.description)))
         state = .connecting
         onConnectedHandler = handler
         webSocket = SRWebSocket(url: conn.URL)
@@ -295,6 +300,8 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         onDisconnectedHandler = handler
         webSocket.close()
         webSocket = nil
+        conn.eventLog.mark(event:
+            Event(type: .WebSocket, comment: "close"))
     }
     
     func send(_ message: Message) {
@@ -348,6 +355,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     // MARK: SRWebSocketDelegate
     
     func webSocketDidOpen(_ webSocket: SRWebSocket!) {
+        conn.eventLog.mark(event: Event(type: .WebSocket, comment: "opened"))
         state = .ready
         onConnectedHandler?(nil)
     }
@@ -379,9 +387,13 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
             print("received message type: ", message.type)
             switch message.type {
             case .ping?:
+                conn.eventLog.mark(event: Event(type: .Signaling,
+                                                comment: "receive ping"))
                 self.send(SignalingPong())
                 
             case .offer?:
+                conn.eventLog.mark(event: Event(type: .Signaling,
+                                                comment: "receive offer"))
                 let offer: SignalingOffer!
                 do {
                     offer = Optional.some(try unbox(dictionary: json))
