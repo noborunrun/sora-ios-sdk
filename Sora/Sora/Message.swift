@@ -2,7 +2,7 @@ import Foundation
 import WebRTC
 import Unbox
 
-public struct Message {
+public class Message {
     
     public enum `Type`: String {
         case connect = "connect"
