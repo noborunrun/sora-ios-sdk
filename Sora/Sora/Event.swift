@@ -2,7 +2,7 @@ import Foundation
 
 public class Event {
     
-    public enum `Type`: String {
+    public enum EventType: String {
         case WebSocket
         case Signaling
         case PeerConnection
@@ -15,11 +15,11 @@ public class Event {
         case End
     }
     
-    public var type: Type
+    public var type: EventType
     public var comment: String
     public var date: Date
     
-    public init(type: Type, comment: String, date: Date = Date()) {
+    public init(type: EventType, comment: String, date: Date = Date()) {
         self.type = type
         self.comment = comment
         self.date = date
