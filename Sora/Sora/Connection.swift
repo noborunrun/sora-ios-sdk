@@ -300,8 +300,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         onDisconnectedHandler = handler
         webSocket.close()
         webSocket = nil
-        conn.eventLog.mark(event:
-            Event(type: .WebSocket, comment: "close"))
+        conn.eventLog.markFormat(type: .WebSocket, format: "close")
     }
     
     func send(_ message: Message) {
@@ -310,6 +309,8 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                                                options: JSONSerialization.WritingOptions(rawValue: 0))
         let msg = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String!
         print("WebSocket send ", j)
+        conn.eventLog.markFormat(type: .WebSocket, format: "send message: %@",
+                                 arguments: msg!)
         webSocket.send(msg)
     }
 
@@ -355,13 +356,15 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     // MARK: SRWebSocketDelegate
     
     func webSocketDidOpen(_ webSocket: SRWebSocket!) {
-        conn.eventLog.mark(event: Event(type: .WebSocket, comment: "opened"))
+        conn.eventLog.markFormat(type: .WebSocket, format: "opened")
         state = .ready
         onConnectedHandler?(nil)
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         print("webSocket:didFailWithError:")
+        conn.eventLog.markFormat(type: .WebSocket, format: "fail: %@",
+                                 arguments: error.localizedDescription)
         let connError = ConnectionError.webSocketError(error)
         switch state {
         case .connecting:
@@ -374,12 +377,17 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didReceivePong pongPayload: Data!) {
-        // TODO:
+        conn.eventLog.markFormat(type: .WebSocket,
+                                 format: "received pong: %@",
+                                 arguments: pongPayload.description)
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         // TODO:
         print("webSocket:didReceiveMessage:", message)
+        conn.eventLog.markFormat(type: .WebSocket,
+                                 format: "received message: %@",
+                                 arguments: (message as AnyObject).description)
         
         if let message = Message.fromJSONData(message) {
             conn.onReceiveHandler?(message)
@@ -387,13 +395,13 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
             print("received message type: ", message.type)
             switch message.type {
             case .ping?:
-                conn.eventLog.mark(event: Event(type: .Signaling,
-                                                comment: "receive ping"))
-                self.send(SignalingPong())
+                conn.eventLog.markFormat(type: .Signaling, format: "received ping")
+                let pong = SignalingPong()
+                self.send(pong)
                 
             case .offer?:
                 conn.eventLog.mark(event: Event(type: .Signaling,
-                                                comment: "receive offer"))
+                                                comment: "received offer"))
                 let offer: SignalingOffer!
                 do {
                     offer = Optional.some(try unbox(dictionary: json))
@@ -469,6 +477,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
     
     func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
         print("webSocket:didCloseWithCode:", code)
+        conn.eventLog.markFormat(type: .WebSocket,
+                                 format: "close: code \(code), reason %@, clean \(wasClean)",
+                                 arguments: reason)
         switch state {
         case .connecting:
             onConnectedHandler?(nil)

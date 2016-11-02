@@ -48,7 +48,15 @@ public class EventLog {
             onMarkHandler?(event)
         }
     }
-
+    
+    public func markFormat(type: Event.EventType,
+                           format: String,
+                           arguments: CVarArg...) {
+        let comment = String(format: format, arguments: arguments)
+        let event = Event(type: type, comment: comment)
+        mark(event: event)
+    }
+    
     var onMarkHandler: ((Event) -> Void)?
     
     public func onMark(handler: @escaping (Event) -> Void) {
