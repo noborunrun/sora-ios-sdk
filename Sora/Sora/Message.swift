@@ -323,3 +323,17 @@ extension SignalingPong: Messageable {
     }
     
 }
+
+struct SignalingStats {
+    
+    var numberOfDownstreamConnections: Int?
+    
+}
+
+extension SignalingStats: Unboxable {
+    
+    init(unboxer: Unboxer) throws {
+        numberOfDownstreamConnections = unboxer.unbox(key: "downstream_connections")
+    }
+    
+}
