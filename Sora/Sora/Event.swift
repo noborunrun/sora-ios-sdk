@@ -32,6 +32,7 @@ public class EventLog {
     public var events: [Event] = []
     public var isEnabled: Bool = true
     public var limit: Int? = nil
+    public var debugMode: Bool = false
     
     public func clear() {
         events = []
@@ -39,6 +40,9 @@ public class EventLog {
     
     public func mark(event: Event) {
         if isEnabled {
+            if debugMode {
+                print(event.description)
+            }
             if let limit = limit {
                 if limit < events.count {
                     events.removeFirst()
@@ -62,5 +66,5 @@ public class EventLog {
     public func onMark(handler: @escaping (Event) -> Void) {
         onMarkHandler = handler
     }
-    
+
 }
