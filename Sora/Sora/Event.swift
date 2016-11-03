@@ -25,6 +25,17 @@ public class Event {
         self.date = date
     }
     
+    public var description: String {
+        get {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let desc = String(format: "[%@] %@: %@",
+                              formatter.string(from: date),
+                              type.rawValue, comment)
+            return desc
+        }
+    }
+    
 }
 
 public class EventLog {
