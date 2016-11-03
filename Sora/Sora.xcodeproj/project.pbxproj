@@ -48,6 +48,7 @@
 		91F5EE4D1DACABF5000EF7AC /* WebRTC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91F5EE4E1DACABF5000EF7AC /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */; };
+		91FD95751DCA06F700047BA9 /* RTCExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FD95741DCA06F700047BA9 /* RTCExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +112,7 @@
 		91DD141D1DC872F1005881C2 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		91E098831D799389004CF024 /* MediaStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaStream.swift; sourceTree = "<group>"; };
 		91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoFrame.swift; sourceTree = "<group>"; };
+		91FD95741DCA06F700047BA9 /* RTCExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTCExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +187,7 @@
 				91B1D6451D75E11F00112A4E /* VideoRenderer.swift */,
 				91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */,
 				91DD141D1DC872F1005881C2 /* Event.swift */,
+				91FD95741DCA06F700047BA9 /* RTCExtensions.swift */,
 			);
 			path = Sora;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 				91E69B671D77536A004124C3 /* Notifications.swift in Sources */,
 				91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */,
 				91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */,
+				91FD95751DCA06F700047BA9 /* RTCExtensions.swift in Sources */,
 				91192F741D598E4600F92D78 /* Message.swift in Sources */,
 				91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */,
 				91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */,
