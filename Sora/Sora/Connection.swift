@@ -111,11 +111,12 @@ public class Connection {
                 return
             }
             assert(upstream != nil, "upstream is nil")
-            let mediaStream = MediaStream.new(peerConn!,
-                                              role: Role.upstream,
-                                              channelId: channelId,
-                                              mediaOption: mediaOption,
-                                              nativeMediaStream: upstream!)
+            let mediaStream = MediaStream(connection: self,
+                                          peerConnection: peerConn!,
+                                          role: Role.upstream,
+                                          channelId: channelId,
+                                          mediaOption: mediaOption,
+                                          nativeMediaStream: upstream!)
             handler(mediaStream, mediaCapturer, nil)
         }
     }
@@ -134,11 +135,12 @@ public class Connection {
                 return
             }
             
-            let mediaStream = MediaStream.new(peerConn!,
-                                              role: Role.downstream,
-                                              channelId: channelId,
-                                              mediaOption: mediaOption,
-                                              nativeMediaStream: downstream!)
+            let mediaStream = MediaStream(connection: self,
+                                          peerConnection: peerConn!,
+                                          role: Role.downstream,
+                                          channelId: channelId,
+                                          mediaOption: mediaOption,
+                                          nativeMediaStream: downstream!)
             handler(mediaStream, nil)
         }
     }
