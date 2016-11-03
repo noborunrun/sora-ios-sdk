@@ -12,6 +12,7 @@ public class MediaStream {
     static var defaultVideoTrackId: String = "mainVideo"
     static var defaultAudioTrackId: String = "mainAudio"
 
+    public weak var connection: Connection!
     public var peerConnection: RTCPeerConnection
     public var mediaOption: MediaOption
     public var creationTime: Date
@@ -24,21 +25,13 @@ public class MediaStream {
     var videoRendererSupport: VideoRendererSupport?
     var nativeMediaStream: RTCMediaStream
     
-    static func new(_ peerConnection: RTCPeerConnection, role: Role, channelId: String,
-                    mediaOption: MediaOption = MediaOption(),
-                    nativeMediaStream: RTCMediaStream) -> MediaStream {
-        let mediaStream = MediaStream(peerConnection: peerConnection,
-                                      role: role, channelId: channelId,
-                                      mediaOption: mediaOption,
-                                      nativeMediaStream: nativeMediaStream)
-        mediaStream.context = MediaStreamContext(mediaStream: mediaStream)
-        peerConnection.delegate = mediaStream.context
-        return mediaStream
-    }
-    
-    fileprivate init(peerConnection: RTCPeerConnection, role: Role, channelId: String,
-         mediaOption: MediaOption = MediaOption(),
-         nativeMediaStream: RTCMediaStream) {
+    init(connection: Connection,
+                     peerConnection: RTCPeerConnection,
+                     role: Role,
+                     channelId: String,
+                     mediaOption: MediaOption = MediaOption(),
+                     nativeMediaStream: RTCMediaStream) {
+        self.connection = connection
         self.peerConnection = peerConnection
         self.role = role
         self.channelId = channelId
@@ -46,6 +39,8 @@ public class MediaStream {
         self.nativeMediaStream = nativeMediaStream
         state = .connected
         creationTime = Date()
+        context = MediaStreamContext(mediaStream: self)
+        peerConnection.delegate = context
     }
     
     func disconnect() {
