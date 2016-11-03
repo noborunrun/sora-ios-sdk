@@ -99,8 +99,10 @@ public class MediaStream {
 
 class MediaStreamContext: NSObject, RTCPeerConnectionDelegate {
     
-    var mediaStream: MediaStream
+    weak var mediaStream: MediaStream!
 
+    var eventLog: EventLog { get { return mediaStream.connection.eventLog } }
+    
     init(mediaStream: MediaStream) {
         self.mediaStream = mediaStream
     }
@@ -108,25 +110,34 @@ class MediaStreamContext: NSObject, RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didChange stateChanged: RTCSignalingState) {
         print("peerConnection:didChangeSignalingState:", stateChanged.rawValue)
+        eventLog.markFormat(type: .PeerConnection, format: "signaling state changed: %@",
+                            arguments: stateChanged.description)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didAdd stream: RTCMediaStream) {
         print("peerConnection:didAddStream:")
+        eventLog.markFormat(type: .PeerConnection, format: "added stream")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didRemove stream: RTCMediaStream) {
         print("peerConnection:didRemoveStream:")
+        eventLog.markFormat(type: .PeerConnection, format: "removed stream")
     }
     
     func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
         print("peerConnectionShouldNegotiate:")
+        eventLog.markFormat(type: .PeerConnection, format: "should negatiate")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didChange newState: RTCIceConnectionState) {
         print("peerConnection:didChangeIceConnectionState:", newState.rawValue)
+        eventLog.markFormat(type: .PeerConnection,
+                            format: "ICE connection state changed: %@",
+                            arguments: newState.description)
+        
         switch newState {
         case .disconnected:
             print("ice connection disconnected")
@@ -139,21 +150,30 @@ class MediaStreamContext: NSObject, RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didChange newState: RTCIceGatheringState) {
         print("peerConnection:didChangeIceGatheringState:")
+        eventLog.markFormat(type: .PeerConnection,
+                            format: "ICE gathering state changed: %@",
+                            arguments: newState.description)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didGenerate candidate: RTCIceCandidate) {
         print("peerConnection:didGenerateIceCandidate:")
+        eventLog.markFormat(type: .PeerConnection, format: "candidate generated: %@",
+                            arguments: candidate.sdp)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didRemove candidates: [RTCIceCandidate]) {
         print("peerConnection:didRemoveIceCandidates:")
+        eventLog.markFormat(type: .PeerConnection,
+                            format: "candidates %d removed",
+                            arguments: candidates.count)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didOpen dataChannel: RTCDataChannel) {
         print("peerConnection:didOpenDataChannel:")
+        eventLog.markFormat(type: .PeerConnection, format: "data channel opened")
     }
     
 }

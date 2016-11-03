@@ -57,10 +57,6 @@ public class Connection {
         self.URL = URL
         state = .disconnected
         creationTime = Date()
-        config()
-    }
-    
-    func config() {
         context = ConnectionContext(connection: self)
     }
     
@@ -249,7 +245,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         case peerConnecting
     }
     
-    var conn: Connection!
+    weak var conn: Connection!
     var webSocket: SRWebSocket!
     var state: State = .disconnected
     var peerConnFactory: RTCPeerConnectionFactory
@@ -340,6 +336,9 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
         print("send connect")
         state = .peerConnecting
         let sigConnect = SignalingConnect(role: SignalingRole.from(role), channel_id: channelId)
+        conn.eventLog.markFormat(type: .Signaling,
+                                 format: "send connect message: %@",
+                                 arguments: sigConnect.message().JSON().description)
         send(sigConnect)
     }
     
@@ -402,8 +401,7 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                 self.send(pong)
                 
             case .offer?:
-                conn.eventLog.mark(event: Event(type: .Signaling,
-                                                comment: "received offer"))
+                conn.eventLog.markFormat(type: .Signaling, format: "received offer")
                 let offer: SignalingOffer!
                 do {
                     offer = Optional.some(try unbox(dictionary: json))
@@ -435,8 +433,11 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                         peerConfig.iceServers = [server]
                     }
                     
+                    conn.eventLog.markFormat(type: .Signaling, format: "set configuration")
                     if !peerConnContext.peerConn.setConfiguration(peerConfig) {
                         print("failed setting configuration sent by offer")
+                        conn.eventLog.markFormat(type: .Signaling,
+                                                 format: "setting configuration failed")
                         onConnectedHandler?(ConnectionError.failureSetConfiguration(peerConfig))
                         state = .ready
                         return
@@ -445,27 +446,48 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                 
                 state = .peerOffered
                 let sdp = offer.sessionDescription()
+                conn.eventLog.markFormat(type: .Signaling, format: "set remote description")
                 peerConnContext.peerConn.setRemoteDescription(sdp) {
                     (error: Error?) in
                     if let error = error {
+                        self.conn.eventLog.markFormat(type: .Signaling,
+                                                      format: "setting remote description failed")
                         self.conn.onFailedHandler?(ConnectionError.peerConnectionError(error))
                         return
                     }
                     
                     print("create answer")
+                    self.conn.eventLog.markFormat(type: .Signaling,
+                                                  format: "create answer")
                     self.state = .peerAnswering
                     self.peerConnContext.peerConn.answer(for: self.peerConnContext.mediaOption.answerMediaConstraints) {
                         (sdp, error) in
                         if let error = error {
+                            self.conn.eventLog.markFormat(type: .Signaling,
+                                                          format: "creating answer failed")
                             self.conn.onFailedHandler?(ConnectionError.peerConnectionError(error))
                             return
                         }
                         print("generate answer: ", sdp)
+                        self.conn.eventLog.markFormat(type: .Signaling,
+                                                      format: "generated answer: %@",
+                                                      arguments: sdp!)
                         
                         print("set local description")
+                        self.conn.eventLog.markFormat(type: .Signaling,
+                                                      format: "set local description")
                         self.peerConnContext.peerConn.setLocalDescription(sdp!) {
                             (error) in
+                            if let error = error {
+                                self.conn.eventLog.markFormat(type: .Signaling,
+                                                              format: "failed setting local description")
+                                self.conn.onFailedHandler?(ConnectionError.peerConnectionError(error))
+                                return
+                            }
+                            
                             print("send answer")
+                            self.conn.eventLog.markFormat(type: .Signaling,
+                                                          format: "send answer")
                             let answer = SignalingAnswer(sdp: sdp!.sdp)
                             self.send(answer)
                         }
@@ -503,6 +525,8 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     var mediaOption: MediaOption
     var onConnectedHandler: ((RTCPeerConnection?, RTCMediaStream?, Error?) -> Void)
     
+    var eventLog: EventLog { get { return connContext.conn.eventLog } }
+    
     init(connContext: ConnectionContext,
          factory: RTCPeerConnectionFactory,
          mediaOption: MediaOption,
@@ -515,6 +539,7 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     }
     
     func createPeerConnection() {
+        eventLog.markFormat(type: .PeerConnection, format: "create peer connection")
         peerConn = factory.peerConnection(
             with: mediaOption.configuration,
             constraints: mediaOption.mediaConstraints,
@@ -524,11 +549,14 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didChange stateChanged: RTCSignalingState) {
         print("peerConnection:didChangeSignalingState:", stateChanged.rawValue)
+        eventLog.markFormat(type: .PeerConnection, format: "signaling state changed: %@",
+                            arguments: stateChanged.description)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didAdd stream: RTCMediaStream) {
         print("peerConnection:didAddStream:")
+        eventLog.markFormat(type: .PeerConnection, format: "added stream")
         if downstream != nil {
             peerConnection.close()
             onConnectedHandler(nil, nil, ConnectionError.multipleDownstreams)
@@ -540,6 +568,7 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didRemove stream: RTCMediaStream) {
         print("peerConnection:didRemoveStream:")
+        eventLog.markFormat(type: .PeerConnection, format: "removed stream")
         if downstream == stream {
             downstream = nil
         }
@@ -547,11 +576,15 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     
     func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
         print("peerConnectionShouldNegotiate:")
+        eventLog.markFormat(type: .PeerConnection, format: "should negatiate")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didChange newState: RTCIceConnectionState) {
         print("peerConnection:didChangeIceConnectionState:", newState.rawValue)
+        eventLog.markFormat(type: .PeerConnection,
+                            format: "ICE connection state changed: %@",
+                            arguments: newState.description)
         switch newState {
         case .connected:
             print("ice connection connected")
@@ -565,22 +598,31 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didChange newState: RTCIceGatheringState) {
         print("peerConnection:didChangeIceGatheringState:")
+        eventLog.markFormat(type: .PeerConnection,
+                            format: "ICE gathering state changed: %@",
+                            arguments: newState.description)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didGenerate candidate: RTCIceCandidate) {
         print("peerConnection:didGenerateIceCandidate:")
+        eventLog.markFormat(type: .PeerConnection, format: "candidate generated: %@",
+                            arguments: candidate.sdp)
         connContext.send(SignalingICECandidate(candidate: candidate.sdp))
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didRemove candidates: [RTCIceCandidate]) {
         print("peerConnection:didRemoveIceCandidates:")
+        eventLog.markFormat(type: .PeerConnection,
+                            format: "candidates %d removed",
+                            arguments: candidates.count)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didOpen dataChannel: RTCDataChannel) {
         print("peerConnection:didOpenDataChannel:")
+        eventLog.markFormat(type: .PeerConnection, format: "data channel opened")
     }
     
 }
