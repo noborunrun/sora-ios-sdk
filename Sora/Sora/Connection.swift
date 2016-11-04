@@ -178,6 +178,14 @@ public class Connection {
         onPingHandler = handler
     }
     
+    public func onStatistics(_ handler: @escaping ((Statistics) -> Void)) {
+        onStatisticsHandler = handler
+    }
+    
+    public func onNotify(_ handler: @escaping ((String) -> Void)) {
+        onNotifyHandler = handler
+    }
+    
     // MARK: イベントハンドラ: メディアチャネル
     
     var onDisconnectMediaChannelHandler: ((MediaChannel) -> Void)?
@@ -419,6 +427,21 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                 conn.eventLog.markFormat(type: .Signaling, format: buf)
                 
                 conn.onStatisticsHandler?(stats)
+                
+            case .notify?:
+                var notify: SignalingNotify!
+                do {
+                    notify = Optional.some(try unbox(dictionary: json))
+                } catch {
+                    conn.eventLog.markFormat(type: .Signaling,
+                                             format: "failed parsing notify: %@",
+                                             arguments: json.description)
+                }
+                
+                conn.eventLog.markFormat(type: .Signaling, format: "received notify: %@",
+                                         arguments: notify.notifyMessage)
+                
+                conn.onNotifyHandler?(notify.notifyMessage)
                 
             case .offer?:
                 conn.eventLog.markFormat(type: .Signaling, format: "received offer")

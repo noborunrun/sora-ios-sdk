@@ -12,6 +12,7 @@ public class Message {
         case ping = "ping"
         case pong = "pong"
         case stats = "stats"
+        case notify = "notify"
     }
     
     public var type: Type?
@@ -334,6 +335,20 @@ extension Statistics: Unboxable {
     
     public init(unboxer: Unboxer) throws {
         numberOfDownstreamConnections = unboxer.unbox(key: "downstream_connections")
+    }
+    
+}
+
+struct SignalingNotify {
+    
+    var notifyMessage: String
+    
+}
+
+extension SignalingNotify: Unboxable {
+    
+    public init(unboxer: Unboxer) throws {
+        notifyMessage = try unboxer.unbox(key: "message")
     }
     
 }
