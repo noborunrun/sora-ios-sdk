@@ -149,6 +149,8 @@ public class Connection {
     var onUpdatedHandler: ((State) -> Void)?
     var onFailedHandler: ((ConnectionError) -> Void)?
     var onPingHandler: ((Void) -> Void)?
+    var onStatisticsHandler: ((Statistics) -> Void)?
+    var onNotifyHandler: ((String) -> Void)?
     
     // シグナリングメッセージ
     public func onReceive(_ handler: @escaping ((Message) -> Void)) {
@@ -399,6 +401,24 @@ class ConnectionContext: NSObject, SRWebSocketDelegate {
                 conn.eventLog.markFormat(type: .Signaling, format: "received ping")
                 let pong = SignalingPong()
                 self.send(pong)
+                
+            case .stats?:
+                var stats: Statistics!
+                do {
+                    stats = Optional.some(try unbox(dictionary: json))
+                } catch {
+                    conn.eventLog.markFormat(type: .Signaling,
+                                             format: "failed parsing stats: %@",
+                                             arguments: json.description)
+                }
+                
+                var buf = "received statistics"
+                if let n = stats.numberOfDownstreamConnections {
+                    buf = buf.appendingFormat(": downstreams=%d", n)
+                }
+                conn.eventLog.markFormat(type: .Signaling, format: buf)
+                
+                conn.onStatisticsHandler?(stats)
                 
             case .offer?:
                 conn.eventLog.markFormat(type: .Signaling, format: "received offer")

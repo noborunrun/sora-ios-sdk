@@ -324,15 +324,15 @@ extension SignalingPong: Messageable {
     
 }
 
-struct SignalingStats {
+public struct Statistics {
     
-    var numberOfDownstreamConnections: Int?
+    public var numberOfDownstreamConnections: Int?
     
 }
 
-extension SignalingStats: Unboxable {
+extension Statistics: Unboxable {
     
-    init(unboxer: Unboxer) throws {
+    public init(unboxer: Unboxer) throws {
         numberOfDownstreamConnections = unboxer.unbox(key: "downstream_connections")
     }
     
