@@ -24,6 +24,24 @@ public class MediaStream {
         get { return state == .disconnected }
     }
     
+    public var nativeVideoTrack: RTCVideoTrack? {
+        get {
+            if nativeMediaStream.videoTracks.isEmpty {
+                return nil
+            }
+            return nativeMediaStream.videoTracks[0]
+        }
+    }
+    
+    public var nativeAudioTrack: RTCAudioTrack? {
+        get {
+            if nativeMediaStream.audioTracks.isEmpty {
+                return nil
+            }
+            return nativeMediaStream.audioTracks[0]
+        }
+    }
+
     var context: MediaStreamContext!
     var state: State
     var videoRendererSupport: VideoRendererSupport?
@@ -54,22 +72,46 @@ public class MediaStream {
         state = .disconnected
     }
     
+    func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
+        if let videoTrack = nativeVideoTrack {
+            if let renderer = videoRenderer {
+                videoRendererSupport = VideoRendererSupport(videoRenderer: renderer)
+                videoTrack.add(videoRendererSupport!)
+            } else if let support = videoRendererSupport {
+                videoTrack.remove(support)
+            }
+        }
     }
     
-    func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
-        if nativeMediaStream.videoTracks.isEmpty {
-            return
+    public func statisticsReports(level: StatisticsReport.Level)
+        -> ([StatisticsReport], [StatisticsReport])
+    {
+        func getReports(track: RTCMediaStreamTrack) -> [StatisticsReport] {
+            var reports: [StatisticsReport] = []
+            peerConnection.stats(for: track, statsOutputLevel: level.nativeOutputLevel) {
+                nativeReports in
+                for nativeReport in nativeReports {
+                    if let report = StatisticsReport.parse(report: nativeReport) {
+                        reports.append(report)
+                    }
+                }
+            }
+            return reports
         }
         
-        let videoTrack = nativeMediaStream.videoTracks[0]
-        if let renderer = videoRenderer {
-            videoRendererSupport = VideoRendererSupport(videoRenderer: renderer)
-            videoTrack.add(videoRendererSupport!)
-        } else if let support = videoRendererSupport {
-            videoTrack.remove(support)
+        var videoReports: [StatisticsReport] = []
+        if let track = nativeVideoTrack {
+            videoReports = getReports(track: track)
         }
+        
+        var audioReports: [StatisticsReport] = []
+        if let track = nativeAudioTrack {
+            audioReports = getReports(track: track)
+        }
+        
+        return (videoReports, audioReports)
     }
-
+    
     // MARK: イベントハンドラ
     
     var onConnectedHandler: ((MediaStream?, Error?) -> Void)?
