@@ -32,7 +32,7 @@ struct RemoteVideoFrame: VideoFrame {
     }
     
     var timestamp: CMTime {
-        get { return CMTimeMake(nativeVideoFrame.timeStamp, 1000000000) }
+        get { return CMTimeMake(nativeVideoFrame.timeStampNs, 1000000000) }
     }
     
     init(nativeVideoFrame: RTCVideoFrame) {
