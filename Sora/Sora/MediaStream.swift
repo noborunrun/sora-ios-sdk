@@ -20,6 +20,10 @@ public class MediaStream {
     public var clientId: String?
     public var role: Role
     
+    public var isDisconnected: Bool {
+        get { return state == .disconnected }
+    }
+    
     var context: MediaStreamContext!
     var state: State
     var videoRendererSupport: VideoRendererSupport?
@@ -50,8 +54,6 @@ public class MediaStream {
         state = .disconnected
     }
     
-    public func isDisconnected() -> Bool {
-        return state == .disconnected
     }
     
     func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
