@@ -21,6 +21,7 @@ public enum ConnectionError: Error {
     case webSocketClose(Int, String)
     case webSocketError(Error)
     case peerConnectionError(Error)
+    case iceConnectionFailed
 }
 
 public class Connection {
@@ -633,6 +634,14 @@ class PeerConnectionContext: NSObject, RTCPeerConnectionDelegate {
             print("ice connection connected")
             connContext.state = .ready
             onConnectedHandler(peerConnection, downstream, nil)
+        case .disconnected:
+            print("ice connection disconnected")
+            connContext.state = .disconnected
+            connContext.conn.onDisconnectedHandler?()
+        case .failed:
+            print("ice connection failed")
+            connContext.state = .disconnected
+            connContext.conn.onFailedHandler?(.iceConnectionFailed)
         default:
             break
         }

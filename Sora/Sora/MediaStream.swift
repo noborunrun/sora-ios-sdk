@@ -184,7 +184,10 @@ class MediaStreamContext: NSObject, RTCPeerConnectionDelegate {
         
         switch newState {
         case .disconnected:
-            print("ice connection disconnected")
+            print("MediaStream: ice connection disconnected")
+            mediaStream.disconnect()
+        case .failed:
+            print("MediaStream: ice connection failed")
             mediaStream.disconnect()
         default:
             break
