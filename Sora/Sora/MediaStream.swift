@@ -12,16 +12,23 @@ public class MediaStream {
     static var defaultVideoTrackId: String = "mainVideo"
     static var defaultAudioTrackId: String = "mainAudio"
 
-    public weak var connection: Connection!
-    public var peerConnection: RTCPeerConnection
-    public var mediaOption: MediaOption
-    public var creationTime: Date
-    public var channelId: String
-    public var clientId: String?
+    public weak var mediaConnection: MediaConnection!
     public var role: Role
+    public var mediaChannelId: String
+    public var accessToken: String?
+    public var mediaStreamlId: String?
+    public var mediaOption: MediaOption?
+    public var creationTime: Date
+    public var clientId: String?
+    public var peerConnection: RTCPeerConnection?
+    public var state: State
+
+    public weak var connection: Connection! {
+        get { return mediaConnection.mediaChannel.connection }
+    }
     
-    public var isDisconnected: Bool {
-        get { return state == .disconnected }
+    public var isAvailable: Bool {
+        get { return state == .connected }
     }
     
     public var nativeVideoTrack: RTCVideoTrack? {
@@ -42,34 +49,38 @@ public class MediaStream {
         }
     }
 
-    var context: MediaStreamContext!
-    var state: State
+    var context: MediaStreamContext?
     var videoRendererSupport: VideoRendererSupport?
     var nativeMediaStream: RTCMediaStream
     
-    init(connection: Connection,
-                     peerConnection: RTCPeerConnection,
-                     role: Role,
-                     channelId: String,
-                     mediaOption: MediaOption = MediaOption(),
-                     nativeMediaStream: RTCMediaStream) {
-        self.connection = connection
-        self.peerConnection = peerConnection
+    init(mediaConnection: MediaConnection,
+         role: Role,
+         mediaChannelId: String,
+         accessToken: String? = nil,
+         mediaStreamId: String? = nil,
+         mediaOption: MediaOption = MediaOption()) {
+        self.mediaConnection = mediaConnection
         self.role = role
-        self.channelId = channelId
+        self.mediaChannelId = mediaChannelId
+        self.accessToken = accessToken
+        self.mediaStreamlId = mediaStreamId
         self.mediaOption = mediaOption
-        self.nativeMediaStream = nativeMediaStream
-        state = .connected
+        state = .disconnected
         creationTime = Date()
-        context = MediaStreamContext(mediaStream: self)
-        peerConnection.delegate = context
     }
     
-    func disconnect() {
-        connectionTimer?.invalidate()
-        peerConnection.close()
-        videoRendererSupport = nil
+    public func connect(handler: @escaping ((Error?) -> Void)) {
+        // TODO: impl
+    }
+    
+    public func disconnect(handler: @escaping () -> Void) {
         state = .disconnected
+        connectionTimer?.invalidate()
+        videoRendererSupport = nil
+        
+        // TODO: デリゲートを使って close の完了を知るべき
+        peerConnection.close()
+        handler()
     }
     
     func setVideoRenderer(_ videoRenderer: VideoRenderer?) {

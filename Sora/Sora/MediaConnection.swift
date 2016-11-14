@@ -36,26 +36,95 @@ public class MediaOption {
 
 public class MediaConnection {
     
-    public var connection: Connection
-    public var mediaStream: MediaStream
-    public var mediaOption: MediaOption
-    
-    public var videoRenderer: VideoRenderer? {
-        
-        willSet {
-            self.mediaStream.setVideoRenderer(newValue)
-        }
-        
+    public enum State {
+        case connected
+        case connecting
+        case disconnected
+        case disconnecting
     }
     
-    init(connection: Connection, mediaStream: MediaStream, mediaOption: MediaOption) {
-        self.connection = connection
-        self.mediaStream = mediaStream
+    public weak var mediaChannel: MediaChannel!
+    public var mediaChannelId: String
+    public var mediaStream: MediaStream?
+    public var mediaOption: MediaOption?
+    public var state: State
+    
+    public var isAvailable: Bool {
+        get { return state == .connected }
+    }
+    
+    public var videoRenderer: VideoRenderer? {
+        willSet {
+            self.mediaStream?.setVideoRenderer(newValue)
+        }
+    }
+    
+    init(mediaChannel: MediaChannel,
+         mediaChannelId: String,
+         mediaOption: MediaOption?) {
+        self.mediaChannel = mediaChannel
+        self.mediaChannelId = mediaChannelId
         self.mediaOption = mediaOption
+        state = .disconnected
+    }
+    
+    func role() -> Role {
+        assertionFailure("subclass must implement role()")
+    }
+    
+    public func connect(accessToken: String? = nil,
+                        mediaStreamId: String? = nil,
+                        handler: @escaping ((Error?) -> Void)) {
+        // TODO: impl
+        state = .connecting
+        mediaStream = MediaStream(self,
+                                  role: role(),
+                                  mediaChannelId: mediaChannelId,
+                                  accessToken: accessToken,
+                                  mediaStreamId: mediaStreamId,
+                                  mediaOption: mediaOption))
+        mediaStream.connect {
+            error in
+            if let error = error {
+                self.state = .disconnected
+                self.onFailureHandler?(error)
+                self.onDisconnectHandler?()
+            } else {
+                self.state = .connected
+                self.onConnectHandler?()
+            }
+            handler(error)
+        }
     }
     
     public func disconnect() {
-        mediaStream.disconnect()
+        if state == .connected || state == .connecting {
+            assert(mediaStream != nil, "mediaStream must not be nil")
+            state = .disconnecting
+            onDisconnectHandler?()
+            mediaStream!.disconnect {
+                self.state = .disconnected
+            }
+        }
+    }
+    
+    // MARK: イベントハンドラ
+    
+    var onConnectHandler: ((Void) -> Void)?
+    var onDisconnectHandler: ((Void) -> Void)?
+    var onFailureHandler: ((ConnectionError) -> Void)?
+    
+    public func onConnect(handler: @escaping ((Void) -> Void)) {
+        onConnectHandler = handler
+    }
+    
+    public func onDisconnect(handler: @escaping ((Void) -> Void)) {
+        onDisconnectHandler = handler
+    }
+    
+    // この次に必ず onDisconnect が呼ばれる
+    public func onFailure(handler: @escaping ((ConnectionError) -> Void)) {
+        onFailureHandler = handler
     }
     
 }
@@ -113,6 +182,10 @@ public class MediaPublisher: MediaConnection {
                    mediaOption: mediaOption)
     }
     
+    override func role() -> Role {
+        return .upstream
+    }
+    
     public func switchCamera(_ position: CameraPosition? = nil) {
         switch position {
         case nil:
@@ -128,5 +201,9 @@ public class MediaPublisher: MediaConnection {
 }
 
 public class MediaSubscriber: MediaConnection {
+    
+    override func role() -> Role {
+        return .downstream
+    }
     
 }

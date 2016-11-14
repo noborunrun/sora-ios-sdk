@@ -25,15 +25,15 @@ public enum AudioCodec {
 
 public class MediaChannel {
     
-    public var connection: Connection
-    public var channelId: String
+    public weak var connection: Connection!
+    public var mediaChannelId: String
     public var creationTime: Date
     public var mediaPublisher: MediaPublisher?
     public var mediaSubscriber: MediaSubscriber?
     
-    init(connection: Connection, channelId: String) {
+    init(connection: Connection, mediaChannelId: String) {
         self.connection = connection
-        self.channelId = channelId
+        self.mediaChannelId = mediaChannelId
         creationTime = Date()
     }
     
@@ -50,7 +50,7 @@ public class MediaChannel {
     {
         // TODO:
         print("create publisher")
-        connection.createMediaUpstream(channelId,
+        connection.createMediaUpstream(mediaChannelId,
                                        accessToken: accessToken,
                                        mediaOption: mediaOption,
                                        streamId: "main")
@@ -75,7 +75,7 @@ public class MediaChannel {
                                       handler: @escaping ((MediaSubscriber?, Error?) -> Void)) {
         // TODO:
         print("create subscriber")
-        connection.createMediaDownstream(channelId, accessToken: accessToken,
+        connection.createMediaDownstream(mediaChannelId, accessToken: accessToken,
                                          mediaOption: mediaOption)
         {
             (mediaStream, error) in
