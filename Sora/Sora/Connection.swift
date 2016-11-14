@@ -139,51 +139,6 @@ public class Connection {
         }
     }
     
-    // MARK: イベントハンドラ
-    
-    var onReceiveHandler: ((Message) -> Void)?
-    var onConnectedHandler: ((Void) -> Void)?
-    var onDisconnectedHandler: ((Void) -> Void)?
-    var onUpdatedHandler: ((State) -> Void)?
-    var onFailedHandler: ((ConnectionError) -> Void)?
-    var onPingHandler: ((Void) -> Void)?
-    var onStatisticsHandler: ((Statistics) -> Void)?
-    var onNotifyHandler: ((String) -> Void)?
-    
-    // シグナリングメッセージ
-    public func onReceive(_ handler: @escaping ((Message) -> Void)) {
-        onReceiveHandler = handler
-    }
-    
-    // 接続
-    public func onConnected(_ handler: @escaping ((Void) -> Void)) {
-        onConnectedHandler = handler
-    }
-    
-    public func onDisconnected(_ handler: @escaping ((Void) -> Void)) {
-        onDisconnectedHandler = handler
-    }
-    
-    public func onUpdated(_ handler: @escaping ((State) -> Void)) {
-        onUpdatedHandler = handler
-    }
-    
-    public func onFailed(_ handler: @escaping ((ConnectionError) -> Void)) {
-        onFailedHandler = handler
-    }
-    
-    public func onPing(_ handler: @escaping ((Void) -> Void)) {
-        onPingHandler = handler
-    }
-    
-    public func onStatistics(_ handler: @escaping ((Statistics) -> Void)) {
-        onStatisticsHandler = handler
-    }
-    
-    public func onNotify(_ handler: @escaping ((String) -> Void)) {
-        onNotifyHandler = handler
-    }
-    
 }
 
 class ConnectionContext: NSObject, SRWebSocketDelegate {
