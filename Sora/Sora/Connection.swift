@@ -34,8 +34,6 @@ public class Connection {
     }
     
     public var URL: Foundation.URL
-    public var clientId: String?
-    public var creationTime: Date
     public var mediaChannels: [MediaChannel] = []
     public var eventLog: EventLog = EventLog()
     
@@ -57,7 +55,6 @@ public class Connection {
     public init(URL: Foundation.URL) {
         self.URL = URL
         state = .disconnected
-        creationTime = Date()
         context = ConnectionContext(connection: self)
     }
     
