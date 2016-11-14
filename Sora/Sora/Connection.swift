@@ -187,60 +187,6 @@ public class Connection {
         onNotifyHandler = handler
     }
     
-    // MARK: イベントハンドラ: メディアチャネル
-    
-    var onDisconnectMediaChannelHandler: ((MediaChannel) -> Void)?
-    var onMediaChannelFailedHandler: ((MediaChannel, Error) -> Void)?
-    
-    public func onDisconnectMediaChannel(_ handler: @escaping ((MediaChannel) -> Void)) {
-        onDisconnectMediaChannelHandler = handler
-    }
-    
-    public func onMediaChannelFailed(_ handler: @escaping ((MediaChannel, Error) -> Void)) {
-        onMediaChannelFailedHandler = handler
-    }
-    
-    // MARK: イベントハンドラ: Web フック
-    
-    var onSignalingConnectedHandler: ((SignalingConnected) -> Void)?
-    var onSignalingCompletedHandler: ((SignalingCompleted) -> Void)?
-    var onSignalingDisconnectedHandler: ((SignalingDisconnected) -> Void)?
-    var onSignalingFailedHandler: ((SignalingFailed) -> Void)?
-    var onArchiveFinishedHandler: ((MediaChannel, ArchiveFinished) -> Void)?
-    var onArchiveFailedHandler: ((MediaChannel, ArchiveFailed) -> Void)?
-    
-    public func onSignalingConnected(_ handler: @escaping ((SignalingConnected) -> Void)) {
-        onSignalingConnectedHandler = handler
-    }
-    
-    public func onSignalingCompleted(_ handler: @escaping ((SignalingCompleted) -> Void)) {
-        onSignalingCompletedHandler = handler
-    }
-    
-    public func onSignalingDisconnected(_ handler: @escaping ((SignalingDisconnected) -> Void)) {
-        onSignalingDisconnectedHandler = handler
-    }
-    
-    public func onSignalingFailedHandler(_ handler: @escaping ((SignalingFailed) -> Void)) {
-        onSignalingFailedHandler = handler
-    }
-    
-    public func onArchiveFinished(_ handler: @escaping ((MediaChannel, ArchiveFinished) -> Void)) {
-        onArchiveFinishedHandler = handler
-    }
-    
-    public func onArchiveFailed(_ handler: @escaping ((MediaChannel, ArchiveFailed) -> Void)) {
-        onArchiveFailedHandler = handler
-    }
-    
-    // MARK: イベントハンドラ: プッシュ通知
-    
-    var onReceivePushHandler: ((MediaChannel?, Message) -> Void)?
-    
-    public func onReceivePush(_ handler: @escaping ((MediaChannel?, Message) -> Void)) {
-        onReceivePushHandler = handler
-    }
-    
 }
 
 class ConnectionContext: NSObject, SRWebSocketDelegate {
