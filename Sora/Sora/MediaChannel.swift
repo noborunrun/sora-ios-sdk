@@ -46,6 +46,7 @@ public class MediaChannel {
         }
     }
     
+    // TODO: reimpl
     public func createMediaPublisher(
         mediaOption: MediaOption? = nil,
         accessToken: String? = nil,
@@ -77,6 +78,7 @@ public class MediaChannel {
         }
     }
     
+    // TODO: reimpl
     public func createMediaSubscriber(_ mediaOption: MediaOption = MediaOption(),
                                       accessToken: String? = nil,
                                       handler: @escaping ((MediaSubscriber?, Error?) -> Void)) {

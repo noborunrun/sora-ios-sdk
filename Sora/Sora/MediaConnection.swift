@@ -103,27 +103,56 @@ public class MediaConnection {
     }
     
     public func disconnect(handler: @escaping (ConnectionError?) -> Void) {
-        if let stream = mediaStream {
-            mediaStream = nil
-            switch state {
-            case .connected, .connecting:
-                state = .disconnecting
-                onDisconnectHandler?()
-                stream.disconnect {
-                    error in
-                    self.state = .disconnected
-                    handler(error)
-                }
-            default:
-                handler(ConnectionError.connectionDisconnected)
-            }
-        } else {
+        switch state {
+        case .disconnected:
             handler(ConnectionError.connectionDisconnected)
+        case .disconnecting:
+            handler(ConnectionError.connectionBusy)
+        case .connected, .connecting:
+            state = .disconnecting
+            mediaStream!.disconnect {
+                error in
+                self.state = .disconnected
+                handler(error)
+            }
         }
     }
     
-    public func send(messageable: Messageable) {
-        mediaStream?.send(messageable)
+    public func send(messageable: Messageable) -> ConnectionError? {
+        if isAvailable {
+            return mediaStream!.send(messageable: messageable)
+        } else {
+            return ConnectionError.connectionDisconnected
+        }
+    }
+    
+    // MARK: タイマー
+    
+    var connectionTimer: Timer?
+    var connectionTimerHandler: ((Int) -> Void)?
+    
+    @available(iOS 10.0, *)
+    public func startConnectionTimer(timeInterval: TimeInterval,
+                                     handler: @escaping ((Int) -> Void)) {
+        connectionTimerHandler = handler
+        connectionTimer?.invalidate()
+        connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
+            timer in
+            if let stream = self.mediaStream {
+                if stream.isAvailable {
+                    let diff = Date(timeIntervalSinceNow: 0)
+                        .timeIntervalSince(stream.creationTime!)
+                    handler(Int(diff))
+                }
+            }
+        }
+        RunLoop.main.add(connectionTimer!, forMode: .commonModes)
+        RunLoop.main.run()
+    }
+    
+    @available(iOS 10.0, *)
+    public func stopConnectionTimer() {
+        connectionTimer?.invalidate()
     }
     
     // MARK: イベントハンドラ
