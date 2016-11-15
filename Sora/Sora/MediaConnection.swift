@@ -49,6 +49,10 @@ public class MediaConnection {
     public var mediaOption: MediaOption?
     public var state: State
     
+    public var webSocketEventHandlers: WebSocketEventHandlers?
+    public var signalingEventHandlers: SignalingEventHandlers?
+    public var peerConnectionEventHandlers: PeerConnectionEventHandlers?
+    
     public var isAvailable: Bool {
         get { return state == .connected }
     }
@@ -70,23 +74,24 @@ public class MediaConnection {
     
     func role() -> Role {
         assertionFailure("subclass must implement role()")
+        return Role.upstream
     }
     
     public func connect(accessToken: String? = nil,
                         mediaStreamId: String? = nil,
                         handler: @escaping ((Error?) -> Void)) {
-        // TODO: impl
         state = .connecting
-        mediaStream = MediaStream(self,
+        mediaStream = MediaStream(mediaConnection: self,
                                   role: role(),
                                   mediaChannelId: mediaChannelId,
                                   accessToken: accessToken,
                                   mediaStreamId: mediaStreamId,
-                                  mediaOption: mediaOption))
-        mediaStream.connect {
+                                  mediaOption: mediaOption)
+        mediaStream!.connect {
             error in
             if let error = error {
                 self.state = .disconnected
+                self.mediaStream = nil
                 self.onFailureHandler?(error)
                 self.onDisconnectHandler?()
             } else {
@@ -97,15 +102,28 @@ public class MediaConnection {
         }
     }
     
-    public func disconnect() {
-        if state == .connected || state == .connecting {
-            assert(mediaStream != nil, "mediaStream must not be nil")
-            state = .disconnecting
-            onDisconnectHandler?()
-            mediaStream!.disconnect {
-                self.state = .disconnected
+    public func disconnect(handler: @escaping (ConnectionError?) -> Void) {
+        if let stream = mediaStream {
+            mediaStream = nil
+            switch state {
+            case .connected, .connecting:
+                state = .disconnecting
+                onDisconnectHandler?()
+                stream.disconnect {
+                    error in
+                    self.state = .disconnected
+                    handler(error)
+                }
+            default:
+                handler(ConnectionError.connectionDisconnected)
             }
+        } else {
+            handler(ConnectionError.connectionDisconnected)
         }
+    }
+    
+    public func send(messageable: Messageable) {
+        mediaStream?.send(messageable)
     }
     
     // MARK: イベントハンドラ
@@ -174,11 +192,12 @@ public class MediaPublisher: MediaConnection {
         get { return mediaCapturer.videoCaptureSource.captureSession }
     }
     
-    init(connection: Connection, mediaStream: MediaStream,
+    init(mediaChannel: MediaChannel, mediaChannelId: String,
          mediaOption: MediaOption, mediaCapturer: MediaCapturer) {
         self.mediaCapturer = mediaCapturer
         mediaCapturer.videoCaptureSource.useBackCamera = false
-        super.init(connection: connection, mediaStream: mediaStream,
+        super.init(mediaChannel: mediaChannel,
+                   mediaChannelId: mediaChannelId,
                    mediaOption: mediaOption)
     }
     

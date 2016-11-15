@@ -71,6 +71,14 @@ public class Message {
     
 }
 
+extension Message : Messageable {
+    
+    public func message() -> Message {
+        return self
+    }
+
+}
+
 public protocol Messageable {
 
     func message() -> Message

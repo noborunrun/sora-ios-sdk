@@ -27,24 +27,31 @@ public class MediaChannel {
     
     public weak var connection: Connection!
     public var mediaChannelId: String
-    public var creationTime: Date
     public var mediaPublisher: MediaPublisher?
     public var mediaSubscriber: MediaSubscriber?
     
     init(connection: Connection, mediaChannelId: String) {
         self.connection = connection
         self.mediaChannelId = mediaChannelId
-        creationTime = Date()
     }
     
-    public func disconnect() {
-        mediaPublisher?.disconnect()
-        mediaSubscriber?.disconnect()
+    public func disconnect(handler: @escaping (MediaConnection, ConnectionError?) -> Void) {
+        mediaPublisher?.disconnect {
+            error in
+            handler(self.mediaPublisher!, error)
+        }
+        mediaSubscriber?.disconnect {
+            error in
+            handler(self.mediaSubscriber!, error)
+        }
     }
     
     public func createMediaPublisher(
-        _ mediaOption: MediaOption = MediaOption(),
+        mediaOption: MediaOption? = nil,
         accessToken: String? = nil,
+        mediaStreamId: String? = nil,
+        videoCaptureTrackId: String? = nil,
+        audioCaptureTrackId: String? = nil,
         videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
         handler: @escaping ((MediaPublisher?, Error?) -> Void))
     {
@@ -62,8 +69,8 @@ public class MediaChannel {
             }
             
             self.mediaPublisher = MediaPublisher(
-                connection: self.connection,
-                mediaStream: mediaStream!,
+                mediaChannel: self,
+                mediaChannelId: mediaStream!,
                 mediaOption: mediaOption,
                 mediaCapturer: mediaCapturer!)
             handler(self.mediaPublisher, nil)

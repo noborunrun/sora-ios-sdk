@@ -14,7 +14,7 @@ public enum ConnectionError: Error {
     case failureMissingSDP
     case failureSetConfiguration(RTCConfiguration)
     case unknownType
-    case connectWaitTimeout
+    case connectionWaitTimeout
     case connectionDisconnected
     case connectionBusy
     case multipleDownstreams
@@ -26,62 +26,15 @@ public enum ConnectionError: Error {
 
 public class Connection {
     
-    public enum State {
-        case connected
-        case connecting
-        case disconnected
-        case disconnecting
-    }
-    
     public var URL: Foundation.URL
     public var mediaChannels: [MediaChannel] = []
     public var eventLog: EventLog = EventLog()
     
-    public var state: State = .disconnected {
-        
-        didSet {
-            onUpdatedHandler?(state)
-        }
-        
-    }
-
-    public var peerConnectionFactory: RTCPeerConnectionFactory {
-        get { return context.peerConnFactory }
-    }
-    
-    var webSocket: SRWebSocket?
-    var context: ConnectionContext!
-    
     public init(URL: Foundation.URL) {
         self.URL = URL
-        state = .disconnected
-        context = ConnectionContext(connection: self)
     }
     
-    // MARK: シグナリング接続
-    
-    public func connect(_ handler: @escaping ((ConnectionError?) -> Void)) {
-        context.connect(handler)
-    }
-    
-    public func disconnect(_ handler: @escaping ((ConnectionError?) -> Void)) {
-        for channel in mediaChannels {
-            channel.disconnect()
-        }
-        context.disconnect(handler)
-    }
-    
-    public func send(_ message: Message) {
-        context.send(message)
-    }
-    
-    public func send(_ messageable: Messageable) {
-        context.send(messageable.message())
-    }
-    
-    public func isReady() -> Bool {
-        return context.state == .ready
-    }
+    // TODO: deprecated
     
     // メディアチャネル
     public func createMediaChannel(_ channelId: String) -> MediaChannel {

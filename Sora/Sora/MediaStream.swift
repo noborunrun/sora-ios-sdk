@@ -3,8 +3,10 @@ import WebRTC
 
 public class MediaStream {
     
-    enum State {
+    public enum State {
+        case connecting
         case connected
+        case disconnecting
         case disconnected
     }
     
@@ -18,9 +20,10 @@ public class MediaStream {
     public var accessToken: String?
     public var mediaStreamlId: String?
     public var mediaOption: MediaOption?
-    public var creationTime: Date
+    public var creationTime: Date?
     public var clientId: String?
     public var peerConnection: RTCPeerConnection?
+    public var peerConnectionFactory: RTCPeerConnectionFactory?
     public var state: State
 
     public weak var connection: Connection! {
@@ -58,7 +61,7 @@ public class MediaStream {
          mediaChannelId: String,
          accessToken: String? = nil,
          mediaStreamId: String? = nil,
-         mediaOption: MediaOption = MediaOption()) {
+         mediaOption: MediaOption? = MediaOption()) {
         self.mediaConnection = mediaConnection
         self.role = role
         self.mediaChannelId = mediaChannelId
@@ -66,21 +69,6 @@ public class MediaStream {
         self.mediaStreamlId = mediaStreamId
         self.mediaOption = mediaOption
         state = .disconnected
-        creationTime = Date()
-    }
-    
-    public func connect(handler: @escaping ((Error?) -> Void)) {
-        // TODO: impl
-    }
-    
-    public func disconnect(handler: @escaping () -> Void) {
-        state = .disconnected
-        connectionTimer?.invalidate()
-        videoRendererSupport = nil
-        
-        // TODO: デリゲートを使って close の完了を知るべき
-        peerConnection.close()
-        handler()
     }
     
     func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
@@ -94,12 +82,58 @@ public class MediaStream {
         }
     }
     
+    // MARK: シグナリング
+    
+    func connect(handler: @escaping ((ConnectionError?) -> Void)) {
+        switch state {
+        case .connected, .connecting, .disconnecting:
+            handler(ConnectionError.connectionBusy)
+        case .disconnected:
+            state = .connecting
+            // TODO
+            creationTime = Date()
+        }
+    }
+    
+    func disconnect(handler: @escaping (ConnectionError?) -> Void) {
+        switch state {
+        case .disconnecting:
+            handler(ConnectionError.connectionBusy)
+        case .disconnected:
+            handler(ConnectionError.connectionDisconnected)
+        case .connecting, .connected:
+            assert(peerConnection == nil, "peerConnection must not be nil")
+            state = .disconnected
+            connectionTimer?.invalidate()
+            videoRendererSupport = nil
+
+            // TODO: デリゲートを使って close の完了を知るべき
+            peerConnection!.close()
+            handler(nil)
+            creationTime = nil
+        }
+    }
+    
+    public func send(_ message: Message) {
+        context.send(message)
+    }
+    
+    public func send(_ messageable: Messageable) {
+        context.send(messageable.message())
+    }
+    
+    // MARK: 統計情報
+    
     public func statisticsReports(level: StatisticsReport.Level)
         -> ([StatisticsReport], [StatisticsReport])
     {
+        if peerConnection == nil {
+            return ([], [])
+        }
+        
         func getReports(track: RTCMediaStreamTrack) -> [StatisticsReport] {
             var reports: [StatisticsReport] = []
-            peerConnection.stats(for: track, statsOutputLevel: level.nativeOutputLevel) {
+            peerConnection!.stats(for: track, statsOutputLevel: level.nativeOutputLevel) {
                 nativeReports in
                 for nativeReport in nativeReports {
                     if let report = StatisticsReport.parse(report: nativeReport) {
@@ -124,25 +158,18 @@ public class MediaStream {
     }
     
     // MARK: イベントハンドラ
-    
-    var onConnectedHandler: ((MediaStream?, Error?) -> Void)?
-    var onDisconnectedHandler: ((MediaStream?, Error?) -> Void)?
-    
-    public func onDisconnected(_ handler: @escaping ((MediaStream?, Error?) -> Void)) {
-        onDisconnectedHandler = handler
-    }
-    
-    var onAvailableHandler: ((Int) -> Void)?
+
+    var onUpdateHandler: ((Int) -> Void)?
     var connectionTimer: Timer?
     
     @available(iOS 10.0, *)
-    public func onAvailable(handler: @escaping ((Int) -> Void)) {
-        onAvailableHandler = handler
+    public func onUpdate(timeInterval: TimeInterval, handler: @escaping ((Int) -> Void)) {
+        onUpdateHandler = handler
         connectionTimer?.invalidate()
-        connectionTimer = Timer(timeInterval: 1, repeats: true) {
+        connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
             timer in
             if self.state == .connected {
-                let diff = Date(timeIntervalSinceNow: 0).timeIntervalSince(self.creationTime)
+                let diff = Date(timeIntervalSinceNow: 0).timeIntervalSince(self.creationTime!)
                 handler(Int(diff))
             }
         }
