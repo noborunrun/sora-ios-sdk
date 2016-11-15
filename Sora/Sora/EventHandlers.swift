@@ -9,7 +9,7 @@ public struct MediaConnectionState {
     
 }
 
-public class WebSocketEventHandlers {
+open class WebSocketEventHandlers {
 
     var onOpenHandler: ((SRWebSocket) -> ())?
     var onFailureHandler: ((SRWebSocket, Error) -> ())?
@@ -17,29 +17,29 @@ public class WebSocketEventHandlers {
     var onMessageHandler: ((SRWebSocket, String) -> ())?
     var onCloseHandler: ((SRWebSocket, Int, String, Bool) -> ())?
 
-    func onOpen(handler: @escaping (SRWebSocket) -> ()) {
+    public func onOpen(handler: @escaping (SRWebSocket) -> ()) {
         onOpenHandler = handler
     }
     
-    func onFailure(handler: @escaping (SRWebSocket, Error) -> ()) {
+    public func onFailure(handler: @escaping (SRWebSocket, Error) -> ()) {
         onFailureHandler = handler
     }
     
-    func onPong(handler: @escaping (SRWebSocket, Data) -> ()) {
+    public func onPong(handler: @escaping (SRWebSocket, Data) -> ()) {
         onPongHandler = handler
     }
     
-    func onMessage(handler: @escaping (SRWebSocket, String) -> ()) {
+    public func onMessage(handler: @escaping (SRWebSocket, String) -> ()) {
         onMessageHandler = handler
     }
     
-    func onClose(handler: @escaping (SRWebSocket, Int, String, Bool) -> ()) {
+    public func onClose(handler: @escaping (SRWebSocket, Int, String, Bool) -> ()) {
         onCloseHandler = handler
     }
     
 }
 
-public class SignalingEventHandlers {
+open class SignalingEventHandlers {
     
     var onReceiveHandler: ((Message) -> Void)?
     var onConnectHandler: ((Void) -> Void)?
@@ -79,7 +79,7 @@ public class SignalingEventHandlers {
     
 }
 
-public class PeerConnectionEventHandlers {
+open class PeerConnectionEventHandlers {
     
     var onChangeSignalingStateHandler:
     ((RTCPeerConnection, RTCSignalingState) -> Void)?
@@ -99,46 +99,46 @@ public class PeerConnectionEventHandlers {
     var onOpenDataChannelHandler:
     ((RTCPeerConnection, RTCDataChannel) -> Void)?
     
-    func onChangeSignalingState(handler:
+    public func onChangeSignalingState(handler:
         @escaping (RTCPeerConnection, RTCSignalingState) -> Void) {
         onChangeSignalingStateHandler = handler
     }
     
-    func onAddStream(handler:
+    public func onAddStream(handler:
         @escaping (RTCPeerConnection, RTCMediaStream) -> Void) {
         onAddStreamHandler = handler
     }
     
-    func onRemoveStream(handler:
+    public func onRemoveStream(handler:
         @escaping (RTCPeerConnection, RTCMediaStream) -> Void) {
         onRemoveStreamHandler = handler
     }
     
-    func onNegotiate(handler: @escaping (RTCPeerConnection) -> Void) {
+    public func onNegotiate(handler: @escaping (RTCPeerConnection) -> Void) {
         onNegotiateHandler = handler
     }
     
-    func onChangeIceConnectionState(handler:
+    public func onChangeIceConnectionState(handler:
         @escaping (RTCPeerConnection,  RTCIceConnectionState) -> Void) {
         onChangeIceConnectionStateHandler = handler
     }
     
-    func onChangeIceGatheringState(handler:
+    public func onChangeIceGatheringState(handler:
         @escaping (RTCPeerConnection, RTCIceGatheringState) -> Void) {
         onChangeIceGatheringStateHandler = handler
     }
     
-    func onGenerateIceCandidate(handler:
+    public func onGenerateIceCandidate(handler:
         @escaping (RTCPeerConnection, RTCIceCandidate) -> Void) {
         onGenerateIceCandidateHandler = handler
     }
     
-    func onRemoveCandidates(handler:
+    public func onRemoveCandidates(handler:
         @escaping (RTCPeerConnection, [RTCIceCandidate]) -> Void) {
         onRemoveCandidatesHandler = handler
     }
     
-    func onOpenDataChannel(handler:
+    public func onOpenDataChannel(handler:
         @escaping (RTCPeerConnection, RTCDataChannel) -> Void) {
         onOpenDataChannelHandler = handler
     }
