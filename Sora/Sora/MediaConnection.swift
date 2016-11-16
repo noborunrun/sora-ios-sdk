@@ -6,9 +6,10 @@ public class MediaOption {
     public var videoEnabled: Bool
     public var audioEnabled: Bool
     public var configuration: RTCConfiguration
-    public var mediaConstraints: RTCMediaConstraints
-    public var answerMediaConstraints: RTCMediaConstraints
-    
+    public var signalingAnswerMediaConstraints: RTCMediaConstraints
+    public var videoCaptureSourceMediaConstraints: RTCMediaConstraints
+    public var peerConnectionMediaConstraints: RTCMediaConstraints
+
     public static var defaultConfiguration: RTCConfiguration = {
         () -> RTCConfiguration in
         let config = RTCConfiguration()
@@ -23,13 +24,18 @@ public class MediaOption {
     
     public init(videoEnabled: Bool = true, audioEnabled: Bool = true,
                 configuration: RTCConfiguration? = nil,
-                mediaConstraints: RTCMediaConstraints? = nil,
-                answerMediaConstraints: RTCMediaConstraints? = nil) {
+                signalingAnswerMediaConstraints: RTCMediaConstraints? = nil,
+                videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
+                peerConnectionMediaConstraints: RTCMediaConstraints? = nil) {
         self.videoEnabled = videoEnabled
         self.audioEnabled = audioEnabled
         self.configuration = configuration ?? MediaOption.defaultConfiguration
-        self.mediaConstraints = mediaConstraints ?? MediaOption.defaultMediaConstraints
-        self.answerMediaConstraints = answerMediaConstraints ?? MediaOption.defaultMediaConstraints
+        self.signalingAnswerMediaConstraints = signalingAnswerMediaConstraints
+            ?? MediaOption.defaultMediaConstraints
+        self.videoCaptureSourceMediaConstraints = videoCaptureSourceMediaConstraints
+            ?? MediaOption.defaultMediaConstraints
+        self.peerConnectionMediaConstraints = peerConnectionMediaConstraints
+            ?? MediaOption.defaultMediaConstraints
     }
     
 }
@@ -41,6 +47,22 @@ public class MediaConnection {
         case connecting
         case disconnected
         case disconnecting
+    }
+    
+    public struct Statistics {
+        
+        public var numberOfUpstreamConnections: Int?
+        public var numberOfDownstreamConnections: Int?
+        
+        init(signalingStats: SignalingStats) {
+            self.numberOfUpstreamConnections = signalingStats.numberOfUpstreamConnections
+            self.numberOfDownstreamConnections = signalingStats.numberOfUpstreamConnections
+        }
+        
+    }
+    
+    public enum Notification: String {
+        case disconnectedUpstream = "DISCONNECTED-UPSTREAM"
     }
     
     public weak var mediaChannel: MediaChannel!
@@ -155,12 +177,51 @@ public class MediaConnection {
         connectionTimer?.invalidate()
     }
     
+    
+    // MARK: 統計情報
+    
+    public func statisticsReports(level: StatisticsReport.Level)
+        -> ([StatisticsReport], [StatisticsReport])
+    {
+        if !isAvailable {
+            return ([], [])
+        }
+        
+        func getReports(track: RTCMediaStreamTrack) -> [StatisticsReport] {
+            var reports: [StatisticsReport] = []
+            mediaStream!.peerConnection!
+                .stats(for: track, statsOutputLevel: level.nativeOutputLevel) {
+                nativeReports in
+                for nativeReport in nativeReports {
+                    if let report = StatisticsReport.parse(report: nativeReport) {
+                        reports.append(report)
+                    }
+                }
+            }
+            return reports
+        }
+        
+        var videoReports: [StatisticsReport] = []
+        if let track = mediaStream!.nativeVideoTrack {
+            videoReports = getReports(track: track)
+        }
+        
+        var audioReports: [StatisticsReport] = []
+        if let track = mediaStream!.nativeAudioTrack {
+            audioReports = getReports(track: track)
+        }
+        
+        return (videoReports, audioReports)
+    }
+
     // MARK: イベントハンドラ
     
     var onConnectHandler: ((Void) -> Void)?
     var onDisconnectHandler: ((Void) -> Void)?
     var onFailureHandler: ((ConnectionError) -> Void)?
-    
+    var onUpdateHandler: ((Statistics) -> Void)?
+    var onNotifyHandler: ((Notification) -> Void)?
+
     public func onConnect(handler: @escaping ((Void) -> Void)) {
         onConnectHandler = handler
     }
@@ -172,6 +233,14 @@ public class MediaConnection {
     // この次に必ず onDisconnect が呼ばれる
     public func onFailure(handler: @escaping ((ConnectionError) -> Void)) {
         onFailureHandler = handler
+    }
+    
+    public func onUpdate(handler: @escaping ((Statistics) -> Void)) {
+        onUpdateHandler = handler
+    }
+    
+    public func onNotify(handler: @escaping ((Notification) -> Void)) {
+        onNotifyHandler = handler
     }
     
 }
@@ -196,7 +265,7 @@ public class MediaCapturer {
             .avFoundationVideoSource(with: videoCaptureSourceMediaConstraints)
         videoCaptureTrack = factory
             .videoTrack(with: videoCaptureSource,
-                                  trackId: MediaCapturer.defaultVideoCaptureTrackId)
+                        trackId: MediaCapturer.defaultVideoCaptureTrackId)
         audioCaptureTrack = factory
             .audioTrack(withTrackId: MediaCapturer.defaultAudioCaptureTrackId)
     }

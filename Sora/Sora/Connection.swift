@@ -2,7 +2,6 @@ import Foundation
 import WebRTC
 import SocketRocket
 import UIKit
-import Unbox
 
 public enum ConnectionError: Error {
     case failureJSONDecode

@@ -333,11 +333,18 @@ extension SignalingPong: Messageable {
     
 }
 
-struct SignalingStats {
+public struct SignalingStats {
     
     public var numberOfUpstreamConnections: Int?
     public var numberOfDownstreamConnections: Int?
     
+    var description: String {
+        get {
+            return String(format: "upstreams = %d, downstreams = %d",
+                          numberOfUpstreamConnections ?? 0,
+                          numberOfDownstreamConnections ?? 0)
+        }
+    }
 }
 
 extension SignalingStats: Unboxable {
@@ -349,7 +356,7 @@ extension SignalingStats: Unboxable {
     
 }
 
-struct SignalingNotify {
+public struct SignalingNotify {
     
     var notifyMessage: String
     

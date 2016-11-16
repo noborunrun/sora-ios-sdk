@@ -2,19 +2,12 @@ import Foundation
 import WebRTC
 import SocketRocket
 
-public struct MediaConnectionState {
-    
-    public var numberOfUpstreamConnections: Int?
-    public var numberOfDownstreamConnections: Int?
-    
-}
-
 open class WebSocketEventHandlers {
 
     var onOpenHandler: ((SRWebSocket) -> ())?
     var onFailureHandler: ((SRWebSocket, Error) -> ())?
     var onPongHandler: ((SRWebSocket, Data) -> ())?
-    var onMessageHandler: ((SRWebSocket, String) -> ())?
+    var onMessageHandler: ((SRWebSocket, AnyObject) -> ())?
     var onCloseHandler: ((SRWebSocket, Int, String, Bool) -> ())?
 
     public func onOpen(handler: @escaping (SRWebSocket) -> ()) {
@@ -29,7 +22,7 @@ open class WebSocketEventHandlers {
         onPongHandler = handler
     }
     
-    public func onMessage(handler: @escaping (SRWebSocket, String) -> ()) {
+    public func onMessage(handler: @escaping (SRWebSocket, AnyObject) -> ()) {
         onMessageHandler = handler
     }
     
@@ -44,10 +37,10 @@ open class SignalingEventHandlers {
     var onReceiveHandler: ((Message) -> Void)?
     var onConnectHandler: ((Void) -> Void)?
     var onDisconnectHandler: ((Void) -> Void)?
-    var onUpdateHandler: ((MediaConnectionState) -> Void)?
+    var onUpdateHandler: ((SignalingStats) -> Void)?
     var onFailureHandler: ((ConnectionError) -> Void)?
     var onPingHandler: ((Void) -> Void)?
-    var onNotifyHandler: ((String) -> Void)?
+    var onNotifyHandler: ((SignalingNotify) -> Void)?
     
     public func onReceive(handler: @escaping ((Message) -> Void)) {
         onReceiveHandler = handler
@@ -61,7 +54,7 @@ open class SignalingEventHandlers {
         onDisconnectHandler = handler
     }
     
-    public func onUpdate(handler: @escaping ((MediaConnectionState) -> Void)) {
+    public func onUpdate(handler: @escaping ((SignalingStats) -> Void)) {
         onUpdateHandler = handler
     }
     
@@ -73,7 +66,7 @@ open class SignalingEventHandlers {
         onPingHandler = handler
     }
     
-    public func onNotify(handler: @escaping ((String) -> Void)) {
+    public func onNotify(handler: @escaping ((SignalingNotify) -> Void)) {
         onNotifyHandler = handler
     }
     
