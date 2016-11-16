@@ -291,11 +291,12 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         print("create media capturer")
         eventLog.markFormat(type: .PeerConnection, format: "create media capturer")
         let constraints = mediaConnection.mediaOption?
-            .videoCaptureSourceConstraints
+            .videoCaptureSourceMediaConstraints
             ?? MediaOption.defaultMediaConstraints
         mediaCapturer = MediaCapturer(factory: peerConnectionFactory, videoCaptureSourceMediaConstraints: constraints)
         if mediaCapturer == nil {
-            eventLog.markFormat(type: .PeerConnection, format: "create media capturer failed")
+            eventLog.markFormat(type: .PeerConnection,
+                                format: "create media capturer failed")
             webSocket?.close()
             return
         }
@@ -363,178 +364,200 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             print("received message type: ", message.type)
             switch message.type {
             case .ping?:
-                if state != .connected {
-                    return
-                }
-                
-                eventLog.markFormat(type: .Signaling, format: "received ping")
-                signalingEventHandlers?.onPingHandler?()
-                if let error = self.send(SignalingPong()) {
-                    mediaConnection.onFailureHandler?(error)
-                }
+                receiveSignalingPing()
                 
             case .stats?:
-                if state != .connected {
-                    return
-                }
-                
-                var stats: SignalingStats!
-                do {
-                    stats = Optional.some(try unbox(dictionary: json))
-                } catch {
-                    eventLog.markFormat(type: .Signaling,
-                                        format: "failed parsing stats: %@",
-                                        arguments: json.description)
-                    return
-                }
-                
-                eventLog.markFormat(type: .Signaling, format: "stats: %@",
-                                    arguments: stats.description)
-                
-                let mediaStats = MediaConnection.Statistics(signalingStats: stats)
-                signalingEventHandlers?.onUpdateHandler?(stats)
-                mediaConnection.onUpdateHandler?(mediaStats)
+                receiveSignalingStats(json: json)
                 
             case .notify?:
-                if state != .connected {
-                    return
-                }
-                
-                var notify: SignalingNotify!
-                do {
-                    notify = Optional.some(try unbox(dictionary: json))
-                } catch {
-                    eventLog.markFormat(type: .Signaling,
-                                        format: "failed parsing notify: %@",
-                                        arguments: json.description)
-                }
-                
-                eventLog.markFormat(type: .Signaling, format: "received notify: %@",
-                                    arguments: notify.notifyMessage)
-                signalingEventHandlers?.onNotifyHandler?(notify)
-                if let notify = MediaConnection
-                    .Notification(rawValue: notify.notifyMessage) {
-                    mediaConnection.onNotifyHandler?(notify)
-                }
+                receiveSignalingNotify(json: json)
                 
             case .offer?:
-                if state != .signalingConnected {
-                    return
-                }
-                
-                eventLog.markFormat(type: .Signaling, format: "received offer")
-                let offer: SignalingOffer!
-                do {
-                    offer = Optional.some(try unbox(dictionary: json))
-                } catch {
-                    eventLog.markFormat(type: .Signaling, format: "parsing offer failed")
-                    return
-                }
-                print("peer offered")
-                
-                if let config = offer.config {
-                    print("offer config:", config)
-                    eventLog.markFormat(type: .Signaling,
-                                        format: "configure ICE transport policy")
-                    let peerConfig = RTCConfiguration()
-                    switch config.iceTransportPolicy {
-                    case "relay":
-                        peerConfig.iceTransportPolicy = .relay
-                    default:
-                        eventLog.markFormat(type: .Signaling,
-                                            format: "unsupported iceTransportPolicy %@",
-                                            arguments: config.iceTransportPolicy)
-                        return
-                    }
-                    
-                    eventLog.markFormat(type: .Signaling, format: "configure ICE servers")
-                    for serverConfig in config.iceServers {
-                        let server = RTCIceServer(urlStrings: serverConfig.urls,
-                                                  username: serverConfig.username,
-                                                  credential: serverConfig.credential)
-                        peerConfig.iceServers = [server]
-                    }
-                    
-                    if !peerConnection.setConfiguration(peerConfig) {
-                        print("failed setting configuration sent by offer")
-                        eventLog.markFormat(type: .Signaling,
-                                            format: "cannot configure peer connection")
-                        onConnectHandler?(ConnectionError.failureSetConfiguration(peerConfig))
-                        return
-                    }
-                }
-                
-                state = .peerConnectionOffered
-                let sdp = offer.sessionDescription()
-                eventLog.markFormat(type: .Signaling, format: "set remote description")
-                peerConnContext.peerconnection.setRemoteDescription(sdp) {
-                    (error: Error?) in
-                    if let error = error {
-                        self.eventLog.markFormat(type: .Signaling,
-                                                      format: "setting remote description failed")
-                        self.connection.onFailedHandler?(ConnectionError.peerConnectionError(error))
-                        return
-                    }
-                    
-                    print("create answer")
-                    self.eventLog.markFormat(type: .Signaling,
-                                                  format: "create answer")
-                    self.state = .peerAnswering
-                    self.peerConnContext.peerconnection.answer(for: self.peerConnContext.mediaOption.answerMediaConstraints) {
-                        (sdp, error) in
-                        if let error = error {
-                            self.eventLog.markFormat(type: .Signaling,
-                                                          format: "creating answer failed")
-                            self.connection.onFailedHandler?(ConnectionError.peerConnectionError(error))
-                            return
-                        }
-                        print("generate answer: ", sdp)
-                        self.eventLog.markFormat(type: .Signaling,
-                                                      format: "generated answer: %@",
-                                                      arguments: sdp!)
-                        
-                        print("set local description")
-                        self.eventLog.markFormat(type: .Signaling,
-                                                      format: "set local description")
-                        self.peerConnContext.peerconnection.setLocalDescription(sdp!) {
-                            (error) in
-                            if let error = error {
-                                self.eventLog.markFormat(type: .Signaling,
-                                                              format: "failed setting local description")
-                                self.connection.onFailedHandler?(ConnectionError.peerConnectionError(error))
-                                return
-                            }
-                            
-                            print("send answer")
-                            self.eventLog.markFormat(type: .Signaling,
-                                                          format: "send answer")
-                            let answer = SignalingAnswer(sdp: sdp!.sdp)
-                            self.send(answer)
-                        }
-                    }
-                }
+                receiveSignalingOffer(json: json)
+
             default:
                 return
             }
         }
     }
     
-    // MARK: RTCPeerConnectionDelegate
-    
-    var downstream: RTCMediaStream?
-    var mediaOption: MediaOption
-    var onConnectHandler: ((RTCPeerConnection?, RTCMediaStream?, Error?) -> Void)
-    
-    // TODO: deprecated
-    /*
-    func createPeerConnection() {
-        eventLog.markFormat(type: .PeerConnection, format: "create peer connection")
-        peerConn = factory.peerConnection(
-            with: mediaOption.configuration,
-            constraints: mediaOption.mediaConstraints,
-            delegate: self)
+    func receiveSignalingPing() {
+        if state != .connected {
+            return
+        }
+        
+        eventLog.markFormat(type: .Signaling, format: "received ping")
+        signalingEventHandlers?.onPingHandler?()
+        if let error = self.send(SignalingPong()) {
+            mediaConnection.onFailureHandler?(error)
+        }
     }
- */
+    
+    func receiveSignalingStats(json: [String: Any]) {
+        if state != .connected {
+            return
+        }
+        
+        var stats: SignalingStats!
+        do {
+            stats = Optional.some(try unbox(dictionary: json))
+        } catch {
+            eventLog.markFormat(type: .Signaling,
+                                format: "failed parsing stats: %@",
+                                arguments: json.description)
+            return
+        }
+        
+        eventLog.markFormat(type: .Signaling, format: "stats: %@",
+                            arguments: stats.description)
+        
+        let mediaStats = MediaConnection.Statistics(signalingStats: stats)
+        signalingEventHandlers?.onUpdateHandler?(stats)
+        mediaConnection.onUpdateHandler?(mediaStats)
+    }
+    
+    func receiveSignalingNotify(json: [String: Any]) {
+        if state != .connected {
+            return
+        }
+        
+        var notify: SignalingNotify!
+        do {
+            notify = Optional.some(try unbox(dictionary: json))
+        } catch {
+            eventLog.markFormat(type: .Signaling,
+                                format: "failed parsing notify: %@",
+                                arguments: json.description)
+        }
+        
+        eventLog.markFormat(type: .Signaling, format: "received notify: %@",
+                            arguments: notify.notifyMessage)
+        signalingEventHandlers?.onNotifyHandler?(notify)
+        if let notify = MediaConnection
+            .Notification(rawValue: notify.notifyMessage) {
+            mediaConnection.onNotifyHandler?(notify)
+        }
+    }
+    
+    func receiveSignalingOffer(json: [String: Any]) {
+        if state != .signalingConnected {
+            return
+        }
+        
+        eventLog.markFormat(type: .Signaling, format: "received offer")
+        let offer: SignalingOffer!
+        do {
+            offer = Optional.some(try unbox(dictionary: json))
+        } catch {
+            eventLog.markFormat(type: .Signaling,
+                                format: "parsing offer failed")
+            return
+        }
+        print("peer offered")
+        
+        if let config = offer.config {
+            print("offer config:", config)
+            eventLog.markFormat(type: .Signaling,
+                                format: "configure ICE transport policy")
+            let peerConfig = RTCConfiguration()
+            switch config.iceTransportPolicy {
+            case "relay":
+                peerConfig.iceTransportPolicy = .relay
+            default:
+                eventLog.markFormat(type: .Signaling,
+                                    format: "unsupported iceTransportPolicy %@",
+                                    arguments: config.iceTransportPolicy)
+                return
+            }
+            
+            eventLog.markFormat(type: .Signaling, format: "configure ICE servers")
+            for serverConfig in config.iceServers {
+                let server = RTCIceServer(urlStrings: serverConfig.urls,
+                                          username: serverConfig.username,
+                                          credential: serverConfig.credential)
+                peerConfig.iceServers = [server]
+            }
+            
+            if !peerConnection.setConfiguration(peerConfig) {
+                print("failed setting configuration sent by offer")
+                eventLog.markFormat(type: .Signaling,
+                                    format: "cannot configure peer connection")
+                onConnectHandler?(ConnectionError
+                    .failureSetConfiguration(peerConfig))
+                return
+            }
+        }
+        
+        state = .peerConnectionOffered
+        let sdp = offer.sessionDescription()
+        eventLog.markFormat(type: .Signaling,
+                            format: "set remote description")
+        peerConnection.setRemoteDescription(sdp) {
+            error in
+            if let error = error {
+                self.eventLog.markFormat(type: .Signaling,
+                                         format: "set remote description failed")
+                self.mediaConnection.onFailureHandler?(
+                    ConnectionError.peerConnectionError(error))
+                self.webSocket?.close()
+                return
+            }
+            
+            print("create answer")
+            self.eventLog.markFormat(type: .Signaling,
+                                     format: "create answer")
+            self.peerConnection.answer(for: self
+                .mediaConnection.mediaOption?
+                .signalingAnswerMediaConstraints
+                ?? MediaOption.defaultMediaConstraints)
+            {
+                (sdp, error) in
+                if let error = error {
+                    self.eventLog.markFormat(type: .Signaling,
+                                             format: "creating answer failed")
+                    self.peerConnectionEventHandlers?.onFailureHandler?(error)
+                    self.mediaConnection.onFailureHandler?(
+                        ConnectionError.peerConnectionError(error))
+                    self.webSocket?.close()
+                    return
+                }
+                print("generate answer: ", sdp)
+                self.eventLog.markFormat(type: .Signaling,
+                                         format: "generated answer: %@",
+                                         arguments: sdp!)
+                
+                print("set local description")
+                self.eventLog.markFormat(type: .Signaling,
+                                         format: "set local description")
+                self.peerConnection.setLocalDescription(sdp!) {
+                    error in
+                    if let error = error {
+                        self.eventLog.markFormat(type: .Signaling,
+                                                 format: "set local description failed")
+                        self.peerConnectionEventHandlers?.onFailureHandler?(error)
+                        self.mediaConnection.onFailureHandler?(
+                            ConnectionError.peerConnectionError(error))
+                        self.webSocket?.close()
+                        return
+                    }
+                    
+                    print("send answer")
+                    self.eventLog.markFormat(type: .Signaling,
+                                             format: "send answer")
+                    let answer = SignalingAnswer(sdp: sdp!.sdp)
+                    if let error = self.send(answer) {
+                        self.mediaConnection.onFailureHandler?(
+                            ConnectionError.peerConnectionError(error))
+                        self.webSocket?.close()
+                        return
+                    }
+                    self.state = .peerConnectionAnswered
+                }
+            }
+        }
+    }
+    
+    // MARK: RTCPeerConnectionDelegate
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
                         didChange stateChanged: RTCSignalingState) {

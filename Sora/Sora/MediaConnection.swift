@@ -3,12 +3,12 @@ import WebRTC
 
 public class MediaOption {
     
-    public var videoEnabled: Bool
-    public var audioEnabled: Bool
-    public var configuration: RTCConfiguration
-    public var signalingAnswerMediaConstraints: RTCMediaConstraints
-    public var videoCaptureSourceMediaConstraints: RTCMediaConstraints
-    public var peerConnectionMediaConstraints: RTCMediaConstraints
+    public var videoEnabled: Bool = true
+    public var audioEnabled: Bool = true
+    public var configuration: RTCConfiguration?
+    public var signalingAnswerMediaConstraints: RTCMediaConstraints?
+    public var videoCaptureSourceMediaConstraints: RTCMediaConstraints?
+    public var peerConnectionMediaConstraints: RTCMediaConstraints?
 
     public static var defaultConfiguration: RTCConfiguration = {
         () -> RTCConfiguration in
@@ -21,22 +21,6 @@ public class MediaOption {
     
     public static var defaultMediaConstraints: RTCMediaConstraints =
         RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
-    
-    public init(videoEnabled: Bool = true, audioEnabled: Bool = true,
-                configuration: RTCConfiguration? = nil,
-                signalingAnswerMediaConstraints: RTCMediaConstraints? = nil,
-                videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
-                peerConnectionMediaConstraints: RTCMediaConstraints? = nil) {
-        self.videoEnabled = videoEnabled
-        self.audioEnabled = audioEnabled
-        self.configuration = configuration ?? MediaOption.defaultConfiguration
-        self.signalingAnswerMediaConstraints = signalingAnswerMediaConstraints
-            ?? MediaOption.defaultMediaConstraints
-        self.videoCaptureSourceMediaConstraints = videoCaptureSourceMediaConstraints
-            ?? MediaOption.defaultMediaConstraints
-        self.peerConnectionMediaConstraints = peerConnectionMediaConstraints
-            ?? MediaOption.defaultMediaConstraints
-    }
     
 }
 

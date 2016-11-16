@@ -74,6 +74,9 @@ open class SignalingEventHandlers {
 
 open class PeerConnectionEventHandlers {
     
+    var onConnectHandler: ((Void) -> Void)?
+    var onDisconnectHandler: ((Void) -> Void)?
+    var onFailureHandler: ((Error) -> Void)?
     var onChangeSignalingStateHandler:
     ((RTCPeerConnection, RTCSignalingState) -> Void)?
     var onAddStreamHandler: ((RTCPeerConnection, RTCMediaStream) -> Void)?
@@ -91,6 +94,18 @@ open class PeerConnectionEventHandlers {
     ((RTCPeerConnection, [RTCIceCandidate]) -> Void)?
     var onOpenDataChannelHandler:
     ((RTCPeerConnection, RTCDataChannel) -> Void)?
+    
+    public func onConnect(handler: @escaping ((Void) -> Void)) {
+        onConnectHandler = handler
+    }
+    
+    public func onDisconnect(handler: @escaping ((Void) -> Void)) {
+        onDisconnectHandler = handler
+    }
+
+    public func onFailure(handler: @escaping ((Error) -> Void)) {
+        onFailureHandler = handler
+    }
     
     public func onChangeSignalingState(handler:
         @escaping (RTCPeerConnection, RTCSignalingState) -> Void) {
