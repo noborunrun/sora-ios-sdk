@@ -24,8 +24,6 @@ public class MediaStream {
     public var mediaOption: MediaOption?
     public var creationTime: Date?
     public var clientId: String?
-    public var peerConnection: RTCPeerConnection?
-    public var peerConnectionFactory: RTCPeerConnectionFactory?
     public var state: State
 
     public weak var connection: Connection! {
@@ -34,6 +32,18 @@ public class MediaStream {
     
     public var isAvailable: Bool {
         get { return state == .connected }
+    }
+    
+    public var mediaCapturer: MediaCapturer? {
+        get { return context?.mediaCapturer }
+    }
+    
+    public var peerConnection: RTCPeerConnection? {
+        get { return context?.peerConnection }
+    }
+    
+    public var peerConnectionFactory: RTCPeerConnectionFactory? {
+        get { return context?.peerConnectionFactory }
     }
     
     public var nativeVideoTrack: RTCVideoTrack? {
@@ -188,7 +198,6 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     
     // MARK: ピア接続
     
-    // RTCPeerConnection オブジェクトは peerConnection プロパティにもセットされる
     func connect(handler:
         @escaping ((RTCPeerConnection?, ConnectionError?) -> Void)) {
         if state != .disconnected {
@@ -288,13 +297,16 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             // ピア接続オブジェクトを生成する
             eventLog.markFormat(type: .PeerConnection, format: "create peer connection")
             peerConnection = peerConnectionFactory.peerConnection(
-                with: mediaConnection.mediaOption?.configuration
+                with: mediaStream.mediaOption?.configuration
                     ?? MediaOption.defaultConfiguration,
-                constraints: mediaConnection.mediaOption?.peerConnectionMediaConstraints
+                constraints: mediaStream.mediaOption?.peerConnectionMediaConstraints
                     ?? MediaOption.defaultMediaConstraints,
                 delegate: self)
             if mediaConnection.role() == Role.upstream {
-                createMediaCapturer()
+                if let error = createMediaCapturer() {
+                    terminate(error: error)
+                    return
+                }
             }
             
             // シグナリング connect を送信する
@@ -321,25 +333,29 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         }
     }
 
-    func createMediaCapturer() {
+    func createMediaCapturer() -> ConnectionError? {
         print("create media capturer")
         eventLog.markFormat(type: .PeerConnection, format: "create media capturer")
-        let constraints = mediaConnection.mediaOption?
-            .videoCaptureSourceMediaConstraints
-            ?? MediaOption.defaultMediaConstraints
-        mediaCapturer = MediaCapturer(factory: peerConnectionFactory, videoCaptureSourceMediaConstraints: constraints)
+        mediaCapturer = MediaCapturer(factory: peerConnectionFactory,
+                                      mediaOption: mediaStream.mediaOption)
         if mediaCapturer == nil {
             eventLog.markFormat(type: .PeerConnection,
                                 format: "create media capturer failed")
-            webSocket?.close()
-            return
+            return ConnectionError.mediaCapturerFailed
         }
         
         let upstream = peerConnectionFactory.mediaStream(withStreamId:
             mediaStream.mediaStreamlId ?? MediaStream.defaultStreamId)
-        upstream.addVideoTrack(mediaCapturer!.videoCaptureTrack)
-        upstream.addAudioTrack(mediaCapturer!.audioCaptureTrack)
+        if mediaStream.mediaOption == nil ||
+            mediaStream.mediaOption?.videoEnabled == true {
+            upstream.addVideoTrack(mediaCapturer!.videoCaptureTrack)
+        }
+        if mediaStream.mediaOption == nil ||
+            mediaStream.mediaOption?.audioEnabled == true {
+            upstream.addAudioTrack(mediaCapturer!.audioCaptureTrack)
+        }
         peerConnection.add(upstream)
+        return nil
     }
 
     public func webSocket(_ webSocket: SRWebSocket!,
@@ -543,7 +559,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             self.eventLog.markFormat(type: .Signaling,
                                      format: "create answer")
             self.peerConnection.answer(for: self
-                .mediaConnection.mediaOption?
+                .mediaStream.mediaOption?
                 .signalingAnswerMediaConstraints
                 ?? MediaOption.defaultMediaConstraints)
             {
@@ -557,14 +573,9 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                     self.webSocket?.close()
                     return
                 }
-                print("generate answer: ", sdp)
                 self.eventLog.markFormat(type: .Signaling,
                                          format: "generated answer: %@",
                                          arguments: sdp!)
-                
-                print("set local description")
-                self.eventLog.markFormat(type: .Signaling,
-                                         format: "set local description")
                 self.peerConnection.setLocalDescription(sdp!) {
                     error in
                     if let error = error {
@@ -668,25 +679,10 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             
         case .failed:
             print("ice connection failed")
-            eventLog.markFormat(type: .PeerConnection,
-                                format: "ICE connection failed")
             mediaConnection.onFailureHandler?(ConnectionError.iceConnectionFailed)
             
-        case .new:
-            eventLog.markFormat(type: .PeerConnection,
-                                format: "ICE connection new")
-            
-        case .checking:
-            eventLog.markFormat(type: .PeerConnection,
-                                format: "ICE connection checking")
-            
-        case .closed:
-            eventLog.markFormat(type: .PeerConnection,
-                                format: "ICE connection closed")
-            
-        case .count:
-            eventLog.markFormat(type: .PeerConnection,
-                                format: "ICE connection count")
+        default:
+            break
         }
     }
     
@@ -698,7 +694,6 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                             arguments: newState.description)
         peerConnectionEventHandlers?
             .onChangeIceGatheringStateHandler?(peerConnection, newState)
-        // TODO: 各状態の処理
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,
@@ -708,7 +703,11 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                             arguments: candidate.sdp)
         peerConnectionEventHandlers?
             .onGenerateIceCandidateHandler?(peerConnection, candidate)
-        send(SignalingICECandidate(candidate: candidate.sdp))
+        if let error = send(SignalingICECandidate(candidate: candidate.sdp)) {
+            eventLog.markFormat(type: .PeerConnection,
+                                format: "send candidate to server failed")
+            terminate(error: error)
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection,

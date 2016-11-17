@@ -46,58 +46,20 @@ public class MediaChannel {
         }
     }
     
-    // TODO: reimpl
-    public func createMediaPublisher(
-        mediaOption: MediaOption? = nil,
-        accessToken: String? = nil,
-        mediaStreamId: String? = nil,
-        videoCaptureTrackId: String? = nil,
-        audioCaptureTrackId: String? = nil,
-        videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
-        handler: @escaping ((MediaPublisher?, Error?) -> Void))
+    public func createMediaPublisher(mediaOption: MediaOption? = nil)
+        -> MediaPublisher
     {
-        // TODO:
-        print("create publisher")
-        connection.createMediaUpstream(mediaChannelId,
-                                       accessToken: accessToken,
-                                       mediaOption: mediaOption,
-                                       streamId: "main")
-        {
-            (mediaStream, mediaCapturer, error) in
-            if let error = error {
-                handler(nil, error)
-                return
-            }
-            
-            self.mediaPublisher = MediaPublisher(
-                mediaChannel: self,
-                mediaChannelId: mediaStream!,
-                mediaOption: mediaOption,
-                mediaCapturer: mediaCapturer!)
-            handler(self.mediaPublisher, nil)
-        }
+        return MediaPublisher(mediaChannel: self,
+                              mediaChannelId: mediaChannelId,
+                              mediaOption: mediaOption)
     }
     
-    // TODO: reimpl
-    public func createMediaSubscriber(_ mediaOption: MediaOption = MediaOption(),
-                                      accessToken: String? = nil,
-                                      handler: @escaping ((MediaSubscriber?, Error?) -> Void)) {
-        // TODO:
-        print("create subscriber")
-        connection.createMediaDownstream(mediaChannelId, accessToken: accessToken,
-                                         mediaOption: mediaOption)
-        {
-            (mediaStream, error) in
-            if let error = error {
-                handler(nil, error)
-                return
-            }
-            self.mediaSubscriber = MediaSubscriber(
-                connection: self.connection,
-                mediaStream: mediaStream!,
-                mediaOption: mediaOption)
-            handler(self.mediaSubscriber, nil)
-        }
+    public func createMediaSubscriber(mediaOption: MediaOption? = nil)
+        -> MediaSubscriber
+    {
+        return MediaSubscriber(mediaChannel: self,
+                               mediaChannelId: mediaChannelId,
+                               mediaOption: mediaOption)
     }
-    
+        
 }

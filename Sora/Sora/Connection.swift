@@ -23,6 +23,7 @@ public enum ConnectionError: Error {
     case peerConnectionError(Error)
     case iceConnectionFailed
     case iceConnectionDisconnected
+    case mediaCapturerFailed
 }
 
 public class Connection {
@@ -40,5 +41,5 @@ public class Connection {
         mediaChannels.append(channel)
         return channel
     }
-        
+    
 }

@@ -9,7 +9,9 @@ public class MediaOption {
     public var signalingAnswerMediaConstraints: RTCMediaConstraints?
     public var videoCaptureSourceMediaConstraints: RTCMediaConstraints?
     public var peerConnectionMediaConstraints: RTCMediaConstraints?
-
+    public var videoCaptureTrackId: String?
+    public var audioCaptureTrackId: String?
+    
     public static var defaultConfiguration: RTCConfiguration = {
         () -> RTCConfiguration in
         let config = RTCConfiguration()
@@ -21,7 +23,10 @@ public class MediaOption {
     
     public static var defaultMediaConstraints: RTCMediaConstraints =
         RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
-    
+ 
+    public static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
+    public static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
+
 }
 
 public class MediaConnection {
@@ -85,7 +90,7 @@ public class MediaConnection {
     
     public func connect(accessToken: String? = nil,
                         mediaStreamId: String? = nil,
-                        handler: @escaping ((Error?) -> Void)) {
+                        handler: @escaping ((ConnectionError?) -> Void)) {
         state = .connecting
         mediaStream = MediaStream(mediaConnection: self,
                                   role: role(),
@@ -240,18 +245,18 @@ public class MediaCapturer {
     public var videoCaptureSource: RTCAVFoundationVideoSource
     public var audioCaptureTrack: RTCAudioTrack
     
-    static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
-    static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
-
-    init(factory: RTCPeerConnectionFactory,
-         videoCaptureSourceMediaConstraints: RTCMediaConstraints) {
+    init(factory: RTCPeerConnectionFactory, mediaOption: MediaOption?) {
         videoCaptureSource = factory
-            .avFoundationVideoSource(with: videoCaptureSourceMediaConstraints)
+            .avFoundationVideoSource(with:
+                mediaOption?.videoCaptureSourceMediaConstraints ??
+                    MediaOption.defaultMediaConstraints)
         videoCaptureTrack = factory
             .videoTrack(with: videoCaptureSource,
-                        trackId: MediaCapturer.defaultVideoCaptureTrackId)
+                        trackId: mediaOption?.videoCaptureTrackId ??
+                            MediaOption.defaultVideoCaptureTrackId)
         audioCaptureTrack = factory
-            .audioTrack(withTrackId: MediaCapturer.defaultAudioCaptureTrackId)
+            .audioTrack(withTrackId: mediaOption?.audioCaptureTrackId ??
+                MediaOption.defaultAudioCaptureTrackId)
     }
     
 }
@@ -264,23 +269,21 @@ public enum CameraPosition {
 public class MediaPublisher: MediaConnection {
     
     public var videoPreset: VideoPreset =  VideoPreset.vga
-    public var mediaCapturer: MediaCapturer
+    
+    public var mediaCapturer: MediaCapturer? {
+        get { return mediaStream?.mediaCapturer }
+    }
 
     public var canUseBackCamera: Bool {
-        get { return mediaCapturer.videoCaptureSource.canUseBackCamera }
+        get { return mediaCapturer!.videoCaptureSource.canUseBackCamera }
     }
     
     public var captureSession: AVCaptureSession {
-        get { return mediaCapturer.videoCaptureSource.captureSession }
+        get { return mediaCapturer!.videoCaptureSource.captureSession }
     }
     
-    init(mediaChannel: MediaChannel, mediaChannelId: String,
-         mediaOption: MediaOption, mediaCapturer: MediaCapturer) {
-        self.mediaCapturer = mediaCapturer
-        mediaCapturer.videoCaptureSource.useBackCamera = false
-        super.init(mediaChannel: mediaChannel,
-                   mediaChannelId: mediaChannelId,
-                   mediaOption: mediaOption)
+    var eventLog: EventLog {
+        get { return mediaChannel.connection.eventLog }
     }
     
     override func role() -> Role {
@@ -288,14 +291,17 @@ public class MediaPublisher: MediaConnection {
     }
     
     public func switchCamera(_ position: CameraPosition? = nil) {
+        eventLog.markFormat(type: .MediaConnection,
+                            format: "switch camera to %@",
+                            arguments: position.debugDescription)
         switch position {
         case nil:
-            mediaCapturer.videoCaptureSource.useBackCamera =
-                !mediaCapturer.videoCaptureSource.useBackCamera
+            mediaCapturer!.videoCaptureSource.useBackCamera =
+                !mediaCapturer!.videoCaptureSource.useBackCamera
         case CameraPosition.front?:
-            mediaCapturer.videoCaptureSource.useBackCamera = false
+            mediaCapturer!.videoCaptureSource.useBackCamera = false
         case CameraPosition.back?:
-            mediaCapturer.videoCaptureSource.useBackCamera = true
+            mediaCapturer!.videoCaptureSource.useBackCamera = true
         }
     }
     
