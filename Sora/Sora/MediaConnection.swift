@@ -94,7 +94,7 @@ public class MediaConnection {
                                   mediaStreamId: mediaStreamId,
                                   mediaOption: mediaOption)
         mediaStream!.connect {
-            error in
+            peerConn, error in
             if let error = error {
                 self.state = .disconnected
                 self.mediaStream = nil
