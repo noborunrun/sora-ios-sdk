@@ -153,7 +153,7 @@ public class MediaStream {
 
 class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelegate {
     
-    enum State {
+    enum State: String {
         case signalingConnecting
         case signalingConnected
         case peerConnectionReady
@@ -246,21 +246,18 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     }
     
     func send(_ message: Message) -> ConnectionError? {
+        eventLog.markFormat(type: .WebSocket,
+                            format: "send message (state %@): %@",
+                            arguments: state.rawValue, message.description)
         switch state {
         case .disconnected:
             return ConnectionError.connectionDisconnected
-        case .connected:
-            let j = message.JSON()
-            let data = try! JSONSerialization.data(withJSONObject: j,
-                                                   options:
-                JSONSerialization.WritingOptions(rawValue: 0))
-            let msg = NSString(data: data,
-                               encoding: String.Encoding.utf8.rawValue) as String!
-            print("WebSocket send ", j)
+        case .signalingConnected, .connected:
+            let s = message.JSONString()
             eventLog.markFormat(type: .WebSocket,
-                                format: "send message: %@",
-                                arguments: msg!)
-            webSocket!.send(msg)
+                                format: "send message ok",
+                                arguments: s)
+            webSocket!.send(s)
             return nil
         default:
             return ConnectionError.connectionBusy

@@ -69,6 +69,19 @@ public class Message {
         return json
     }
     
+    public func JSONString() -> String {
+        let j = JSON()
+        let data = try! JSONSerialization.data(withJSONObject: j,
+                                               options:
+            JSONSerialization.WritingOptions(rawValue: 0))
+        return NSString(data: data,
+                        encoding: String.Encoding.utf8.rawValue) as String!
+    }
+    
+    public var description: String {
+        get { return JSONString() }
+    }
+    
 }
 
 extension Message : Messageable {
