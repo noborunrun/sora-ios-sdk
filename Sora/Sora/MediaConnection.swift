@@ -88,6 +88,8 @@ public class MediaConnection {
         return Role.upstream
     }
     
+    // MARK: 接続
+    
     public func connect(accessToken: String? = nil,
                         mediaStreamId: String? = nil,
                         handler: @escaping ((ConnectionError?) -> Void)) {
@@ -104,10 +106,13 @@ public class MediaConnection {
                 self.state = .disconnected
                 self.mediaStream = nil
                 self.onFailureHandler?(error)
-                self.onDisconnectHandler?()
+                self.mediaChannel.onMediaConnectionFailureHandler?(self, error)
+                self.onDisconnectHandler?(error)
+                self.mediaChannel.onMediaConnectionDisconnectHandler?(self, error)
             } else {
                 self.state = .connected
-                self.onConnectHandler?()
+                self.onConnectHandler?(nil)
+                self.mediaChannel.onMediaConnectionConnectHandler?(self, nil)
             }
             handler(error)
         }
@@ -205,31 +210,56 @@ public class MediaConnection {
 
     // MARK: イベントハンドラ
     
-    var onConnectHandler: ((Void) -> Void)?
-    var onDisconnectHandler: ((Void) -> Void)?
-    var onFailureHandler: ((ConnectionError) -> Void)?
-    var onUpdateHandler: ((Statistics) -> Void)?
-    var onNotifyHandler: ((Notification) -> Void)?
+    private var onConnectHandler: ((ConnectionError?) -> Void)?
+    private var onDisconnectHandler: ((ConnectionError?) -> Void)?
+    private var onFailureHandler: ((ConnectionError) -> Void)?
+    private var onUpdateHandler: ((Statistics) -> Void)?
+    private var onNotifyHandler: ((Notification) -> Void)?
 
-    public func onConnect(handler: @escaping ((Void) -> Void)) {
+    public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
         onConnectHandler = handler
     }
     
-    public func onDisconnect(handler: @escaping ((Void) -> Void)) {
+    func callOnConnectHandler(error: ConnectionError?) {
+        onConnectHandler?(error)
+        mediaChannel.onMediaConnectionConnectHandler?(self, error)
+    }
+    
+    public func onDisconnect(handler: @escaping (ConnectionError?) -> Void) {
         onDisconnectHandler = handler
     }
     
+    func callOnDisonnectHandler(error: ConnectionError?) {
+        onDisconnectHandler?(error)
+        mediaChannel.onMediaConnectionDisconnectHandler?(self, error)
+    }
+    
     // この次に必ず onDisconnect が呼ばれる
-    public func onFailure(handler: @escaping ((ConnectionError) -> Void)) {
+    public func onFailure(handler: @escaping (ConnectionError) -> Void) {
         onFailureHandler = handler
+    }
+    
+    func callOnFailureHandler(error: ConnectionError) {
+        onFailureHandler?(error)
+        mediaChannel.onMediaConnectionFailureHandler?(self, error)
     }
     
     public func onUpdate(handler: @escaping ((Statistics) -> Void)) {
         onUpdateHandler = handler
     }
     
+    func callOnUpdateHandler(stats: Statistics) {
+        onUpdateHandler?(stats)
+        mediaChannel.onMediaConnectionUpdateHandler?(self, stats)
+    }
+    
     public func onNotify(handler: @escaping ((Notification) -> Void)) {
         onNotifyHandler = handler
+    }
+    
+    func callOnNotifyHandler(notification: Notification) {
+        onNotifyHandler?(notification)
+        mediaChannel.onMediaConnectionNotifyHandler?(self, notification)
     }
     
 }
