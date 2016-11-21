@@ -236,6 +236,8 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     
      // 強制的にシグナリングを切断する
     func terminate(error: ConnectionError?) {
+        eventLog.markFormat(type: .Signaling,
+                            format: "connection terminated")
         state = .terminating
         mediaConnection.callOnFailureHandler(
             error: error ?? ConnectionError.connectionTerminated)
