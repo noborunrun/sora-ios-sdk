@@ -493,7 +493,11 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     }
     
     func receiveSignalingOffer(json: [String: Any]) {
-        if state != .signalingConnected {
+        if state != .peerConnectionReady {
+            eventLog.markFormat(type: .Signaling,
+                                format: "offer: invalid state %@",
+                                arguments: state.rawValue)
+            terminate(error: ConnectionError.connectionTerminated)
             return
         }
         
