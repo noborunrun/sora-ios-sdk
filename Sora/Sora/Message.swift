@@ -51,11 +51,9 @@ public class Message {
                 if let type = Type(rawValue: type) {
                     return Message(type: type, data: j)
                 } else {
-                    print("invalid type:", type)
                     return nil
                 }
             } else {
-                print("'type' is not found")
                 return nil
             }
         } else {
