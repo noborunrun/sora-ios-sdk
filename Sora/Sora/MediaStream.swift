@@ -647,11 +647,11 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             .onChangeIceConnectionState?(peerConnection, newState)
         switch newState {
         case .connected:
-            break
-            
-        case .completed:
             switch state {
             case .peerConnectionAnswered:
+                eventLog.markFormat(type: .PeerConnection,
+                                    format: "remote peer connected",
+                                    arguments: newState.description)
                 state = .connected
                 peerConnectionEventHandlers?.onConnectHandler?()
                 onConnectHandler?(nil, nil)
