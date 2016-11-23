@@ -254,19 +254,25 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                             arguments: state.rawValue, message.description)
         switch state {
         case .disconnected:
+            eventLog.markFormat(type: .WebSocket,
+                                format: "failed sending message (connection disconnected)")
+            
             return ConnectionError.connectionDisconnected
-        case .signalingConnected, .connected:
+        case .signalingConnecting, .disconnecting, .terminating:
+            eventLog.markFormat(type: .WebSocket,
+                                format: "failed sending message (connection busy)")
+            return ConnectionError.connectionBusy
+            
+        default:
             let s = message.JSONString()
             eventLog.markFormat(type: .WebSocket,
-                                format: "send message ok",
+                                format: "send message as JSON: %@",
                                 arguments: s)
-            webSocket!.send(s)
+            webSocket!.send(message.JSONString())
             return nil
-        default:
-            return ConnectionError.connectionBusy
         }
     }
-    
+ 
     func send(_ messageable: Messageable) -> ConnectionError? {
         return self.send(messageable.message())
     }
