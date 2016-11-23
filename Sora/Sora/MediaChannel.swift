@@ -25,14 +25,12 @@ public enum AudioCodec {
 
 public class MediaChannel {
     
-    public weak var connection: Connection!
-    public var mediaChannelId: String
+    public var connection: Connection
     public var mediaPublisher: MediaPublisher?
     public var mediaSubscriber: MediaSubscriber?
     
-    init(connection: Connection, mediaChannelId: String) {
+    public init(connection: Connection) {
         self.connection = connection
-        self.mediaChannelId = mediaChannelId
     }
     
     public func disconnect(handler: @escaping (MediaConnection, ConnectionError?) -> Void) {
@@ -49,16 +47,16 @@ public class MediaChannel {
     public func createMediaPublisher(mediaOption: MediaOption? = nil)
         -> MediaPublisher
     {
-        return MediaPublisher(mediaChannel: self,
-                              mediaChannelId: mediaChannelId,
+        return MediaPublisher(connection: connection,
+                              mediaChannel: self,
                               mediaOption: mediaOption)
     }
     
     public func createMediaSubscriber(mediaOption: MediaOption? = nil)
         -> MediaSubscriber
     {
-        return MediaSubscriber(mediaChannel: self,
-                               mediaChannelId: mediaChannelId,
+        return MediaSubscriber(connection: connection,
+                               mediaChannel: self,
                                mediaOption: mediaOption)
     }
     

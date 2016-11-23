@@ -54,11 +54,22 @@ public class MediaConnection {
         case disconnectedUpstream = "DISCONNECTED-UPSTREAM"
     }
     
+    public var connection: Connection
     public weak var mediaChannel: MediaChannel!
-    public var mediaChannelId: String
     public var mediaStream: MediaStream?
     public var mediaOption: MediaOption?
-    public var state: State
+    
+    private var _state: State
+    
+    public var state: State {
+        get {
+            return _state
+        }
+        set {
+            _state = newValue
+            onChangeStateHandler?(state)
+        }
+    }
     
     public var webSocketEventHandlers: WebSocketEventHandlers?
     public var signalingEventHandlers: SignalingEventHandlers?
@@ -74,13 +85,13 @@ public class MediaConnection {
         }
     }
     
-    init(mediaChannel: MediaChannel,
-         mediaChannelId: String,
+    init(connection: Connection,
+         mediaChannel: MediaChannel,
          mediaOption: MediaOption?) {
+        self.connection = connection
         self.mediaChannel = mediaChannel
-        self.mediaChannelId = mediaChannelId
         self.mediaOption = mediaOption
-        state = .disconnected
+        _state = .disconnected
     }
     
     func role() -> Role {
@@ -94,9 +105,9 @@ public class MediaConnection {
                         mediaStreamId: String? = nil,
                         handler: @escaping ((ConnectionError?) -> Void)) {
         state = .connecting
-        mediaStream = MediaStream(mediaConnection: self,
+        mediaStream = MediaStream(connection: connection,
+                                  mediaConnection: self,
                                   role: role(),
-                                  mediaChannelId: mediaChannelId,
                                   accessToken: accessToken,
                                   mediaStreamId: mediaStreamId,
                                   mediaOption: mediaOption)
@@ -210,12 +221,17 @@ public class MediaConnection {
 
     // MARK: イベントハンドラ
     
+    private var onChangeStateHandler: ((State) -> Void)?
     private var onConnectHandler: ((ConnectionError?) -> Void)?
     private var onDisconnectHandler: ((ConnectionError?) -> Void)?
     private var onFailureHandler: ((ConnectionError) -> Void)?
     private var onUpdateHandler: ((Statistics) -> Void)?
     private var onNotifyHandler: ((Notification) -> Void)?
 
+    public func onChangeState(handler: @escaping (State) -> Void) {
+        onChangeStateHandler = handler
+    }
+    
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
         onConnectHandler = handler
     }

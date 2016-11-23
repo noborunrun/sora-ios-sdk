@@ -29,17 +29,13 @@ public enum ConnectionError: Error {
 public class Connection {
     
     public var URL: Foundation.URL
-    public var mediaChannels: [MediaChannel] = []
-    public var eventLog: EventLog = EventLog()
+    public var mediaChannelId: String
+    public var eventLog: EventLog
     
-    public init(URL: Foundation.URL) {
+    public init(URL: Foundation.URL, mediaChannelId: String) {
         self.URL = URL
+        self.mediaChannelId = mediaChannelId
+        eventLog = EventLog(URL: URL, mediaChannelId: mediaChannelId)
     }
 
-    public func createMediaChannel(mediaChannelId: String) -> MediaChannel {
-        let channel = MediaChannel(connection: self, mediaChannelId: mediaChannelId)
-        mediaChannels.append(channel)
-        return channel
-    }
-    
 }
