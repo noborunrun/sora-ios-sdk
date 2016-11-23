@@ -173,10 +173,6 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     var upstream: RTCMediaStream?
     var mediaCapturer: MediaCapturer?
     
-    var onConnectHandler: ((RTCPeerConnection?, ConnectionError?) -> Void)?
-    var onDisconnectHandler: ((ConnectionError?) -> Void)?
-    var onSentHandler: ((ConnectionError?) -> Void)?
-    
     var connection: Connection {
         get { return mediaStream.connection }
     }
@@ -227,12 +223,6 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         }
     }
     
-    func callOnDisconnectHandler(error: ConnectionError?) {
-        onDisconnectHandler?(error)
-        onDisconnectHandler = nil
-        mediaConnection?.callOnDisonnectHandler(error: error)
-    }
-    
      // 強制的にシグナリングを切断する
     func terminate(error: ConnectionError?) {
         eventLog.markFormat(type: .Signaling,
@@ -275,6 +265,18 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
  
     func send(_ messageable: Messageable) -> ConnectionError? {
         return self.send(messageable.message())
+    }
+    
+    // MARK: イベントハンドラ
+    
+    var onConnectHandler: ((RTCPeerConnection?, ConnectionError?) -> Void)?
+    var onDisconnectHandler: ((ConnectionError?) -> Void)?
+    var onSentHandler: ((ConnectionError?) -> Void)?
+    
+    func callOnDisconnectHandler(error: ConnectionError?) {
+        onDisconnectHandler?(error)
+        onDisconnectHandler = nil
+        mediaConnection?.callOnDisonnectHandler(error: error)
     }
     
     // MARK: SRWebSocketDelegate
