@@ -351,9 +351,14 @@ public struct SignalingStats {
     
     var description: String {
         get {
-            return String(format: "upstreams = %d, downstreams = %d",
-                          numberOfUpstreamConnections ?? 0,
-                          numberOfDownstreamConnections ?? 0)
+            var s = ""
+            if let n = numberOfUpstreamConnections {
+                s = s.appendingFormat("upstreams=%d ", n)
+            }
+            if let n = numberOfDownstreamConnections {
+                s = s.appendingFormat("downstreams=%d", n)
+            }
+            return s
         }
     }
 }
