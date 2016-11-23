@@ -33,17 +33,6 @@ public class MediaChannel {
         self.connection = connection
     }
     
-    public func disconnect(handler: @escaping (MediaConnection, ConnectionError?) -> Void) {
-        mediaPublisher?.disconnect {
-            error in
-            handler(self.mediaPublisher!, error)
-        }
-        mediaSubscriber?.disconnect {
-            error in
-            handler(self.mediaSubscriber!, error)
-        }
-    }
-    
     public func createMediaPublisher(mediaOption: MediaOption? = nil)
         -> MediaPublisher
     {
