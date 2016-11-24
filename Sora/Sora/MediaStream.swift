@@ -72,6 +72,10 @@ public class MediaStream {
     var videoRendererSupport: VideoRendererSupport?
     var nativeMediaStream: RTCMediaStream?
     
+    private var eventLog: EventLog {
+        get { return connection.eventLog }
+    }
+    
     init(connection: Connection,
          mediaConnection: MediaConnection,
          role: Role,
@@ -90,9 +94,15 @@ public class MediaStream {
     func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
         if let videoTrack = nativeVideoTrack {
             if let renderer = videoRenderer {
-                videoRendererSupport = VideoRendererSupport(videoRenderer: renderer)
+                eventLog.markFormat(type: .VideoRenderer,
+                                    format: "set video render")
+                videoRendererSupport =
+                    VideoRendererSupport(mediaStream: self,
+                                         videoRenderer: renderer)
                 videoTrack.add(videoRendererSupport!)
             } else if let support = videoRendererSupport {
+                eventLog.markFormat(type: .VideoRenderer,
+                                    format: "clear video render")
                 videoTrack.remove(support)
             }
         }
