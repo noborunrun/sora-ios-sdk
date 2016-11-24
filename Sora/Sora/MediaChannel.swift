@@ -26,27 +26,13 @@ public enum AudioCodec {
 public class MediaChannel {
     
     public var connection: Connection
-    public var mediaPublisher: MediaPublisher?
-    public var mediaSubscriber: MediaSubscriber?
+    public var mediaPublisher: MediaPublisher!
+    public var mediaSubscriber: MediaSubscriber!
     
     public init(connection: Connection) {
         self.connection = connection
-    }
-    
-    public func createMediaPublisher(mediaOption: MediaOption? = nil)
-        -> MediaPublisher
-    {
-        return MediaPublisher(connection: connection,
-                              mediaChannel: self,
-                              mediaOption: mediaOption)
-    }
-    
-    public func createMediaSubscriber(mediaOption: MediaOption? = nil)
-        -> MediaSubscriber
-    {
-        return MediaSubscriber(connection: connection,
-                               mediaChannel: self,
-                               mediaOption: mediaOption)
+        mediaPublisher = MediaPublisher(connection: connection, mediaChannel: self)
+        mediaSubscriber = MediaSubscriber(connection: connection, mediaChannel: self)
     }
     
     // MARK: イベントハンドラ

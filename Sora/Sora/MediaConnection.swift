@@ -83,12 +83,9 @@ public class MediaConnection {
         get { return connection.eventLog }
     }
     
-    init(connection: Connection,
-         mediaChannel: MediaChannel,
-         mediaOption: MediaOption?) {
+    init(connection: Connection, mediaChannel: MediaChannel) {
         self.connection = connection
         self.mediaChannel = mediaChannel
-        self.mediaOption = mediaOption
         state = .disconnected
     }
     
