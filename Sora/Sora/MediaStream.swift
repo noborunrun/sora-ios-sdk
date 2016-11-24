@@ -5,7 +5,7 @@ import Unbox
 
 public class MediaStream {
     
-    public enum State {
+    public enum State: String {
         case connecting
         case connected
         case disconnecting
@@ -24,7 +24,17 @@ public class MediaStream {
     public var mediaOption: MediaOption?
     public var creationTime: Date?
     public var clientId: String?
-    public var state: State
+    
+    public var state: State {
+        willSet {
+            switch newValue {
+            case .connected:
+                creationTime = Date()
+            default:
+                creationTime = nil
+            }
+        }
+    }
 
     public var isAvailable: Bool {
         get { return state == .connected }
@@ -177,7 +187,22 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     var role: Role
     
     var webSocket: SRWebSocket?
-    var state: State = .disconnected
+    
+    var state: State = .disconnected {
+        willSet {
+            switch newValue {
+            case .connected:
+                mediaStream?.state = .connected
+            case .disconnecting, .terminating:
+                mediaStream?.state = .disconnecting
+            case .disconnected:
+                mediaStream?.state = .disconnected
+            default:
+                mediaStream?.state = .connecting
+            }
+        }
+    }
+    
     var peerConnectionFactory: RTCPeerConnectionFactory
     var peerConnection: RTCPeerConnection!
     var upstream: RTCMediaStream?

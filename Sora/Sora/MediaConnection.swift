@@ -79,6 +79,10 @@ public class MediaConnection {
         }
     }
     
+    var eventLog: EventLog {
+        get { return connection.eventLog }
+    }
+    
     init(connection: Connection,
          mediaChannel: MediaChannel,
          mediaOption: MediaOption?) {
@@ -150,21 +154,36 @@ public class MediaConnection {
     // MARK: タイマー
     
     var connectionTimer: Timer?
-    var connectionTimerHandler: ((Int) -> Void)?
+    var connectionTimerHandler: ((Int?) -> Void)?
     
     @available(iOS 10.0, *)
     public func startConnectionTimer(timeInterval: TimeInterval,
-                                     handler: @escaping ((Int) -> Void)) {
+                                     handler: @escaping ((Int?) -> Void)) {
+        eventLog.markFormat(type: .MediaConnection,
+                            format: "start timer (interval %f)",
+                            arguments: timeInterval)
         connectionTimerHandler = handler
         connectionTimer?.invalidate()
         connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
             timer in
+
             if let stream = self.mediaStream {
                 if stream.isAvailable {
+                    self.eventLog.markFormat(type: .MediaConnection,
+                                             format: "fire timer (stream is available)")
                     let diff = Date(timeIntervalSinceNow: 0)
                         .timeIntervalSince(stream.creationTime!)
                     handler(Int(diff))
+                } else {
+                    self.eventLog.markFormat(type: .MediaConnection,
+                                             format: "fire timer (stream exists but not available: %@)",
+                                             arguments: stream.state.rawValue)
+                    handler(nil)
                 }
+            } else {
+                self.eventLog.markFormat(type: .MediaConnection,
+                                         format: "fire timer (stream does not exist)")
+                handler(nil)
             }
         }
         RunLoop.main.add(connectionTimer!, forMode: .commonModes)
@@ -173,6 +192,7 @@ public class MediaConnection {
     
     @available(iOS 10.0, *)
     public func stopConnectionTimer() {
+        eventLog.markFormat(type: .MediaConnection, format: "stop timer")
         connectionTimer?.invalidate()
     }
     
@@ -320,10 +340,6 @@ public class MediaPublisher: MediaConnection {
     
     public var captureSession: AVCaptureSession {
         get { return mediaCapturer!.videoCaptureSource.captureSession }
-    }
-    
-    var eventLog: EventLog {
-        get { return mediaChannel.connection.eventLog }
     }
     
     override func role() -> Role {
