@@ -59,15 +59,9 @@ public class MediaConnection {
     public var mediaStream: MediaStream?
     public var mediaOption: MediaOption?
     
-    private var _state: State
-    
     public var state: State {
-        get {
-            return _state
-        }
-        set {
-            _state = newValue
-            onChangeStateHandler?(state)
+        willSet {
+            onChangeStateHandler?(newValue)
         }
     }
     
@@ -91,7 +85,7 @@ public class MediaConnection {
         self.connection = connection
         self.mediaChannel = mediaChannel
         self.mediaOption = mediaOption
-        _state = .disconnected
+        state = .disconnected
     }
     
     func role() -> Role {
