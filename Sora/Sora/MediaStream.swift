@@ -52,6 +52,12 @@ public class MediaStream {
         get { return context?.peerConnectionFactory }
     }
     
+    public var nativeMediaStream: RTCMediaStream? {
+        get {
+            return peerConnection?.localStreams.first
+        }
+    }
+    
     public var nativeVideoTrack: RTCVideoTrack? {
         get {
             if let stream = nativeMediaStream {
@@ -80,7 +86,6 @@ public class MediaStream {
 
     var context: MediaStreamContext?
     var videoRendererSupport: VideoRendererSupport?
-    var nativeMediaStream: RTCMediaStream?
     
     private var eventLog: EventLog {
         get { return connection.eventLog }
