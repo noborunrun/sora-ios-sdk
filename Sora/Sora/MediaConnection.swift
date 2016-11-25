@@ -55,7 +55,7 @@ public class MediaConnection {
     }
     
     public var connection: Connection
-    public weak var mediaChannel: MediaChannel!
+    public weak var mediaChannel: MediaChannel?
     public var mediaStream: MediaStream?
     public var mediaOption: MediaOption?
     
