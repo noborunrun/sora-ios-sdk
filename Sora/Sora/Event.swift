@@ -6,8 +6,9 @@ public class Event {
         case WebSocket
         case Signaling
         case PeerConnection
+        case MediaPublisher
+        case MediaSubscriber
         case VideoRenderer
-        case MediaConnection
         case VideoView
     }
     

@@ -83,6 +83,13 @@ public class MediaConnection {
         get { return connection.eventLog }
     }
     
+    var eventType: Event.EventType {
+        get {
+            assert(false, "must be override")
+            return .MediaPublisher
+        }
+    }
+    
     init(connection: Connection, mediaChannel: MediaChannel) {
         self.connection = connection
         self.mediaChannel = mediaChannel
@@ -153,7 +160,7 @@ public class MediaConnection {
     @available(iOS 10.0, *)
     public func startConnectionTimer(timeInterval: TimeInterval,
                                      handler: @escaping ((Int?) -> Void)) {
-        eventLog.markFormat(type: .MediaConnection,
+        eventLog.markFormat(type: eventType,
                             format: "start timer (interval %f)",
                             arguments: timeInterval)
         connectionTimerHandler = handler
@@ -186,7 +193,7 @@ public class MediaConnection {
     
     @available(iOS 10.0, *)
     public func stopConnectionTimer() {
-        eventLog.markFormat(type: .MediaConnection, format: "stop timer")
+        eventLog.markFormat(type: eventType, format: "stop timer")
         connectionTimer?.invalidate()
     }
     
@@ -331,12 +338,16 @@ public class MediaPublisher: MediaConnection {
         get { return mediaCapturer!.videoCaptureSource.captureSession }
     }
     
+    override var eventType: Event.EventType {
+        get { return .MediaPublisher }
+    }
+    
     override func role() -> Role {
         return .upstream
     }
     
     public func switchCamera(_ position: CameraPosition? = nil) {
-        eventLog.markFormat(type: .MediaConnection,
+        eventLog.markFormat(type: eventType,
                             format: "switch camera to %@",
                             arguments: position.debugDescription)
         switch position {
