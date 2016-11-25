@@ -265,11 +265,12 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         state = .terminating
         mediaConnection?.callOnFailureHandler(
             error: error ?? ConnectionError.connectionTerminated)
-        // webSocket?.close() だと onDisconnectHandler が二重に呼ばれる可能性がある
+        // onDisconnectHandler を二重に呼ばないようにする
         if let webSocket = webSocket {
             webSocket.close()
+        } else {
+            callOnDisconnectHandler(error: error)
         }
-        callOnDisconnectHandler(error: error)
         onConnectHandler?(nil, error)
     }
     
