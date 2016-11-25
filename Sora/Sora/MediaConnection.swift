@@ -112,13 +112,10 @@ public class MediaConnection {
                 self.state = .disconnected
                 self.mediaStream = nil
                 self.onFailureHandler?(error)
-                self.mediaChannel.onMediaConnectionFailureHandler?(self, error)
                 self.onDisconnectHandler?(error)
-                self.mediaChannel.onMediaConnectionDisconnectHandler?(self, error)
             } else {
                 self.state = .connected
                 self.onConnectHandler?(nil)
-                self.mediaChannel.onMediaConnectionConnectHandler?(self, nil)
             }
             handler(error)
         }
@@ -249,7 +246,6 @@ public class MediaConnection {
     
     func callOnConnectHandler(error: ConnectionError?) {
         onConnectHandler?(error)
-        mediaChannel.onMediaConnectionConnectHandler?(self, error)
     }
     
     public func onDisconnect(handler: @escaping (ConnectionError?) -> Void) {
@@ -258,7 +254,6 @@ public class MediaConnection {
     
     func callOnDisonnectHandler(error: ConnectionError?) {
         onDisconnectHandler?(error)
-        mediaChannel.onMediaConnectionDisconnectHandler?(self, error)
     }
     
     // この次に必ず onDisconnect が呼ばれる
@@ -268,7 +263,6 @@ public class MediaConnection {
     
     func callOnFailureHandler(error: ConnectionError) {
         onFailureHandler?(error)
-        mediaChannel.onMediaConnectionFailureHandler?(self, error)
     }
     
     public func onUpdate(handler: @escaping ((Statistics) -> Void)) {
@@ -277,7 +271,6 @@ public class MediaConnection {
     
     func callOnUpdateHandler(stats: Statistics) {
         onUpdateHandler?(stats)
-        mediaChannel.onMediaConnectionUpdateHandler?(self, stats)
     }
     
     public func onNotify(handler: @escaping ((Notification) -> Void)) {
@@ -286,7 +279,6 @@ public class MediaConnection {
     
     func callOnNotifyHandler(notification: Notification) {
         onNotifyHandler?(notification)
-        mediaChannel.onMediaConnectionNotifyHandler?(self, notification)
     }
     
 }
