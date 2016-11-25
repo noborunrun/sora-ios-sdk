@@ -8,6 +8,7 @@ public class Event {
         case PeerConnection
         case VideoRenderer
         case MediaConnection
+        case VideoView
     }
     
     public enum Marker {
