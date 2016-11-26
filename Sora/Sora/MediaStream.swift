@@ -676,7 +676,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                         didRemove stream: RTCMediaStream) {
         eventLog.markFormat(type: .PeerConnection, format: "removed stream")
         peerConnectionEventHandlers?.onRemoveStreamHandler?(peerConnection, stream)
-        peerConnection.add(stream)
+        peerConnection.remove(stream)
     }
     
     func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
