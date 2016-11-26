@@ -170,20 +170,13 @@ public class MediaConnection {
 
             if let stream = self.mediaStream {
                 if stream.isAvailable {
-                    self.eventLog.markFormat(type: .MediaConnection,
-                                             format: "fire timer (stream is available)")
                     let diff = Date(timeIntervalSinceNow: 0)
                         .timeIntervalSince(stream.creationTime!)
                     handler(Int(diff))
                 } else {
-                    self.eventLog.markFormat(type: .MediaConnection,
-                                             format: "fire timer (stream exists but not available: %@)",
-                                             arguments: stream.state.rawValue)
                     handler(nil)
                 }
             } else {
-                self.eventLog.markFormat(type: .MediaConnection,
-                                         format: "fire timer (stream does not exist)")
                 handler(nil)
             }
         }
