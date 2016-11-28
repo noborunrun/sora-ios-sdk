@@ -26,69 +26,13 @@ public enum AudioCodec {
 public class MediaChannel {
     
     public var connection: Connection
-    public var channelId: String
-    public var creationTime: Date
-    public var mediaPublisher: MediaPublisher?
-    public var mediaSubscriber: MediaSubscriber?
+    public var mediaPublisher: MediaPublisher!
+    public var mediaSubscriber: MediaSubscriber!
     
-    init(connection: Connection, channelId: String) {
+    public init(connection: Connection) {
         self.connection = connection
-        self.channelId = channelId
-        creationTime = Date()
+        mediaPublisher = MediaPublisher(connection: connection, mediaChannel: self)
+        mediaSubscriber = MediaSubscriber(connection: connection, mediaChannel: self)
     }
-    
-    public func disconnect() {
-        mediaPublisher?.disconnect()
-        mediaSubscriber?.disconnect()
-    }
-    
-    public func createMediaPublisher(
-        _ mediaOption: MediaOption = MediaOption(),
-        accessToken: String? = nil,
-        videoCaptureSourceMediaConstraints: RTCMediaConstraints? = nil,
-        handler: @escaping ((MediaPublisher?, Error?) -> Void))
-    {
-        // TODO:
-        print("create publisher")
-        connection.createMediaUpstream(channelId,
-                                       accessToken: accessToken,
-                                       mediaOption: mediaOption,
-                                       streamId: "main")
-        {
-            (mediaStream, mediaCapturer, error) in
-            if let error = error {
-                handler(nil, error)
-                return
-            }
-            
-            self.mediaPublisher = MediaPublisher(
-                connection: self.connection,
-                mediaStream: mediaStream!,
-                mediaOption: mediaOption,
-                mediaCapturer: mediaCapturer!)
-            handler(self.mediaPublisher, nil)
-        }
-    }
-    
-    public func createMediaSubscriber(_ mediaOption: MediaOption = MediaOption(),
-                                      accessToken: String? = nil,
-                                      handler: @escaping ((MediaSubscriber?, Error?) -> Void)) {
-        // TODO:
-        print("create subscriber")
-        connection.createMediaDownstream(channelId, accessToken: accessToken,
-                                         mediaOption: mediaOption)
-        {
-            (mediaStream, error) in
-            if let error = error {
-                handler(nil, error)
-                return
-            }
-            self.mediaSubscriber = MediaSubscriber(
-                connection: self.connection,
-                mediaStream: mediaStream!,
-                mediaOption: mediaOption)
-            handler(self.mediaSubscriber, nil)
-        }
-    }
-    
+
 }

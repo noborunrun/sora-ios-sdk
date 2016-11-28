@@ -3,11 +3,14 @@ import WebRTC
 
 public class MediaOption {
     
-    public var videoEnabled: Bool
-    public var audioEnabled: Bool
-    public var configuration: RTCConfiguration
-    public var mediaConstraints: RTCMediaConstraints
-    public var answerMediaConstraints: RTCMediaConstraints
+    public var videoEnabled: Bool = true
+    public var audioEnabled: Bool = true
+    public var configuration: RTCConfiguration?
+    public var signalingAnswerMediaConstraints: RTCMediaConstraints?
+    public var videoCaptureSourceMediaConstraints: RTCMediaConstraints?
+    public var peerConnectionMediaConstraints: RTCMediaConstraints?
+    public var videoCaptureTrackId: String?
+    public var audioCaptureTrackId: String?
     
     public static var defaultConfiguration: RTCConfiguration = {
         () -> RTCConfiguration in
@@ -20,42 +23,262 @@ public class MediaOption {
     
     public static var defaultMediaConstraints: RTCMediaConstraints =
         RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
-    
-    public init(videoEnabled: Bool = true, audioEnabled: Bool = true,
-                configuration: RTCConfiguration? = nil,
-                mediaConstraints: RTCMediaConstraints? = nil,
-                answerMediaConstraints: RTCMediaConstraints? = nil) {
-        self.videoEnabled = videoEnabled
-        self.audioEnabled = audioEnabled
-        self.configuration = configuration ?? MediaOption.defaultConfiguration
-        self.mediaConstraints = mediaConstraints ?? MediaOption.defaultMediaConstraints
-        self.answerMediaConstraints = answerMediaConstraints ?? MediaOption.defaultMediaConstraints
-    }
-    
+ 
+    public static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
+    public static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
+
 }
 
 public class MediaConnection {
     
-    public var connection: Connection
-    public var mediaStream: MediaStream
-    public var mediaOption: MediaOption
+    public enum State {
+        case connected
+        case connecting
+        case disconnected
+        case disconnecting
+    }
     
-    public var videoRenderer: VideoRenderer? {
+    public struct Statistics {
         
-        willSet {
-            self.mediaStream.setVideoRenderer(newValue)
+        public var numberOfUpstreamConnections: Int?
+        public var numberOfDownstreamConnections: Int?
+        
+        init(signalingStats: SignalingStats) {
+            self.numberOfUpstreamConnections = signalingStats.numberOfUpstreamConnections
+            self.numberOfDownstreamConnections = signalingStats.numberOfUpstreamConnections
         }
         
     }
     
-    init(connection: Connection, mediaStream: MediaStream, mediaOption: MediaOption) {
-        self.connection = connection
-        self.mediaStream = mediaStream
-        self.mediaOption = mediaOption
+    public enum Notification: String {
+        case disconnectedUpstream = "DISCONNECTED-UPSTREAM"
     }
     
-    public func disconnect() {
-        mediaStream.disconnect()
+    public var connection: Connection
+    public weak var mediaChannel: MediaChannel?
+    public var mediaStream: MediaStream?
+    public var mediaOption: MediaOption?
+    
+    public var state: State {
+        willSet {
+            onChangeStateHandler?(newValue)
+        }
+    }
+    
+    public var webSocketEventHandlers: WebSocketEventHandlers?
+    public var signalingEventHandlers: SignalingEventHandlers?
+    public var peerConnectionEventHandlers: PeerConnectionEventHandlers?
+    
+    public var isAvailable: Bool {
+        get { return state == .connected }
+    }
+    
+    public var videoRenderer: VideoRenderer? {
+        willSet {
+            self.mediaStream?.setVideoRenderer(newValue)
+        }
+    }
+    
+    var eventLog: EventLog {
+        get { return connection.eventLog }
+    }
+    
+    var eventType: Event.EventType {
+        get {
+            assert(false, "must be override")
+            return .MediaPublisher
+        }
+    }
+    
+    init(connection: Connection, mediaChannel: MediaChannel) {
+        self.connection = connection
+        self.mediaChannel = mediaChannel
+        state = .disconnected
+    }
+    
+    func role() -> Role {
+        assertionFailure("subclass must implement role()")
+        return Role.upstream
+    }
+    
+    // MARK: 接続
+    
+    public func connect(accessToken: String? = nil,
+                        mediaStreamId: String? = nil,
+                        handler: @escaping ((ConnectionError?) -> Void)) {
+        state = .connecting
+        mediaStream = MediaStream(connection: connection,
+                                  mediaConnection: self,
+                                  role: role(),
+                                  accessToken: accessToken,
+                                  mediaStreamId: mediaStreamId,
+                                  mediaOption: mediaOption)
+        mediaStream!.connect {
+            peerConn, error in
+            if let error = error {
+                self.state = .disconnected
+                self.mediaStream = nil
+                self.onFailureHandler?(error)
+                self.onDisconnectHandler?(error)
+            } else {
+                self.state = .connected
+                self.onConnectHandler?(nil)
+            }
+            handler(error)
+        }
+    }
+    
+    public func disconnect(handler: @escaping (ConnectionError?) -> Void) {
+        switch state {
+        case .disconnected:
+            handler(ConnectionError.connectionDisconnected)
+        case .disconnecting:
+            handler(ConnectionError.connectionBusy)
+        case .connected, .connecting:
+            state = .disconnecting
+            mediaStream!.disconnect {
+                error in
+                self.state = .disconnected
+                handler(error)
+            }
+        }
+    }
+    
+    public func send(messageable: Messageable) -> ConnectionError? {
+        if isAvailable {
+            return mediaStream!.send(messageable: messageable)
+        } else {
+            return ConnectionError.connectionDisconnected
+        }
+    }
+    
+    // MARK: タイマー
+    
+    var connectionTimer: Timer?
+    var connectionTimerHandler: ((Int?) -> Void)?
+    
+    @available(iOS 10.0, *)
+    public func startConnectionTimer(timeInterval: TimeInterval,
+                                     handler: @escaping ((Int?) -> Void)) {
+        eventLog.markFormat(type: eventType,
+                            format: "start timer (interval %f)",
+                            arguments: timeInterval)
+        connectionTimerHandler = handler
+        connectionTimer?.invalidate()
+        connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
+            timer in
+
+            if let stream = self.mediaStream {
+                if stream.isAvailable {
+                    let diff = Date(timeIntervalSinceNow: 0)
+                        .timeIntervalSince(stream.creationTime!)
+                    handler(Int(diff))
+                } else {
+                    handler(nil)
+                }
+            } else {
+                handler(nil)
+            }
+        }
+        RunLoop.main.add(connectionTimer!, forMode: .commonModes)
+        RunLoop.main.run()
+    }
+    
+    @available(iOS 10.0, *)
+    public func stopConnectionTimer() {
+        eventLog.markFormat(type: eventType, format: "stop timer")
+        connectionTimer?.invalidate()
+    }
+    
+    
+    // MARK: 統計情報
+    
+    public func statisticsReports(level: StatisticsReport.Level)
+        -> ([StatisticsReport], [StatisticsReport])
+    {
+        if !isAvailable {
+            return ([], [])
+        }
+        
+        func getReports(track: RTCMediaStreamTrack) -> [StatisticsReport] {
+            var reports: [StatisticsReport] = []
+            mediaStream!.peerConnection!
+                .stats(for: track, statsOutputLevel: level.nativeOutputLevel) {
+                nativeReports in
+                for nativeReport in nativeReports {
+                    if let report = StatisticsReport.parse(report: nativeReport) {
+                        reports.append(report)
+                    }
+                }
+            }
+            return reports
+        }
+        
+        var videoReports: [StatisticsReport] = []
+        if let track = mediaStream!.nativeVideoTrack {
+            videoReports = getReports(track: track)
+        }
+        
+        var audioReports: [StatisticsReport] = []
+        if let track = mediaStream!.nativeAudioTrack {
+            audioReports = getReports(track: track)
+        }
+        
+        return (videoReports, audioReports)
+    }
+
+    // MARK: イベントハンドラ
+    
+    private var onChangeStateHandler: ((State) -> Void)?
+    private var onConnectHandler: ((ConnectionError?) -> Void)?
+    private var onDisconnectHandler: ((ConnectionError?) -> Void)?
+    private var onFailureHandler: ((ConnectionError) -> Void)?
+    private var onUpdateHandler: ((Statistics) -> Void)?
+    private var onNotifyHandler: ((Notification) -> Void)?
+
+    public func onChangeState(handler: @escaping (State) -> Void) {
+        onChangeStateHandler = handler
+    }
+    
+    public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
+        onConnectHandler = handler
+    }
+    
+    func callOnConnectHandler(error: ConnectionError?) {
+        onConnectHandler?(error)
+    }
+    
+    public func onDisconnect(handler: @escaping (ConnectionError?) -> Void) {
+        onDisconnectHandler = handler
+    }
+    
+    func callOnDisonnectHandler(error: ConnectionError?) {
+        onDisconnectHandler?(error)
+    }
+    
+    // この次に必ず onDisconnect が呼ばれる
+    public func onFailure(handler: @escaping (ConnectionError) -> Void) {
+        onFailureHandler = handler
+    }
+    
+    func callOnFailureHandler(error: ConnectionError) {
+        onFailureHandler?(error)
+    }
+    
+    public func onUpdate(handler: @escaping ((Statistics) -> Void)) {
+        onUpdateHandler = handler
+    }
+    
+    func callOnUpdateHandler(stats: Statistics) {
+        onUpdateHandler?(stats)
+    }
+    
+    public func onNotify(handler: @escaping ((Notification) -> Void)) {
+        onNotifyHandler = handler
+    }
+    
+    func callOnNotifyHandler(notification: Notification) {
+        onNotifyHandler?(notification)
     }
     
 }
@@ -71,18 +294,18 @@ public class MediaCapturer {
     public var videoCaptureSource: RTCAVFoundationVideoSource
     public var audioCaptureTrack: RTCAudioTrack
     
-    static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
-    static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
-
-    init(factory: RTCPeerConnectionFactory,
-         videoCaptureSourceMediaConstraints: RTCMediaConstraints) {
+    init(factory: RTCPeerConnectionFactory, mediaOption: MediaOption?) {
         videoCaptureSource = factory
-            .avFoundationVideoSource(with: videoCaptureSourceMediaConstraints)
+            .avFoundationVideoSource(with:
+                mediaOption?.videoCaptureSourceMediaConstraints ??
+                    MediaOption.defaultMediaConstraints)
         videoCaptureTrack = factory
             .videoTrack(with: videoCaptureSource,
-                                  trackId: MediaCapturer.defaultVideoCaptureTrackId)
+                        trackId: mediaOption?.videoCaptureTrackId ??
+                            MediaOption.defaultVideoCaptureTrackId)
         audioCaptureTrack = factory
-            .audioTrack(withTrackId: MediaCapturer.defaultAudioCaptureTrackId)
+            .audioTrack(withTrackId: mediaOption?.audioCaptureTrackId ??
+                MediaOption.defaultAudioCaptureTrackId)
     }
     
 }
@@ -95,38 +318,48 @@ public enum CameraPosition {
 public class MediaPublisher: MediaConnection {
     
     public var videoPreset: VideoPreset =  VideoPreset.vga
-    public var mediaCapturer: MediaCapturer
+    
+    public var mediaCapturer: MediaCapturer? {
+        get { return mediaStream?.mediaCapturer }
+    }
 
     public var canUseBackCamera: Bool {
-        get { return mediaCapturer.videoCaptureSource.canUseBackCamera }
+        get { return mediaCapturer!.videoCaptureSource.canUseBackCamera }
     }
     
     public var captureSession: AVCaptureSession {
-        get { return mediaCapturer.videoCaptureSource.captureSession }
+        get { return mediaCapturer!.videoCaptureSource.captureSession }
     }
     
-    init(connection: Connection, mediaStream: MediaStream,
-         mediaOption: MediaOption, mediaCapturer: MediaCapturer) {
-        self.mediaCapturer = mediaCapturer
-        mediaCapturer.videoCaptureSource.useBackCamera = false
-        super.init(connection: connection, mediaStream: mediaStream,
-                   mediaOption: mediaOption)
+    override var eventType: Event.EventType {
+        get { return .MediaPublisher }
+    }
+    
+    override func role() -> Role {
+        return .upstream
     }
     
     public func switchCamera(_ position: CameraPosition? = nil) {
+        eventLog.markFormat(type: eventType,
+                            format: "switch camera to %@",
+                            arguments: position.debugDescription)
         switch position {
         case nil:
-            mediaCapturer.videoCaptureSource.useBackCamera =
-                !mediaCapturer.videoCaptureSource.useBackCamera
+            mediaCapturer!.videoCaptureSource.useBackCamera =
+                !mediaCapturer!.videoCaptureSource.useBackCamera
         case CameraPosition.front?:
-            mediaCapturer.videoCaptureSource.useBackCamera = false
+            mediaCapturer!.videoCaptureSource.useBackCamera = false
         case CameraPosition.back?:
-            mediaCapturer.videoCaptureSource.useBackCamera = true
+            mediaCapturer!.videoCaptureSource.useBackCamera = true
         }
     }
     
 }
 
 public class MediaSubscriber: MediaConnection {
+    
+    override func role() -> Role {
+        return .downstream
+    }
     
 }

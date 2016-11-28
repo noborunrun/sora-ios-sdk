@@ -6,7 +6,10 @@ public class Event {
         case WebSocket
         case Signaling
         case PeerConnection
+        case MediaPublisher
+        case MediaSubscriber
         case VideoRenderer
+        case VideoView
     }
     
     public enum Marker {
@@ -15,11 +18,19 @@ public class Event {
         case End
     }
     
+    public var URL: URL
+    public var mediaChannelId: String
     public var type: EventType
     public var comment: String
     public var date: Date
     
-    public init(type: EventType, comment: String, date: Date = Date()) {
+    public init(URL: URL,
+                mediaChannelId: String,
+                type: EventType,
+                comment: String,
+                date: Date = Date()) {
+        self.URL = URL
+        self.mediaChannelId = mediaChannelId
         self.type = type
         self.comment = comment
         self.date = date
@@ -29,7 +40,9 @@ public class Event {
         get {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let desc = String(format: "[%@] %@: %@",
+            let desc = String(format: "[%@ %@ %@] %@: %@",
+                              URL.absoluteString,
+                              mediaChannelId,
                               formatter.string(from: date),
                               type.rawValue, comment)
             return desc
@@ -40,10 +53,17 @@ public class Event {
 
 public class EventLog {
     
+    public var URL: URL
+    public var mediaChannelId: String
     public var events: [Event] = []
     public var isEnabled: Bool = true
     public var limit: Int? = nil
     public var debugMode: Bool = false
+    
+    init(URL: URL, mediaChannelId: String) {
+        self.URL = URL
+        self.mediaChannelId = mediaChannelId
+    }
     
     public func clear() {
         events = []
@@ -68,7 +88,8 @@ public class EventLog {
                            format: String,
                            arguments: CVarArg...) {
         let comment = String(format: format, arguments: arguments)
-        let event = Event(type: type, comment: comment)
+        let event = Event(URL: URL, mediaChannelId: mediaChannelId,
+                          type: type, comment: comment)
         mark(event: event)
     }
     

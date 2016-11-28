@@ -10,13 +10,24 @@ public protocol VideoRenderer {
 
 class VideoRendererSupport: NSObject, RTCVideoRenderer {
     
+    weak var mediaStream: MediaStream?
     var videoRenderer: VideoRenderer
+    var connection: Connection
     
-    init(videoRenderer: VideoRenderer) {
+    var eventLog: EventLog {
+        get { return connection.eventLog }
+    }
+    
+    init(mediaStream: MediaStream, videoRenderer: VideoRenderer) {
+        self.mediaStream = mediaStream
         self.videoRenderer = videoRenderer
+        self.connection = mediaStream.connection
     }
     
     func setSize(_ size: CGSize) {
+        eventLog.markFormat(type: .VideoRenderer,
+                            format: "set size %@ for %@",
+                            arguments: size.debugDescription, self)
         videoRenderer.onChangedSize(size)
     }
     

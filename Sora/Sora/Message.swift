@@ -51,11 +51,9 @@ public class Message {
                 if let type = Type(rawValue: type) {
                     return Message(type: type, data: j)
                 } else {
-                    print("invalid type:", type)
                     return nil
                 }
             } else {
-                print("'type' is not found")
                 return nil
             }
         } else {
@@ -69,6 +67,27 @@ public class Message {
         return json
     }
     
+    public func JSONString() -> String {
+        let j = JSON()
+        let data = try! JSONSerialization.data(withJSONObject: j,
+                                               options:
+            JSONSerialization.WritingOptions(rawValue: 0))
+        return NSString(data: data,
+                        encoding: String.Encoding.utf8.rawValue) as String!
+    }
+    
+    public var description: String {
+        get { return JSONString() }
+    }
+    
+}
+
+extension Message : Messageable {
+    
+    public func message() -> Message {
+        return self
+    }
+
 }
 
 public protocol Messageable {
@@ -325,21 +344,35 @@ extension SignalingPong: Messageable {
     
 }
 
-public struct Statistics {
+public struct SignalingStats {
     
+    public var numberOfUpstreamConnections: Int?
     public var numberOfDownstreamConnections: Int?
     
+    var description: String {
+        get {
+            var s = ""
+            if let n = numberOfUpstreamConnections {
+                s = s.appendingFormat("upstreams=%d ", n)
+            }
+            if let n = numberOfDownstreamConnections {
+                s = s.appendingFormat("downstreams=%d", n)
+            }
+            return s
+        }
+    }
 }
 
-extension Statistics: Unboxable {
+extension SignalingStats: Unboxable {
     
     public init(unboxer: Unboxer) throws {
+        numberOfUpstreamConnections = unboxer.unbox(key: "upstream_connections")
         numberOfDownstreamConnections = unboxer.unbox(key: "downstream_connections")
     }
     
 }
 
-struct SignalingNotify {
+public struct SignalingNotify {
     
     var notifyMessage: String
     

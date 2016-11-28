@@ -1,4 +1,3 @@
-github "shiguredo/webrtc-ios" == 1.0.1
-github "antitypical/Result"
-github "facebook/SocketRocket" == 0.4.2
-github "johnsundell/unbox"
+github "shiguredo/webrtc-ios" "54.1"
+github "facebook/SocketRocket" "0.4.2"
+github "johnsundell/unbox" "2.2.1"
