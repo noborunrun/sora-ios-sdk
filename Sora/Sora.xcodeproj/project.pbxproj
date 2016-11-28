@@ -25,11 +25,8 @@
 		9139343A1DD9D9A2002F3F6A /* EventHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913934391DD9D9A2002F3F6A /* EventHandlers.swift */; };
 		91577A031D85CB1700A5AF9F /* MediaConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91577A021D85CB1700A5AF9F /* MediaConnection.swift */; };
 		91715A7B1D5DB3B50004C995 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
-		91715A821D5DED6C0004C995 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; };
-		91715A841D5DF24B0004C995 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91715A851D5DF2570004C995 /* WebRTC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91715A861D5DF25B0004C995 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		918201921D58668E00178E2B /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; };
 		918201931D58668E00178E2B /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
 		918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; };
 		918A6DF71DA4DDC800028E3E /* Unbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918A6DF61DA4DDC800028E3E /* Unbox.framework */; };
@@ -45,7 +42,6 @@
 		91E098841D799389004CF024 /* MediaStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E098831D799389004CF024 /* MediaStream.swift */; };
 		91E69B671D77536A004124C3 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D63F1D756AF800112A4E /* Notifications.swift */; };
 		91F5EE4B1DACABF5000EF7AC /* Unbox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918A6DF61DA4DDC800028E3E /* Unbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		91F5EE4C1DACABF5000EF7AC /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9182018F1D58668E00178E2B /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91F5EE4D1DACABF5000EF7AC /* WebRTC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91F5EE4E1DACABF5000EF7AC /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */; };
@@ -70,7 +66,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				91F5EE4B1DACABF5000EF7AC /* Unbox.framework in CopyFiles */,
-				91F5EE4C1DACABF5000EF7AC /* Result.framework in CopyFiles */,
 				91F5EE4D1DACABF5000EF7AC /* WebRTC.framework in CopyFiles */,
 				91F5EE4E1DACABF5000EF7AC /* SocketRocket.framework in CopyFiles */,
 			);
@@ -84,7 +79,6 @@
 			files = (
 				91715A861D5DF25B0004C995 /* SocketRocket.framework in CopyFiles */,
 				91715A851D5DF2570004C995 /* WebRTC.framework in CopyFiles */,
-				91715A841D5DF24B0004C995 /* Result.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +88,6 @@
 		91192F731D598E4600F92D78 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		913934391DD9D9A2002F3F6A /* EventHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandlers.swift; sourceTree = "<group>"; };
 		91577A021D85CB1700A5AF9F /* MediaConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaConnection.swift; sourceTree = "<group>"; };
-		9182018F1D58668E00178E2B /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		918201901D58668E00178E2B /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = Carthage/Build/iOS/WebRTC.framework; sourceTree = "<group>"; };
 		918201911D58668E00178E2B /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		918A6DF61DA4DDC800028E3E /* Unbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Unbox.framework; path = Carthage/Build/iOS/Unbox.framework; sourceTree = "<group>"; };
@@ -122,7 +115,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				918201921D58668E00178E2B /* Result.framework in Frameworks */,
 				918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */,
 				918201931D58668E00178E2B /* WebRTC.framework in Frameworks */,
 				918A6DF71DA4DDC800028E3E /* Unbox.framework in Frameworks */,
@@ -133,7 +125,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91715A821D5DED6C0004C995 /* Result.framework in Frameworks */,
 				91C7B0941D54636A006F5FA2 /* Sora.framework in Frameworks */,
 				91715A7B1D5DB3B50004C995 /* WebRTC.framework in Frameworks */,
 			);
@@ -146,7 +137,6 @@
 			isa = PBXGroup;
 			children = (
 				918A6DF61DA4DDC800028E3E /* Unbox.framework */,
-				9182018F1D58668E00178E2B /* Result.framework */,
 				918201901D58668E00178E2B /* WebRTC.framework */,
 				918201911D58668E00178E2B /* SocketRocket.framework */,
 			);
@@ -333,7 +323,6 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SocketRocket.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebRTC.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Unbox.framework",
