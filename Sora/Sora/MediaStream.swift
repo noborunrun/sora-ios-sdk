@@ -84,6 +84,26 @@ public class MediaStream {
         }
     }
 
+    
+    public var videoRenderer: VideoRenderer? {
+        willSet {
+            if let videoTrack = nativeVideoTrack {
+                if let renderer = videoRenderer {
+                    eventLog.markFormat(type: .VideoRenderer,
+                                        format: "set video render")
+                    videoRendererSupport =
+                        VideoRendererSupport(mediaStream: self,
+                                             videoRenderer: renderer)
+                    videoTrack.add(videoRendererSupport!)
+                } else if let support = videoRendererSupport {
+                    eventLog.markFormat(type: .VideoRenderer,
+                                        format: "clear video render")
+                    videoTrack.remove(support)
+                }
+            }
+        }
+    }
+    
     var context: MediaStreamContext?
     var videoRendererSupport: VideoRendererSupport?
     
@@ -104,23 +124,6 @@ public class MediaStream {
         self.mediaStreamlId = mediaStreamId
         self.mediaOption = mediaOption
         state = .disconnected
-    }
-    
-    func setVideoRenderer(_ videoRenderer: VideoRenderer?) {
-        if let videoTrack = nativeVideoTrack {
-            if let renderer = videoRenderer {
-                eventLog.markFormat(type: .VideoRenderer,
-                                    format: "set video render")
-                videoRendererSupport =
-                    VideoRendererSupport(mediaStream: self,
-                                         videoRenderer: renderer)
-                videoTrack.add(videoRendererSupport!)
-            } else if let support = videoRendererSupport {
-                eventLog.markFormat(type: .VideoRenderer,
-                                    format: "clear video render")
-                videoTrack.remove(support)
-            }
-        }
     }
     
     // MARK: ピア接続

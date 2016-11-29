@@ -75,7 +75,7 @@ public class MediaConnection {
     
     public var videoRenderer: VideoRenderer? {
         willSet {
-            self.mediaStream?.setVideoRenderer(newValue)
+            self.mediaStream?.videoRenderer = newValue
         }
     }
     
