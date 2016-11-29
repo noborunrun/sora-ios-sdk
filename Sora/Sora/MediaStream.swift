@@ -91,11 +91,11 @@ public class MediaStream {
                 if let renderer = videoRenderer {
                     eventLog.markFormat(type: .VideoRenderer,
                                         format: "set video render")
-                    videoRendererSupport =
-                        VideoRendererSupport(mediaStream: self,
+                    videoRendererAdapter =
+                        VideoRendererAdapter(mediaStream: self,
                                              videoRenderer: renderer)
-                    videoTrack.add(videoRendererSupport!)
-                } else if let support = videoRendererSupport {
+                    videoTrack.add(videoRendererAdapter!)
+                } else if let support = videoRendererAdapter {
                     eventLog.markFormat(type: .VideoRenderer,
                                         format: "clear video render")
                     videoTrack.remove(support)
@@ -105,7 +105,7 @@ public class MediaStream {
     }
     
     var context: MediaStreamContext?
-    var videoRendererSupport: VideoRendererSupport?
+    var videoRendererAdapter: VideoRendererAdapter?
     
     private var eventLog: EventLog {
         get { return connection.eventLog }
@@ -151,7 +151,7 @@ public class MediaStream {
             assert(peerConnection == nil, "peerConnection must not be nil")
             state = .disconnected
             creationTime = nil
-            videoRendererSupport = nil
+            videoRendererAdapter = nil
             context?.disconnect(handler: handler)
         }
     }
