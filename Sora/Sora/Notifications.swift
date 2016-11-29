@@ -1,7 +1,7 @@
 import Foundation
 
 public struct SignalingConnected {
-    public var role: Role
+    public var role: MediaStreamRole
     public var clientId: String
     public var channelId: String
     public var channelConnections: Int
@@ -10,13 +10,13 @@ public struct SignalingConnected {
 }
 
 public struct SignalingCompleted {
-    public var role: Role
+    public var role: MediaStreamRole
     public var clientId: String
     public var channelId: String
 }
 
 public struct SignalingDisconnected {
-    public var role: Role
+    public var role: MediaStreamRole
     public var clientId: String
     public var channelId: String
     public var channelConnections: Int

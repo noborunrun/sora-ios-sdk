@@ -126,7 +126,7 @@ enum SignalingRole: String, UnboxableEnum {
     case upstream
     case downstream
     
-    static func from(_ role: Role) -> SignalingRole {
+    static func from(_ role: MediaStreamRole) -> SignalingRole {
         switch role {
         case .upstream:
             return upstream

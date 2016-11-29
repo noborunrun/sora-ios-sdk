@@ -1,7 +1,7 @@
 import Foundation
 import WebRTC
 
-public enum Role {
+public enum MediaStreamRole {
     
     case upstream
     case downstream

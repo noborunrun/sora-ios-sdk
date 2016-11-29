@@ -18,7 +18,7 @@ public class MediaStream {
 
     public var connection: Connection
     public weak var mediaConnection: MediaConnection?
-    public var role: Role
+    public var role: MediaStreamRole
     public var accessToken: String?
     public var mediaStreamlId: String?
     public var mediaOption: MediaOption?
@@ -93,7 +93,7 @@ public class MediaStream {
     
     init(connection: Connection,
          mediaConnection: MediaConnection,
-         role: Role,
+         role: MediaStreamRole,
          accessToken: String? = nil,
          mediaStreamId: String? = nil,
          mediaOption: MediaOption? = MediaOption()) {
@@ -189,7 +189,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     }
     
     weak var mediaStream: MediaStream!
-    var role: Role
+    var role: MediaStreamRole
     
     var webSocket: SRWebSocket?
     
@@ -225,7 +225,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         get { return mediaStream.mediaConnection }
     }
         
-    init(mediaStream: MediaStream, role: Role) {
+    init(mediaStream: MediaStream, role: MediaStreamRole) {
         self.mediaStream = mediaStream
         self.role = role
         peerConnectionFactory = RTCPeerConnectionFactory()
@@ -356,7 +356,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                 constraints: mediaStream.mediaOption?.peerConnectionMediaConstraints
                     ?? MediaOption.defaultMediaConstraints,
                 delegate: self)
-            if role == Role.upstream {
+            if role == MediaStreamRole.upstream {
                 if let error = createMediaCapturer() {
                     terminate(error: error)
                     return

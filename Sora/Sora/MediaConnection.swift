@@ -90,15 +90,17 @@ public class MediaConnection {
         }
     }
     
+    var role: MediaStreamRole {
+        get {
+            assertionFailure("subclass must implement role()")
+            return .upstream
+        }
+    }
+    
     init(connection: Connection, mediaChannel: MediaChannel) {
         self.connection = connection
         self.mediaChannel = mediaChannel
         state = .disconnected
-    }
-    
-    func role() -> Role {
-        assertionFailure("subclass must implement role()")
-        return Role.upstream
     }
     
     // MARK: 接続
@@ -109,7 +111,7 @@ public class MediaConnection {
         state = .connecting
         mediaStream = MediaStream(connection: connection,
                                   mediaConnection: self,
-                                  role: role(),
+                                  role: role,
                                   accessToken: accessToken,
                                   mediaStreamId: mediaStreamId,
                                   mediaOption: mediaOption)
@@ -335,8 +337,8 @@ public class MediaPublisher: MediaConnection {
         get { return .MediaPublisher }
     }
     
-    override func role() -> Role {
-        return .upstream
+    override var role: MediaStreamRole {
+        get { return .upstream }
     }
     
     public func switchCamera(_ position: CameraPosition? = nil) {
@@ -358,8 +360,8 @@ public class MediaPublisher: MediaConnection {
 
 public class MediaSubscriber: MediaConnection {
     
-    override func role() -> Role {
-        return .downstream
+    override var role: MediaStreamRole {
+        get { return .downstream }
     }
     
 }
