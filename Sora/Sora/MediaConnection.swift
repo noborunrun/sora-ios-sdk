@@ -159,7 +159,6 @@ public class MediaConnection {
     var connectionTimer: Timer?
     var connectionTimerHandler: ((Int?) -> Void)?
     
-    @available(iOS 10.0, *)
     public func startConnectionTimer(timeInterval: TimeInterval,
                                      handler: @escaping ((Int?) -> Void)) {
         eventLog.markFormat(type: eventType,
@@ -186,7 +185,6 @@ public class MediaConnection {
         RunLoop.main.run()
     }
     
-    @available(iOS 10.0, *)
     public func stopConnectionTimer() {
         eventLog.markFormat(type: eventType, format: "stop timer")
         connectionTimer?.invalidate()
