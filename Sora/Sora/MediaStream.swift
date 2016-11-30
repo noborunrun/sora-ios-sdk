@@ -83,7 +83,6 @@ public class MediaStream {
             }
         }
     }
-
     
     public var videoRenderer: VideoRenderer? {
         didSet {
