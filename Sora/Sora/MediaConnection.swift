@@ -74,10 +74,8 @@ public class MediaConnection {
     }
     
     public var videoRenderer: VideoRenderer? {
-        willSet {
-            self.mediaStream?.videoRenderer = newValue
-        }
         get { return mediaStream?.videoRenderer }
+        set { mediaStream?.videoRenderer = newValue }
     }
     
     var eventLog: EventLog {
