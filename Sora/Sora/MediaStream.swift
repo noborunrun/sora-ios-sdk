@@ -20,7 +20,7 @@ public class MediaStream {
     public weak var mediaConnection: MediaConnection?
     public var role: MediaStreamRole
     public var accessToken: String?
-    public var mediaStreamlId: String?
+    var mediaStreamId: String?
     public var mediaOption: MediaOption?
     public var creationTime: Date?
     public var clientId: String?
