@@ -120,7 +120,7 @@ public class MediaStream {
         self.mediaConnection = mediaConnection
         self.role = role
         self.accessToken = accessToken
-        self.mediaStreamlId = mediaStreamId
+        self.mediaStreamId = mediaStreamId
         self.mediaOption = mediaOption
         state = .disconnected
     }
@@ -400,7 +400,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         }
         
         let upstream = peerConnectionFactory.mediaStream(withStreamId:
-            mediaStream.mediaStreamlId ?? MediaStream.defaultStreamId)
+            mediaStream.mediaStreamId ?? MediaStream.defaultStreamId)
         if mediaStream.mediaOption == nil ||
             mediaStream.mediaOption?.videoEnabled == true {
             upstream.addVideoTrack(mediaCapturer!.videoCaptureTrack)
