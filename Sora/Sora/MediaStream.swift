@@ -40,7 +40,7 @@ public class MediaStream {
         get { return state == .connected }
     }
     
-    public var mediaCapturer: MediaCapturer? {
+    var mediaCapturer: MediaCapturer? {
         get { return context?.mediaCapturer }
     }
     

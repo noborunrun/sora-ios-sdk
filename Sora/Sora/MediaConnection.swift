@@ -288,7 +288,7 @@ public enum VideoPreset {
     // TODO: etc.
 }
 
-public class MediaCapturer {
+class MediaCapturer {
     
     public var videoCaptureTrack: RTCVideoTrack
     public var videoCaptureSource: RTCAVFoundationVideoSource
@@ -319,8 +319,6 @@ public class MediaPublisher: MediaConnection {
     
     public var videoPreset: VideoPreset =  VideoPreset.vga
     
-    public var mediaCapturer: MediaCapturer? {
-        get { return mediaStream?.mediaCapturer }
     }
 
     public var canUseBackCamera: Bool {
@@ -352,6 +350,9 @@ public class MediaPublisher: MediaConnection {
         case CameraPosition.back?:
             mediaCapturer!.videoCaptureSource.useBackCamera = true
         }
+    var mediaCapturer: MediaCapturer? {
+        get { return mediaStream?.mediaCapturer }
+    }
     }
     
 }
