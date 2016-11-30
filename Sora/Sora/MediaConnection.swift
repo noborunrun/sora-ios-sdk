@@ -145,9 +145,9 @@ public class MediaConnection {
         }
     }
     
-    public func send(messageable: Messageable) -> ConnectionError? {
+    public func send(message: Messageable) -> ConnectionError? {
         if isAvailable {
-            return mediaStream!.send(messageable: messageable)
+            return mediaStream!.send(message: message)
         } else {
             return ConnectionError.connectionDisconnected
         }

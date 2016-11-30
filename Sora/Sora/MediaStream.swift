@@ -157,7 +157,8 @@ public class MediaStream {
     
     // MARK: WebSocket
     
-    func send(message: Message) -> ConnectionError? {
+    func send(message: Messageable) -> ConnectionError? {
+        let message = message.message()
         switch state {
         case .connected:
             return context!.send(message)
@@ -167,11 +168,7 @@ public class MediaStream {
             return ConnectionError.connectionBusy
         }
     }
-    
-    func send(messageable: Messageable) -> ConnectionError? {
-        return send(message: messageable.message())
-    }
-    
+
 }
 
 class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelegate {
@@ -286,7 +283,8 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         onConnectHandler?(nil, error)
     }
     
-    func send(_ message: Message) -> ConnectionError? {
+    func send(_ message: Messageable) -> ConnectionError? {
+        let message = message.message()
         eventLog.markFormat(type: .WebSocket,
                             format: "send message (state %@): %@",
                             arguments: state.rawValue, message.description)
@@ -311,10 +309,6 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         }
     }
  
-    func send(_ messageable: Messageable) -> ConnectionError? {
-        return self.send(messageable.message())
-    }
-    
     // MARK: イベントハンドラ
     
     var onConnectHandler: ((RTCPeerConnection?, ConnectionError?) -> Void)?
