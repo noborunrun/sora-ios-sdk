@@ -86,7 +86,7 @@ public class MediaStream {
 
     
     public var videoRenderer: VideoRenderer? {
-        willSet {
+        didSet {
             if let videoTrack = nativeVideoTrack {
                 if let renderer = videoRenderer {
                     eventLog.markFormat(type: .VideoRenderer,
