@@ -310,23 +310,63 @@ class MediaCapturer {
     
 }
 
-public enum CameraPosition {
+public enum CameraPosition: String {
     case front
     case back
+    
+    public func flip() -> CameraPosition {
+        switch self {
+        case .front: return .back
+        case .back: return .front
+        }
+    }
+    
 }
 
 public class MediaPublisher: MediaConnection {
     
     public var videoPreset: VideoPreset =  VideoPreset.vga
     
-    }
-
-    public var canUseBackCamera: Bool {
-        get { return mediaCapturer!.videoCaptureSource.canUseBackCamera }
+    public var canUseBackCamera: Bool? {
+        get { return mediaCapturer?.videoCaptureSource.canUseBackCamera }
     }
     
-    public var captureSession: AVCaptureSession {
-        get { return mediaCapturer!.videoCaptureSource.captureSession }
+    public var captureSession: AVCaptureSession? {
+        get { return mediaCapturer?.videoCaptureSource.captureSession }
+    }
+    
+    var _cameraPosition: CameraPosition?
+    
+    public var cameraPosition: CameraPosition? {
+        
+        get {
+            if mediaCapturer != nil {
+                if _cameraPosition == nil {
+                    _cameraPosition = .front
+                }
+            } else {
+                _cameraPosition = nil
+            }
+            return _cameraPosition
+        }
+        
+        set {
+            if let capturer = mediaCapturer {
+                if let value = newValue {
+                    eventLog.markFormat(type: eventType,
+                                        format: "switch camera to %@",
+                                        arguments: value.rawValue)
+                    switch value {
+                    case .front:
+                        capturer.videoCaptureSource.useBackCamera = false
+                    case .back:
+                        capturer.videoCaptureSource.useBackCamera = true
+                    }
+                    _cameraPosition = newValue
+                }
+            }
+        }
+        
     }
     
     override var eventType: Event.EventType {
@@ -337,22 +377,12 @@ public class MediaPublisher: MediaConnection {
         get { return .upstream }
     }
     
-    public func switchCamera(_ position: CameraPosition? = nil) {
-        eventLog.markFormat(type: eventType,
-                            format: "switch camera to %@",
-                            arguments: position.debugDescription)
-        switch position {
-        case nil:
-            mediaCapturer!.videoCaptureSource.useBackCamera =
-                !mediaCapturer!.videoCaptureSource.useBackCamera
-        case CameraPosition.front?:
-            mediaCapturer!.videoCaptureSource.useBackCamera = false
-        case CameraPosition.back?:
-            mediaCapturer!.videoCaptureSource.useBackCamera = true
-        }
     var mediaCapturer: MediaCapturer? {
         get { return mediaStream?.mediaCapturer }
     }
+
+    public func flipCameraPosition() {
+        cameraPosition = cameraPosition?.flip()
     }
     
 }
