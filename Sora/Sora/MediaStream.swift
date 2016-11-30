@@ -95,10 +95,10 @@ public class MediaStream {
                         VideoRendererAdapter(mediaStream: self,
                                              videoRenderer: renderer)
                     videoTrack.add(videoRendererAdapter!)
-                } else if let support = videoRendererAdapter {
+                } else if let adapter = videoRendererAdapter {
                     eventLog.markFormat(type: .VideoRenderer,
                                         format: "clear video render")
-                    videoTrack.remove(support)
+                    videoTrack.remove(adapter)
                 }
             }
         }
