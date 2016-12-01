@@ -105,14 +105,13 @@ public class MediaConnection {
     // MARK: 接続
     
     public func connect(accessToken: String? = nil,
-                        mediaStreamId: String? = nil,
                         handler: @escaping ((ConnectionError?) -> Void)) {
         state = .connecting
         mediaStream = MediaStream(connection: connection,
                                   mediaConnection: self,
                                   role: role,
                                   accessToken: accessToken,
-                                  mediaStreamId: mediaStreamId,
+                                  mediaStreamId: nil,
                                   mediaOption: mediaOption)
         mediaStream!.connect {
             peerConn, error in
