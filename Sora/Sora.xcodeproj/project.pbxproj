@@ -41,6 +41,7 @@
 		91DD141E1DC872F1005881C2 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DD141D1DC872F1005881C2 /* Event.swift */; };
 		91E098841D799389004CF024 /* MediaStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E098831D799389004CF024 /* MediaStream.swift */; };
 		91E69B671D77536A004124C3 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D63F1D756AF800112A4E /* Notifications.swift */; };
+		91F82F751DF04BA600F8D923 /* MediaOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F82F741DF04BA600F8D923 /* MediaOption.swift */; };
 		91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */; };
 		91FD95751DCA06F700047BA9 /* RTCExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FD95741DCA06F700047BA9 /* RTCExtensions.swift */; };
 /* End PBXBuildFile section */
@@ -91,6 +92,7 @@
 		91DB5E9D1D6F43A5007744BF /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		91DD141D1DC872F1005881C2 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		91E098831D799389004CF024 /* MediaStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaStream.swift; sourceTree = "<group>"; };
+		91F82F741DF04BA600F8D923 /* MediaOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaOption.swift; sourceTree = "<group>"; };
 		91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoFrame.swift; sourceTree = "<group>"; };
 		91FD95741DCA06F700047BA9 /* RTCExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTCExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -159,6 +161,7 @@
 				91C4655D1D6376AC00AD9C28 /* JSON.swift */,
 				91B1D6411D756C0D00112A4E /* MediaChannel.swift */,
 				91577A021D85CB1700A5AF9F /* MediaConnection.swift */,
+				91F82F741DF04BA600F8D923 /* MediaOption.swift */,
 				91E098831D799389004CF024 /* MediaStream.swift */,
 				91192F731D598E4600F92D78 /* Message.swift */,
 				91B1D63F1D756AF800112A4E /* Notifications.swift */,
@@ -332,6 +335,7 @@
 				91FD95751DCA06F700047BA9 /* RTCExtensions.swift in Sources */,
 				91192F741D598E4600F92D78 /* Message.swift in Sources */,
 				91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */,
+				91F82F751DF04BA600F8D923 /* MediaOption.swift in Sources */,
 				91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */,
 				91B1D6421D756C0D00112A4E /* MediaChannel.swift in Sources */,
 			);

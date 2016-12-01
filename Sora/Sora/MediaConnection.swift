@@ -1,56 +1,6 @@
 import Foundation
 import WebRTC
 
-public enum MediaStreamRole {
-    
-    case upstream
-    case downstream
-    
-}
-
-public enum VideoCodec {
-    
-    case vp8
-    case vp9
-    case h264
-    
-}
-
-public enum AudioCodec {
-    
-    case opus
-    case pcmu
-    
-}
-
-public class MediaOption {
-    
-    public var videoEnabled: Bool = true
-    public var audioEnabled: Bool = true
-    public var configuration: RTCConfiguration?
-    public var signalingAnswerMediaConstraints: RTCMediaConstraints?
-    public var videoCaptureSourceMediaConstraints: RTCMediaConstraints?
-    public var peerConnectionMediaConstraints: RTCMediaConstraints?
-    public var videoCaptureTrackId: String?
-    public var audioCaptureTrackId: String?
-    
-    public static var defaultConfiguration: RTCConfiguration = {
-        () -> RTCConfiguration in
-        let config = RTCConfiguration()
-        config.iceServers = [
-            RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"],
-                username: nil, credential: nil)]
-        return config
-    }()
-    
-    public static var defaultMediaConstraints: RTCMediaConstraints =
-        RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
- 
-    public static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
-    public static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
-
-}
-
 public class MediaConnection {
     
     public enum State {
@@ -79,7 +29,7 @@ public class MediaConnection {
     public var connection: Connection
     public weak var mediaChannel: MediaChannel?
     public var mediaStream: MediaStream?
-    public var mediaOption: MediaOption?
+    public var mediaOption: MediaOption = MediaOption()
     
     public var state: State {
         willSet {

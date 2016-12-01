@@ -152,30 +152,33 @@ extension SignalingRole: JSONEncodable {
 
 enum SignalingVideoCodec: String, UnboxableEnum {
     
-    case vp8 = "VP8"
-    case vp9 = "VP9"
-    case h264 = "H264"
+    case VP8 = "VP8"
+    case VP9 = "VP9"
+    case H264 = "H264"
     
 }
 
 enum SignalingAudioCodec: String, UnboxableEnum {
     
-    case opus = "OPUS"
-    case pcmu = "PCMU"
+    case OPUS = "OPUS"
+    case PCMU = "PCMU"
     
 }
 
 struct SignalingVideo {
     
     var bit_rate: Int?
-    var codec_type: SignalingVideoCodec
+    var codec_type: SignalingVideoCodec?
     
 }
 
 extension SignalingVideo: JSONEncodable {
     
     func encode() -> Any {
-        var data = ["codec_type": codec_type.rawValue]
+        var data: [String: Any] = [:]
+        if let codec_type = codec_type {
+            data["codec_type"] = codec_type.rawValue
+        }
         if let value = bit_rate {
             data["bit_rate"] = value.description
         }
@@ -186,14 +189,18 @@ extension SignalingVideo: JSONEncodable {
 
 struct SignalingAudio {
     
-    var codec_type: SignalingAudioCodec
+    var codec_type: SignalingAudioCodec?
     
 }
 
 extension SignalingAudio: JSONEncodable {
     
     func encode() -> Any {
-        return ["codec_type": codec_type.rawValue]
+        var data: [String: Any] = [:]
+        if let codec_type = codec_type {
+            data["codec_type"] = codec_type.rawValue
+        }
+        return data as Any!
     }
     
 }
@@ -203,16 +210,14 @@ struct SignalingConnect {
     var role: SignalingRole
     var channel_id: String
     var access_token: String?
-    var video: SignalingVideo?
-    var audio: SignalingAudio?
-    var answerConstraints: RTCMediaConstraints =
-        RTCMediaConstraints(mandatoryConstraints: [:],
-                            optionalConstraints: [:])
+    var mediaOption: MediaOption
     
-    init(role: SignalingRole, channel_id: String, access_token: String? = nil) {
+    init(role: SignalingRole, channel_id: String, access_token: String? = nil,
+         mediaOption: MediaOption) {
         self.role = role
         self.channel_id = channel_id
         self.access_token = access_token
+        self.mediaOption = mediaOption
     }
 
 }
@@ -220,14 +225,54 @@ struct SignalingConnect {
 extension SignalingConnect: Messageable {
     
     func message() -> Message {
-        var data = ["role": role.encode(),
-                    "channel_id": channel_id] as [String : Any]
+        var data: [String : Any] = ["role": role.encode(),
+                                    "channel_id": channel_id]
         if let value = access_token {
             data["access_token"] = value
         }
-        if let value = video {
-            data["video"] = value.encode()
+        
+        if !mediaOption.videoEnabled {
+            data["video"] = false
+        } else {
+            var video: [String: Any] = [:]
+            switch mediaOption.videoCodec {
+            case .unspecified:
+                break
+            case .VP8:
+                video["codec_type"] = SignalingVideoCodec.VP8.rawValue
+            case .VP9:
+                video["codec_type"] = SignalingVideoCodec.VP9.rawValue
+            case .H264:
+                video["codec_type"] = SignalingVideoCodec.H264.rawValue
+            }
+            
+            if let bitRate = mediaOption.bitRate {
+                video["bit_rate"] = bitRate
+            }
+            
+            if !video.isEmpty {
+                data["video"] = video
+            }
         }
+        
+        if !mediaOption.audioEnabled {
+            data["audio"] = false
+        } else {
+            var audio: [String: Any] = [:]
+            switch mediaOption.audioCodec {
+            case .unspecified:
+                break
+            case .OPUS:
+                audio["codec_type"] = SignalingAudioCodec.OPUS.rawValue
+            case .PCMU:
+                audio["codec_type"] = SignalingAudioCodec.PCMU.rawValue
+            }
+            
+            if !audio.isEmpty {
+                data["audio"] = audio
+            }
+        }
+        
         return Message(type: .connect, data: data as [String : Any])
     }
     
@@ -305,7 +350,7 @@ extension SignalingVideo: Unboxable {
     
     init(unboxer: Unboxer) throws {
         bit_rate = unboxer.unbox(key: "bit_rate")
-        codec_type = try unboxer.unbox(key: "codec_type")
+        codec_type = unboxer.unbox(key: "codec_type")
     }
     
 }
@@ -313,7 +358,7 @@ extension SignalingVideo: Unboxable {
 extension SignalingAudio: Unboxable {
     
     init(unboxer: Unboxer) throws {
-        codec_type = try unboxer.unbox(key: "codec_type")
+        codec_type = unboxer.unbox(key: "codec_type")
     }
     
 }

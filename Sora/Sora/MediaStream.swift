@@ -21,7 +21,7 @@ public class MediaStream {
     public var role: MediaStreamRole
     public var accessToken: String?
     var mediaStreamId: String?
-    public var mediaOption: MediaOption?
+    public var mediaOption: MediaOption
     public var creationTime: Date?
     public var clientId: String?
     
@@ -115,7 +115,7 @@ public class MediaStream {
          role: MediaStreamRole,
          accessToken: String? = nil,
          mediaStreamId: String? = nil,
-         mediaOption: MediaOption? = MediaOption()) {
+         mediaOption: MediaOption = MediaOption()) {
         self.connection = connection
         self.mediaConnection = mediaConnection
         self.role = role
@@ -347,10 +347,8 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             // ピア接続オブジェクトを生成する
             eventLog.markFormat(type: .PeerConnection, format: "create peer connection")
             peerConnection = peerConnectionFactory.peerConnection(
-                with: mediaStream.mediaOption?.configuration
-                    ?? MediaOption.defaultConfiguration,
-                constraints: mediaStream.mediaOption?.peerConnectionMediaConstraints
-                    ?? MediaOption.defaultMediaConstraints,
+                with: mediaStream.mediaOption.configuration,
+                constraints: mediaStream.mediaOption.peerConnectionMediaConstraints,
                 delegate: self)
             if role == MediaStreamRole.upstream {
                 if let error = createMediaCapturer() {
@@ -361,7 +359,8 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             
             // シグナリング connect を送信する
             let connect = SignalingConnect(role: SignalingRole.from(role),
-                                           channel_id: connection.mediaChannelId)
+                                           channel_id: connection.mediaChannelId,
+                                           mediaOption: mediaStream.mediaOption)
             eventLog.markFormat(type: .Signaling,
                                 format: "send connect message: %@",
                                 arguments: connect.message().JSON().description)
@@ -395,12 +394,10 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         
         let upstream = peerConnectionFactory.mediaStream(withStreamId:
             mediaStream.mediaStreamId ?? MediaStream.defaultStreamId)
-        if mediaStream.mediaOption == nil ||
-            mediaStream.mediaOption?.videoEnabled == true {
+        if mediaStream.mediaOption.videoEnabled {
             upstream.addVideoTrack(mediaCapturer!.videoCaptureTrack)
         }
-        if mediaStream.mediaOption == nil ||
-            mediaStream.mediaOption?.audioEnabled == true {
+        if mediaStream.mediaOption.audioEnabled {
             upstream.addAudioTrack(mediaCapturer!.audioCaptureTrack)
         }
         peerConnection.add(upstream)
@@ -606,9 +603,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             self.eventLog.markFormat(type: .Signaling,
                                      format: "create answer")
             self.peerConnection.answer(for: self
-                .mediaStream.mediaOption?
-                .signalingAnswerMediaConstraints
-                ?? MediaOption.defaultMediaConstraints)
+                .mediaStream.mediaOption.signalingAnswerMediaConstraints)
             {
                 (sdp, error) in
                 if let error = error {
