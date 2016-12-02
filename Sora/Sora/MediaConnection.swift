@@ -253,11 +253,6 @@ public class MediaConnection {
     
 }
 
-public enum VideoPreset {
-    case vga
-    // TODO: etc.
-}
-
 class MediaCapturer {
     
     public var videoCaptureTrack: RTCVideoTrack
@@ -294,8 +289,6 @@ public enum CameraPosition: String {
 }
 
 public class MediaPublisher: MediaConnection {
-    
-    public var videoPreset: VideoPreset =  VideoPreset.vga
     
     public var canUseBackCamera: Bool? {
         get { return mediaCapturer?.videoCaptureSource.canUseBackCamera }
