@@ -199,12 +199,12 @@ public class MediaConnection {
 
     // MARK: イベントハンドラ
     
-    private var onChangeStateHandler: ((State) -> Void)?
-    private var onConnectHandler: ((ConnectionError?) -> Void)?
-    private var onDisconnectHandler: ((ConnectionError?) -> Void)?
-    private var onFailureHandler: ((ConnectionError) -> Void)?
-    private var onUpdateHandler: ((Statistics) -> Void)?
-    private var onNotifyHandler: ((Notification) -> Void)?
+    var onChangeStateHandler: ((State) -> Void)?
+    var onConnectHandler: ((ConnectionError?) -> Void)?
+    var onDisconnectHandler: ((ConnectionError?) -> Void)?
+    var onFailureHandler: ((ConnectionError) -> Void)?
+    var onUpdateHandler: ((Statistics) -> Void)?
+    var onNotifyHandler: ((Notification) -> Void)?
 
     public func onChangeState(handler: @escaping (State) -> Void) {
         onChangeStateHandler = handler
@@ -214,41 +214,20 @@ public class MediaConnection {
         onConnectHandler = handler
     }
     
-    func callOnConnectHandler(error: ConnectionError?) {
-        onConnectHandler?(error)
-    }
-    
     public func onDisconnect(handler: @escaping (ConnectionError?) -> Void) {
         onDisconnectHandler = handler
     }
     
-    func callOnDisonnectHandler(error: ConnectionError?) {
-        onDisconnectHandler?(error)
-    }
-    
-    // この次に必ず onDisconnect が呼ばれる
     public func onFailure(handler: @escaping (ConnectionError) -> Void) {
         onFailureHandler = handler
-    }
-    
-    func callOnFailureHandler(error: ConnectionError) {
-        onFailureHandler?(error)
     }
     
     public func onUpdate(handler: @escaping ((Statistics) -> Void)) {
         onUpdateHandler = handler
     }
     
-    func callOnUpdateHandler(stats: Statistics) {
-        onUpdateHandler?(stats)
-    }
-    
     public func onNotify(handler: @escaping ((Notification) -> Void)) {
         onNotifyHandler = handler
-    }
-    
-    func callOnNotifyHandler(notification: Notification) {
-        onNotifyHandler?(notification)
     }
     
 }
