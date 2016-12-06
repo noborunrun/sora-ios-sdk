@@ -89,14 +89,14 @@ public class MediaStream {
             if let videoTrack = nativeVideoTrack {
                 if let renderer = videoRenderer {
                     eventLog.markFormat(type: .VideoRenderer,
-                                        format: "set video render")
+                                        format: "set video renderer")
                     videoRendererAdapter =
                         VideoRendererAdapter(mediaStream: self,
                                              videoRenderer: renderer)
                     videoTrack.add(videoRendererAdapter!)
                 } else if let adapter = videoRendererAdapter {
                     eventLog.markFormat(type: .VideoRenderer,
-                                        format: "clear video render")
+                                        format: "clear video renderer")
                     videoTrack.remove(adapter)
                 }
             }
