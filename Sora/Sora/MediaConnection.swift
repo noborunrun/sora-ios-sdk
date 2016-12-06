@@ -86,17 +86,18 @@ public class MediaConnection {
                                   mediaStreamId: nil,
                                   mediaOption: mediaOption)
         mediaStream!.connect {
-            peerConn, error in
+            error in
             if let error = error {
                 self.state = .disconnected
                 self.mediaStream = nil
                 self.onFailureHandler?(error)
-                self.onDisconnectHandler?(error)
+                self.onConnectHandler?(error)
+                handler(error)
             } else {
                 self.state = .connected
                 self.onConnectHandler?(nil)
+                handler(nil)
             }
-            handler(error)
         }
     }
     
