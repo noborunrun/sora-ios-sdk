@@ -128,8 +128,7 @@ public class MediaStream {
     // MARK: ピア接続
     
     // 接続に成功すると peerConnection プロパティがセットされる
-    func connect(handler:
-        @escaping ((ConnectionError?) -> Void)) {
+    func connect(timeout: Int, handler: @escaping ((ConnectionError?) -> Void)) {
         eventLog.markFormat(type: .MediaStream, format: "connect")
         switch state {
         case .connected, .connecting, .disconnecting:
@@ -137,7 +136,7 @@ public class MediaStream {
         case .disconnected:
             state = .connecting
             context = MediaStreamContext(mediaStream: self, role: role)
-            context!.connect(handler: handler)
+            context!.connect(timeout: timeout, handler: handler)
         }
     }
     
@@ -236,6 +235,8 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         get { return mediaStream?.mediaConnection }
     }
     
+    private var timeoutTimer: Timer?
+    
     private var connectCompletionHandler: ((ConnectionError?) -> Void)?
     private var disconnectCompletionHandler: ((ConnectionError?) -> Void)?
     
@@ -247,8 +248,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     
     // MARK: ピア接続
     
-    func connect(handler:
-        @escaping ((ConnectionError?) -> Void)) {
+    func connect(timeout: Int, handler: @escaping ((ConnectionError?) -> Void)) {
         if mediaStream == nil {
             return
         }
@@ -263,6 +263,25 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                                             connection!.URL.description))
         state = .signalingConnecting
         connectCompletionHandler = handler
+        
+        startTimeoutTimer(timeout: timeout) {
+            timer in
+            switch self.state {
+            case .disconnecting, .disconnected:
+                break
+            case .connected:
+                self.timeoutTimer?.invalidate()
+                self.timeoutTimer = nil
+            default:
+                self.eventLog.markFormat(type: .MediaStream,
+                                         format: "timeout connecting")
+                let error = ConnectionError.connectionWaitTimeout
+                self.terminate(error: error)
+                self.connectCompletionHandler?(error)
+                self.connectCompletionHandler = nil
+            }
+        }
+        
         webSocket = SRWebSocket(url: connection!.URL)
         webSocket!.delegate = self
         webSocket!.open()
@@ -280,6 +299,15 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         }
     }
 
+    func startTimeoutTimer(timeout: Int, handler: @escaping ((Timer) -> ())) {
+        timeoutTimer?.invalidate()
+        timeoutTimer = Timer(timeInterval: Double(timeout), repeats: false) {
+            timer in
+            handler(timer)
+        }
+        RunLoop.main.add(timeoutTimer!, forMode: .commonModes)
+    }
+    
     func terminate(error: ConnectionError? = nil) {
         switch state {
         case .disconnected:
@@ -315,6 +343,8 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             if let error = error {
                 webSocketEventHandlers?.onFailureHandler?(webSocket!, error)
             }
+            timeoutTimer?.invalidate()
+            timeoutTimer = nil
             peerConnection?.close()
             webSocket?.close()
         }

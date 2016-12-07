@@ -77,6 +77,7 @@ public class MediaConnection {
     // MARK: 接続
     
     public func connect(accessToken: String? = nil,
+                        timeout: Int = 30,
                         handler: @escaping ((ConnectionError?) -> Void)) {
         state = .connecting
         mediaStream = MediaStream(connection: connection,
@@ -85,7 +86,7 @@ public class MediaConnection {
                                   accessToken: accessToken,
                                   mediaStreamId: nil,
                                   mediaOption: mediaOption)
-        mediaStream!.connect {
+        mediaStream!.connect(timeout: timeout) {
             error in
             if let error = error {
                 self.state = .disconnected
