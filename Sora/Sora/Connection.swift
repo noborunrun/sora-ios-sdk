@@ -4,20 +4,11 @@ import SocketRocket
 import UIKit
 
 public enum ConnectionError: Error {
-    case failureJSONDecode
-    case duplicatedChannelId
-    case authenticationFailure
-    case authenticationInternalError
-    case unknownVideoCodecType
-    case failureSDPParse
-    case failureMissingSDP
     case failureSetConfiguration(RTCConfiguration)
-    case unknownType
     case connectionWaitTimeout
     case connectionDisconnected
     case connectionTerminated
     case connectionBusy
-    case multipleDownstreams
     case webSocketClose(Int, String)
     case webSocketError(Error)
     case peerConnectionError(Error)
