@@ -153,7 +153,6 @@ public class MediaConnection {
             }
         }
         RunLoop.main.add(connectionTimer!, forMode: .commonModes)
-        RunLoop.main.run()
     }
     
     public func stopConnectionTimer() {
