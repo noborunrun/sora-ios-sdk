@@ -59,7 +59,7 @@ public class MediaOption {
     public var videoCaptureTrackId: String = defaultVideoCaptureTrackId
     public var audioCaptureTrackId: String = defaultAudioCaptureTrackId
     
-    public static var defaultConfiguration: RTCConfiguration = {
+    static var defaultConfiguration: RTCConfiguration = {
         () -> RTCConfiguration in
         let config = RTCConfiguration()
         config.iceServers = [
@@ -68,10 +68,10 @@ public class MediaOption {
         return config
     }()
     
-    public static var defaultMediaConstraints: RTCMediaConstraints =
+    static var defaultMediaConstraints: RTCMediaConstraints =
         RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
     
-    public static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
-    public static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
+    static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
+    static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
     
 }
