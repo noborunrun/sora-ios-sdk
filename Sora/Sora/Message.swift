@@ -67,7 +67,7 @@ public class Message {
         return json
     }
     
-    public func JSONString() -> String {
+    public func JSONRepresentation() -> String {
         let j = JSON()
         let data = try! JSONSerialization.data(withJSONObject: j,
                                                options:
@@ -77,7 +77,7 @@ public class Message {
     }
     
     public var description: String {
-        get { return JSONString() }
+        get { return JSONRepresentation() }
     }
     
 }

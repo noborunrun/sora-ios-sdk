@@ -376,11 +376,11 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             return ConnectionError.connectionBusy
             
         default:
-            let s = message.JSONString()
+            let s = message.JSONRepresentation()
             eventLog!.markFormat(type: .WebSocket,
                                 format: "send message as JSON: %@",
                                 arguments: s)
-            webSocket!.send(message.JSONString())
+            webSocket!.send(message.JSONRepresentation())
             return nil
         }
     }

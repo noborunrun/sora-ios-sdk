@@ -15,11 +15,11 @@ struct JSONBuilder {
 /*
 public protocol JSONEncodable {
     
-    func JSONString() -> String
+    func JSONRepresentation() -> String
     
 }
 
-func CreateJSONString(obj: AnyObject) -> String {
+func CreateJSONRepresentation(obj: AnyObject) -> String {
     return try! String(data: NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions(rawValue: 0)),
                        encoding: NSUTF8StringEncoding)!
 }
