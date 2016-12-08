@@ -23,7 +23,7 @@ public class Message {
         self.data = data
     }
     
-    public static func fromJSONData(_ data: Any) -> Message? {
+    static func fromJSONData(_ data: Any) -> Message? {
         let base: Data!
         if data is Data {
             base = data as? Data
@@ -45,7 +45,7 @@ public class Message {
         }
     }
     
-    public static func fromJSONObject(_ j: Any) -> Message? {
+    static func fromJSONObject(_ j: Any) -> Message? {
         if let j = j as? [String: Any] {
             if let type = j["type"] as? String {
                 if let type = MessageType(rawValue: type) {
@@ -61,13 +61,13 @@ public class Message {
         }
     }
     
-    public func JSON() -> [String: Any] {
+    func JSON() -> [String: Any] {
         var json: [String: Any] = self.data
         json["type"] = type?.rawValue
         return json
     }
     
-    public func JSONRepresentation() -> String {
+    func JSONRepresentation() -> String {
         let j = JSON()
         let data = try! JSONSerialization.data(withJSONObject: j,
                                                options:
