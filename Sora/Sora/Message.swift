@@ -4,7 +4,7 @@ import Unbox
 
 public class Message {
     
-    public enum `Type`: String {
+    public enum MessageType: String {
         case connect = "connect"
         case offer = "offer"
         case answer = "answer"
@@ -15,10 +15,10 @@ public class Message {
         case notify = "notify"
     }
     
-    public var type: Type?
+    public var type: MessageType?
     public var data: [String: Any]
     
-    public init(type: Type, data: [String: Any] = [:]) {
+    public init(type: MessageType, data: [String: Any] = [:]) {
         self.type = type
         self.data = data
     }
@@ -48,7 +48,7 @@ public class Message {
     public static func fromJSONObject(_ j: Any) -> Message? {
         if let j = j as? [String: Any] {
             if let type = j["type"] as? String {
-                if let type = Type(rawValue: type) {
+                if let type = MessageType(rawValue: type) {
                     return Message(type: type, data: j)
                 } else {
                     return nil
