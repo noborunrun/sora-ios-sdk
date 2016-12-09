@@ -160,7 +160,7 @@ enum SignalingVideoCodec: String, UnboxableEnum {
 
 enum SignalingAudioCodec: String, UnboxableEnum {
     
-    case OPUS = "OPUS"
+    case Opus = "Opus"
     case PCMU = "PCMU"
     
 }
@@ -262,8 +262,8 @@ extension SignalingConnect: Messageable {
             switch mediaOption.audioCodec {
             case .unspecified:
                 break
-            case .OPUS:
-                audio["codec_type"] = SignalingAudioCodec.OPUS.rawValue
+            case .Opus:
+                audio["codec_type"] = SignalingAudioCodec.Opus.rawValue
             case .PCMU:
                 audio["codec_type"] = SignalingAudioCodec.PCMU.rawValue
             }
