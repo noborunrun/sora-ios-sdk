@@ -317,6 +317,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             if webSocket?.readyState == SRReadyState.CLOSED &&
                 peerConnection.signalingState == .closed &&
                 peerConnection.iceConnectionState == .closed {
+                peerConnectionEventHandlers?.onDisconnectHandler?(peerConnection)
                 peerConnection.delegate = nil
                 peerConnection = nil
                 webSocket?.delegate = nil
