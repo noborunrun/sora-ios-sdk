@@ -419,7 +419,7 @@ extension SignalingStats: Unboxable {
 
 public struct SignalingNotify {
     
-    var notifyMessage: String
+    public var notifyMessage: String
     
 }
 
