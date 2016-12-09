@@ -25,16 +25,6 @@ public enum AudioCodec {
     
 }
 
-public enum Resolution {
-    case FHD
-    case HD
-    case VGA
-    case QVGA
-    case HQVGA
-    case QCIF
-    case QQVGA
-}
-
 public class MediaOption {
     
     public var videoCodec: VideoCodec = .unspecified
