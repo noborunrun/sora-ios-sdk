@@ -840,8 +840,6 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         eventLog?.markFormat(type: .PeerConnection,
                             format:
             "data channel opened (Sora does not support data channels")
-        peerConnectionEventHandlers?
-            .onOpenDataChannelHandler?(peerConnection, dataChannel)
     }
     
 }
