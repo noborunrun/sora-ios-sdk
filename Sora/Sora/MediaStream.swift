@@ -351,7 +351,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     }
     
     func terminateByPeerConnection(error: Error) {
-        peerConnectionEventHandlers?.onFailureHandler?(error)
+        peerConnectionEventHandlers?.onFailureHandler?(peerConnection, error)
         terminate(error: ConnectionError.peerConnectionError(error))
     }
     
@@ -677,7 +677,8 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                 if let error = error {
                     self.eventLog.markFormat(type: .Signaling,
                                              format: "creating answer failed")
-                    self.peerConnectionEventHandlers?.onFailureHandler?(error)
+                    self.peerConnectionEventHandlers?
+                        .onFailureHandler?(self.peerConnection, error)
                     self.terminate(error:
                         ConnectionError.peerConnectionError(error))
                     return
@@ -690,7 +691,8 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                     if let error = error {
                         self.eventLog.markFormat(type: .Signaling,
                                                  format: "set local description failed")
-                        self.peerConnectionEventHandlers?.onFailureHandler?(error)
+                        self.peerConnectionEventHandlers?
+                            .onFailureHandler?(self.peerConnection, error)
                         self.terminate(error:
                             ConnectionError.peerConnectionError(error))
                         return
@@ -774,7 +776,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                                     format: "remote peer connected",
                                     arguments: newState.description)
                 state = .connected
-                peerConnectionEventHandlers?.onConnectHandler?()
+                peerConnectionEventHandlers?.onConnectHandler?(peerConnection)
                 connectCompletionHandler?(nil)
                 connectCompletionHandler = nil
             default:
