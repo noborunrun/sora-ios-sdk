@@ -92,8 +92,6 @@ open class PeerConnectionEventHandlers {
     ((RTCPeerConnection, RTCIceCandidate) -> Void)?
     var onRemoveCandidatesHandler:
     ((RTCPeerConnection, [RTCIceCandidate]) -> Void)?
-    var onOpenDataChannelHandler:
-    ((RTCPeerConnection, RTCDataChannel) -> Void)?
     
     public func onConnect(handler: @escaping ((Void) -> Void)) {
         onConnectHandler = handler
@@ -144,11 +142,6 @@ open class PeerConnectionEventHandlers {
     public func onRemoveCandidates(handler:
         @escaping (RTCPeerConnection, [RTCIceCandidate]) -> Void) {
         onRemoveCandidatesHandler = handler
-    }
-    
-    public func onOpenDataChannel(handler:
-        @escaping (RTCPeerConnection, RTCDataChannel) -> Void) {
-        onOpenDataChannelHandler = handler
     }
 
 }
