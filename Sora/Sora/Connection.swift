@@ -22,11 +22,15 @@ public class Connection {
     public var URL: Foundation.URL
     public var mediaChannelId: String
     public var eventLog: EventLog
+    public var mediaPublisher: MediaPublisher!
+    public var mediaSubscriber: MediaSubscriber!
     
     public init(URL: Foundation.URL, mediaChannelId: String) {
         self.URL = URL
         self.mediaChannelId = mediaChannelId
         eventLog = EventLog(URL: URL, mediaChannelId: mediaChannelId)
+        mediaPublisher = MediaPublisher(connection: self)
+        mediaSubscriber = MediaSubscriber(connection: self)
     }
 
 }

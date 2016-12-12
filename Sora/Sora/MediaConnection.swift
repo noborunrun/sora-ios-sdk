@@ -26,8 +26,7 @@ public class MediaConnection {
         case disconnectedUpstream = "DISCONNECTED-UPSTREAM"
     }
     
-    public var connection: Connection
-    public weak var mediaChannel: MediaChannel?
+    public weak var connection: Connection!
     public var mediaStream: MediaStream?
     public var mediaOption: MediaOption = MediaOption()
     
@@ -68,9 +67,8 @@ public class MediaConnection {
         }
     }
     
-    init(connection: Connection, mediaChannel: MediaChannel) {
+    init(connection: Connection) {
         self.connection = connection
-        self.mediaChannel = mediaChannel
         state = .disconnected
     }
     
