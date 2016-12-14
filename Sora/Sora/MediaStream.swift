@@ -341,12 +341,24 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         terminate(error: ConnectionError.peerConnectionError(error))
     }
     
+    private var disconnectingErrors: [ConnectionError] = []
+    
     func proceedDisconnecting(error: ConnectionError? = nil) {
+        if let error = error {
+            disconnectingErrors.append(error)
+        }
+        
         if webSocket?.readyState == SRReadyState.CLOSED &&
             peerConnection.signalingState == .closed &&
             peerConnection.iceConnectionState == .closed {
             eventLog?.markFormat(type: .WebSocket,
                                  format: "finish disconnecting")
+            
+            var aggregateError: ConnectionError? = nil
+            if !disconnectingErrors.isEmpty {
+                aggregateError =
+                    ConnectionError.aggregateError(disconnectingErrors)
+            }
             peerConnectionEventHandlers?.onDisconnectHandler?(peerConnection)
             peerConnection.delegate = nil
             peerConnection = nil
@@ -354,16 +366,16 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             webSocket = nil
             
             state = .disconnected
-            if let error = error {
+            if let error = aggregateError {
                 signalingEventHandlers?.onFailureHandler?(error)
                 mediaConnection?.onFailureHandler?(error)
             }
             signalingEventHandlers?.onDisconnectHandler?()
-            connectCompletionHandler?(error)
+            connectCompletionHandler?(aggregateError)
             connectCompletionHandler = nil
-            disconnectCompletionHandler?(error)
+            disconnectCompletionHandler?(aggregateError)
             disconnectCompletionHandler = nil
-            mediaConnection?.onDisconnectHandler?(error)
+            mediaConnection?.onDisconnectHandler?(aggregateError)
             mediaStream?.terminate()
             mediaStream = nil
         }

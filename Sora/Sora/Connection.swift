@@ -15,6 +15,7 @@ public enum ConnectionError: Error {
     case iceConnectionFailed
     case iceConnectionDisconnected
     case mediaCapturerFailed
+    case aggregateError([ConnectionError])
 }
 
 public class Connection {
