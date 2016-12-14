@@ -316,7 +316,6 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     }
     
     func terminate(error: ConnectionError? = nil) {
-        print("terminate:", state.rawValue)
         switch state {
         case .disconnected:
             break
@@ -502,6 +501,10 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             break
             
         case .disconnecting:
+            // ピア接続を解除すると、サーバーからステータスコード 1001 で接続解除される
+            if code == SRStatusCodeGoingAway.rawValue {
+                error = nil
+            }
             proceedDisconnecting(error: error)
             
         default:
