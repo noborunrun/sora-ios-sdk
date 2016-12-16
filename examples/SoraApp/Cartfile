@@ -1,0 +1,4 @@
+github "shiguredo/sora-ios-sdk"
+github "shiguredo/sora-webrtc-ios"
+github "facebook/SocketRocket" "0.4.2"
+github "johnsundell/unbox" "2.2.1"
