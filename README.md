@@ -1,22 +1,10 @@
 # Sora iOS SDK
 
-Sora client library for iOS.
-Sora is WebRTC SFU server developed by Shiguredo Inc.
+Sora iOS SDK は [WebRTC SFU Sora](https://sora.shiguredo.jp) の iOS クライアントアプリケーションを開発するためのライブラリです。
 
-http://sora.shiguredo.jp
+## システム条件
 
-## Build System Requirements
-
-- Mac OS X 10.11.4 or later
-- Xcode 7.3
-- Swift 2.2 (included Xcode)
-- Carthage (package manager)
-- jazzy (documentation)
-
-## Building Sora Client Library
-
-In Xcode, build "All" target.
-
-## Generating API Reference
-
-Run "Document" target with Xcode or "make doc" in "Sora" directory, API reference is generated in "doc" directory.
+- iOS 10.1 以降 (シミュレーターは非対応)
+- Mac OS X 10.11.6 以降
+- Xcode 8.1 以降
+- Swift 3.0.1
