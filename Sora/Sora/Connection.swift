@@ -9,7 +9,7 @@ public enum ConnectionError: Error {
     case connectionDisconnected
     case connectionTerminated
     case connectionBusy
-    case webSocketClose(Int, String)
+    case webSocketClose(Int, String?)
     case webSocketError(Error)
     case peerConnectionError(Error)
     case iceConnectionFailed

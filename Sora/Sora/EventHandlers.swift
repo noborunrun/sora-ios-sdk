@@ -8,7 +8,7 @@ open class WebSocketEventHandlers {
     var onFailureHandler: ((SRWebSocket, Error) -> ())?
     var onPongHandler: ((SRWebSocket, Data) -> ())?
     var onMessageHandler: ((SRWebSocket, AnyObject) -> ())?
-    var onCloseHandler: ((SRWebSocket, Int, String, Bool) -> ())?
+    var onCloseHandler: ((SRWebSocket, Int, String?, Bool) -> ())?
 
     public func onOpen(handler: @escaping (SRWebSocket) -> ()) {
         onOpenHandler = handler
@@ -26,7 +26,7 @@ open class WebSocketEventHandlers {
         onMessageHandler = handler
     }
     
-    public func onClose(handler: @escaping (SRWebSocket, Int, String, Bool) -> ()) {
+    public func onClose(handler: @escaping (SRWebSocket, Int, String?, Bool) -> ()) {
         onCloseHandler = handler
     }
     

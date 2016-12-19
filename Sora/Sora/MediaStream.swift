@@ -498,11 +498,17 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
     
     public func webSocket(_ webSocket: SRWebSocket!,
                           didCloseWithCode code: Int,
-                          reason: String!,
+                          reason: String?,
                           wasClean: Bool) {
-        eventLog?.markFormat(type: .WebSocket,
-                             format: "close: code \(code), reason %@, clean \(wasClean)",
-            arguments: reason)
+        if let reason = reason {
+            eventLog?.markFormat(type: .WebSocket,
+                                 format: "close: code \(code), reason %@, clean \(wasClean)",
+                arguments: reason)
+        } else {
+            eventLog?.markFormat(type: .WebSocket,
+                                 format: "close: code \(code), clean \(wasClean)")
+        }
+        
         var error: ConnectionError? = nil
         if code != SRStatusCodeNormal.rawValue {
             error = ConnectionError.webSocketClose(code, reason)
