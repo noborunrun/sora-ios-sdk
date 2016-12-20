@@ -594,8 +594,10 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                 case .stats?:
                     receiveSignalingStats(json: json)
                     
+                /*
                 case .notify?:
                     receiveSignalingNotify(json: json)
+                */
                     
                 case .offer?:
                     receiveSignalingOffer(json: json)
@@ -647,6 +649,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         }
     }
     
+    /*
     func receiveSignalingNotify(json: [String: Any]) {
         switch state {
         case .connected:
@@ -671,6 +674,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
             break
         }
     }
+    */
     
     func receiveSignalingOffer(json: [String: Any]) {
         switch state {
