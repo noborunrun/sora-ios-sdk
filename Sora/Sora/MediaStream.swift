@@ -159,12 +159,7 @@ public class MediaStream {
         state = .disconnected
         creationTime = nil
         videoRenderer = nil
-        
-        // FIXME: 実行すると落ちる
-        // 終了処理を完了した context は捨てたいが、
-        // 捨てると -[RTCVideoTrack dealloc] で落ちてしまう
-        // disconnect 後に最後 connect しようとしても落ちる
-        // context = nil
+        context = nil
     }
     
     // MARK: WebSocket
@@ -229,7 +224,7 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
         }
     }
     
-    var peerConnectionFactory: RTCPeerConnectionFactory
+    var peerConnectionFactory: RTCPeerConnectionFactory!
     var peerConnection: RTCPeerConnection!
     var upstream: RTCMediaStream?
     var mediaCapturer: MediaCapturer?
@@ -360,8 +355,12 @@ class MediaStreamContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelega
                     ConnectionError.aggregateError(disconnectingErrors)
             }
             peerConnectionEventHandlers?.onDisconnectHandler?(peerConnection)
+            
+            // この順にクリアしないと落ちる
+            mediaCapturer = nil
             peerConnection.delegate = nil
             peerConnection = nil
+            peerConnectionFactory = nil
             webSocket?.delegate = nil
             webSocket = nil
             
