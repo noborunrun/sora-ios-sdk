@@ -50,7 +50,6 @@ playground.xcworkspace
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
 # Carthage/Checkouts
 
-Cartfile.resolved
 Carthage/Build
 Sora/Carthage/Build
 Sora/Carthage/Checkouts
