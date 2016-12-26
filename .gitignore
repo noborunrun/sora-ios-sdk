@@ -51,6 +51,10 @@ playground.xcworkspace
 # Carthage/Checkouts
 
 Carthage/Build
+Sora/Carthage/Build
+Sora/Carthage/Checkouts
+examples/SoraApp/Carthage/Build
+examples/SoraApp/Carthage/Checkouts
 
 # fastlane
 #
@@ -61,3 +65,7 @@ Carthage/Build
 
 fastlane/report.xml
 fastlane/screenshots
+
+*.swp
+doc
+project.xcworkspace
