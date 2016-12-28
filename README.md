@@ -2,6 +2,8 @@
 
 Sora iOS SDK は [WebRTC SFU Sora](https://sora.shiguredo.jp) の iOS クライアントアプリケーションを開発するためのライブラリです。
 
+使い方は [Sora iOS SDK ドキュメント](https://sora.shiguredo.jp/ios-sdk-doc/) を参照してください。
+
 ## システム条件
 
 - iOS 10.1 以降 (シミュレーターは非対応)
