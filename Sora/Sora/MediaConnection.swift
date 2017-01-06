@@ -108,6 +108,7 @@ public class MediaConnection {
             handler(ConnectionError.connectionBusy)
         case .connected, .connecting:
             state = .disconnecting
+            stopConnectionTimer()
             mediaStream!.disconnect {
                 error in
                 self.state = .disconnected
@@ -157,6 +158,8 @@ public class MediaConnection {
     public func stopConnectionTimer() {
         eventLog.markFormat(type: eventType, format: "stop timer")
         connectionTimer?.invalidate()
+        connectionTimer = nil
+        connectionTimerHandler = nil
     }
     
     
