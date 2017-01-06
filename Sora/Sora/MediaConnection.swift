@@ -29,6 +29,7 @@ public class MediaConnection {
     public weak var connection: Connection!
     public var mediaStream: MediaStream?
     public var mediaOption: MediaOption = MediaOption()
+    public var multistreamEnabled: Bool = false
     
     public var state: State {
         willSet {

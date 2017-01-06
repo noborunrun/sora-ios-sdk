@@ -211,12 +211,14 @@ struct SignalingConnect {
     var channel_id: String
     var access_token: String?
     var mediaOption: MediaOption
+    var multistream: Bool
     
     init(role: SignalingRole, channel_id: String, access_token: String? = nil,
-         mediaOption: MediaOption) {
+         multistream: Bool = false, mediaOption: MediaOption) {
         self.role = role
         self.channel_id = channel_id
         self.access_token = access_token
+        self.multistream = multistream
         self.mediaOption = mediaOption
     }
 
@@ -229,6 +231,9 @@ extension SignalingConnect: Messageable {
                                     "channel_id": channel_id]
         if let value = access_token {
             data["access_token"] = value
+        }
+        if multistream {
+            data["multistream"] = true
         }
         
         if !mediaOption.videoEnabled {
