@@ -8,7 +8,6 @@ public class Event {
         case PeerConnection
         case MediaPublisher
         case MediaSubscriber
-        case MediaStream
         case VideoRenderer
         case VideoView
     }

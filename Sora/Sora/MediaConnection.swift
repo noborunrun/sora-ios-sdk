@@ -27,7 +27,7 @@ public class MediaConnection {
     }
     
     public weak var connection: Connection!
-    public var mediaStream: MediaStream?
+    public var peerConnection: PeerConnection?
     public var mediaOption: MediaOption = MediaOption()
     public var multistreamEnabled: Bool = false
     
@@ -46,8 +46,8 @@ public class MediaConnection {
     }
     
     public var videoRenderer: VideoRenderer? {
-        get { return mediaStream?.videoRenderer }
-        set { mediaStream?.videoRenderer = newValue }
+        get { return peerConnection?.videoRenderer }
+        set { peerConnection?.videoRenderer = newValue }
     }
     
     var eventLog: EventLog {
@@ -79,17 +79,17 @@ public class MediaConnection {
                         timeout: Int = 30,
                         handler: @escaping ((ConnectionError?) -> Void)) {
         state = .connecting
-        mediaStream = MediaStream(connection: connection,
-                                  mediaConnection: self,
-                                  role: role,
-                                  accessToken: accessToken,
-                                  mediaStreamId: nil,
-                                  mediaOption: mediaOption)
-        mediaStream!.connect(timeout: timeout) {
+        peerConnection = PeerConnection(connection: connection,
+                                        mediaConnection: self,
+                                        role: role,
+                                        accessToken: accessToken,
+                                        mediaStreamId: nil,
+                                        mediaOption: mediaOption)
+        peerConnection!.connect(timeout: timeout) {
             error in
             if let error = error {
                 self.state = .disconnected
-                self.mediaStream = nil
+                self.peerConnection = nil
                 self.onFailureHandler?(error)
                 self.onConnectHandler?(error)
                 handler(error)
@@ -110,7 +110,7 @@ public class MediaConnection {
         case .connected, .connecting:
             state = .disconnecting
             stopConnectionTimer()
-            mediaStream!.disconnect {
+            peerConnection!.disconnect {
                 error in
                 self.state = .disconnected
                 handler(error)
@@ -120,7 +120,7 @@ public class MediaConnection {
     
     public func send(message: Messageable) -> ConnectionError? {
         if isAvailable {
-            return mediaStream!.send(message: message)
+            return peerConnection!.send(message: message)
         } else {
             return ConnectionError.connectionDisconnected
         }
@@ -141,10 +141,10 @@ public class MediaConnection {
         connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
             timer in
 
-            if let stream = self.mediaStream {
-                if stream.isAvailable {
+            if let peer = self.peerConnection {
+                if peer.isAvailable {
                     let diff = Date(timeIntervalSinceNow: 0)
-                        .timeIntervalSince(stream.creationTime!)
+                        .timeIntervalSince(peer.creationTime!)
                     handler(Int(diff))
                 } else {
                     handler(nil)
@@ -163,43 +163,6 @@ public class MediaConnection {
         connectionTimerHandler = nil
     }
     
-    
-    // MARK: 統計情報
-    
-    public func statisticsReports(level: StatisticsReport.Level)
-        -> ([StatisticsReport], [StatisticsReport])
-    {
-        if !isAvailable {
-            return ([], [])
-        }
-        
-        func getReports(track: RTCMediaStreamTrack) -> [StatisticsReport] {
-            var reports: [StatisticsReport] = []
-            mediaStream!.peerConnection!
-                .stats(for: track, statsOutputLevel: level.nativeOutputLevel) {
-                nativeReports in
-                for nativeReport in nativeReports {
-                    if let report = StatisticsReport.parse(report: nativeReport) {
-                        reports.append(report)
-                    }
-                }
-            }
-            return reports
-        }
-        
-        var videoReports: [StatisticsReport] = []
-        if let track = mediaStream!.nativeVideoTrack {
-            videoReports = getReports(track: track)
-        }
-        
-        var audioReports: [StatisticsReport] = []
-        if let track = mediaStream!.nativeAudioTrack {
-            audioReports = getReports(track: track)
-        }
-        
-        return (videoReports, audioReports)
-    }
-
     // MARK: イベントハンドラ
     
     var onChangeStateHandler: ((State) -> Void)?
@@ -323,7 +286,7 @@ public class MediaPublisher: MediaConnection {
     }
     
     var mediaCapturer: MediaCapturer? {
-        get { return mediaStream?.mediaCapturer }
+        get { return peerConnection?.mediaCapturer }
     }
 
     public func flipCameraPosition() {
