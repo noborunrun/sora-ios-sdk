@@ -19,7 +19,10 @@ public class PeerConnection {
     var mediaStreamId: String?
     public var mediaOption: MediaOption
     public var clientId: String?
-    public var state: State
+    
+    public var state: State {
+        willSet { onChangeStateHandler?(newValue) }
+    }
     
     public var isAvailable: Bool {
         get { return state == .connected }
@@ -105,6 +108,14 @@ public class PeerConnection {
         default:
             return ConnectionError.connectionBusy
         }
+    }
+    
+    // MARK: イベントハンドラ
+    
+    var onChangeStateHandler: ((State) -> Void)?
+
+    public func onChangeState(handler: @escaping (State) -> Void) {
+        onChangeStateHandler = handler
     }
     
 }
@@ -762,7 +773,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             nativePeerConnection.add(stream)
             let wrap = MediaStream(peerConnection: peerConnection!,
                                    nativeMediaStream: stream)
-            peerConnection?.addMediaStream(stream: wrap)
+            peerConnection?.mediaConnection?.addMediaStream(mediaStream: wrap)
             
         }
     }
@@ -781,7 +792,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             peerConnectionEventHandlers?
                 .onRemoveStreamHandler?(nativePeerConnection, stream)
             nativePeerConnection.remove(stream)
-            peerConnection?.removeMediaStream(mediaStreamId: stream.streamId)
+            peerConnection?.mediaConnection?.removeMediaStream(mediaStreamId: stream.streamId)
         }
     }
     

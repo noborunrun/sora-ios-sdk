@@ -3,13 +3,6 @@ import WebRTC
 
 public class MediaStream {
     
-    public enum State: String {
-        case connecting
-        case connected
-        case disconnecting
-        case disconnected
-    }
-    
     static var defaultStreamId: String = "mainStream"
     static var defaultVideoTrackId: String = "mainVideo"
     static var defaultAudioTrackId: String = "mainAudio"
@@ -22,45 +15,20 @@ public class MediaStream {
         get { return peerConnection?.eventLog }
     }
     
-    public var state: State = .disconnected {
-        willSet {
-            switch newValue {
-            case .connected:
-                creationTime = Date()
-            default:
-                creationTime = nil
-            }
-        }
-    }
-    
     public var isAvailable: Bool {
-        get { return state == .connected }
+        get { return peerConnection?.isAvailable ?? false }
     }
     
     public var mediaStreamId: String {
-        get {
-            return nativeMediaStream.streamId
-        }
+        get { return nativeMediaStream.streamId }
     }
     
     public var nativeVideoTrack: RTCVideoTrack? {
-        get {
-            if nativeMediaStream.videoTracks.isEmpty {
-                return nil
-            } else {
-                return nativeMediaStream.videoTracks[0]
-            }
-        }
+        get { return nativeMediaStream.videoTracks.first }
     }
     
     public var nativeAudioTrack: RTCAudioTrack? {
-        get {
-            if nativeMediaStream.audioTracks.isEmpty {
-                return nil
-            } else {
-                return nativeMediaStream.audioTracks[0]
-            }
-        }
+        get { return nativeMediaStream.audioTracks.first }
     }
     
     public var videoRenderer: VideoRenderer? {

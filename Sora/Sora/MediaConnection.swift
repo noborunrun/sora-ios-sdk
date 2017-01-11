@@ -2,14 +2,7 @@ import Foundation
 import WebRTC
 
 public class MediaConnection {
-    
-    public enum State {
-        case connected
-        case connecting
-        case disconnected
-        case disconnecting
-    }
-    
+
     public struct Statistics {
         
         public var numberOfUpstreamConnections: Int?
@@ -32,10 +25,6 @@ public class MediaConnection {
     public var multistreamEnabled: Bool = false
     public var mediaStreams: [MediaStream] = []
     
-    public var state: State {
-        willSet {
-            onChangeStateHandler?(newValue)
-        }
     public var mainMediaStream: MediaStream? {
         get { return mediaStreams.first }
     }
@@ -45,12 +34,7 @@ public class MediaConnection {
     public var peerConnectionEventHandlers: PeerConnectionEventHandlers?
     
     public var isAvailable: Bool {
-        get { return state == .connected }
-    }
-    
-    public var videoRenderer: VideoRenderer? {
-        get { return peerConnection?.videoRenderer }
-        set { peerConnection?.videoRenderer = newValue }
+        get { return peerConnection?.isAvailable ?? false }
     }
     
     var eventLog: EventLog {
@@ -73,7 +57,6 @@ public class MediaConnection {
     
     init(connection: Connection) {
         self.connection = connection
-        state = .disconnected
     }
     
     // MARK: 接続
@@ -81,7 +64,6 @@ public class MediaConnection {
     public func connect(accessToken: String? = nil,
                         timeout: Int = 30,
                         handler: @escaping ((ConnectionError?) -> Void)) {
-        state = .connecting
         peerConnection = PeerConnection(connection: connection,
                                         mediaConnection: self,
                                         role: role,
@@ -91,13 +73,11 @@ public class MediaConnection {
         peerConnection!.connect(timeout: timeout) {
             error in
             if let error = error {
-                self.state = .disconnected
                 self.peerConnection = nil
                 self.onFailureHandler?(error)
                 self.onConnectHandler?(error)
                 handler(error)
             } else {
-                self.state = .connected
                 self.onConnectHandler?(nil)
                 handler(nil)
             }
@@ -105,21 +85,18 @@ public class MediaConnection {
     }
     
     public func disconnect(handler: @escaping (ConnectionError?) -> Void) {
-        switch state {
-        case .disconnected:
+        switch peerConnection?.state {
+        case nil, .disconnected?:
             handler(ConnectionError.connectionDisconnected)
-        case .disconnecting:
+        case .disconnecting?:
             handler(ConnectionError.connectionBusy)
-        case .connected, .connecting:
-            state = .disconnecting
-            stopConnectionTimer()
+        case .connected?, .connecting?:
             for stream in mediaStreams {
                 stream.terminate()
             }
             mediaStreams = []
             peerConnection!.disconnect {
                 error in
-                self.state = .disconnected
                 handler(error)
             }
         }
@@ -148,17 +125,12 @@ public class MediaConnection {
     
     // MARK: イベントハンドラ
     
-    var onChangeStateHandler: ((State) -> Void)?
     var onConnectHandler: ((ConnectionError?) -> Void)?
     var onDisconnectHandler: ((ConnectionError?) -> Void)?
     var onFailureHandler: ((ConnectionError) -> Void)?
     var onUpdateHandler: ((Statistics) -> Void)?
     var onNotifyHandler: ((Notification) -> Void)?
 
-    public func onChangeState(handler: @escaping (State) -> Void) {
-        onChangeStateHandler = handler
-    }
-    
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
         onConnectHandler = handler
     }
