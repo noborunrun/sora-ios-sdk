@@ -133,41 +133,17 @@ public class MediaConnection {
         }
     }
     
-    // MARK: タイマー
+    // MARK: マルチストリーム
     
-    var connectionTimer: Timer?
-    var connectionTimerHandler: ((Int?) -> Void)?
-    
-    public func startConnectionTimer(timeInterval: TimeInterval,
-                                     handler: @escaping ((Int?) -> Void)) {
-        eventLog.markFormat(type: eventType,
-                            format: "start timer (interval %f)",
-                            arguments: timeInterval)
-        connectionTimerHandler = handler
-        connectionTimer?.invalidate()
-        connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
-            timer in
-
-            if let peer = self.peerConnection {
-                if peer.isAvailable {
-                    let diff = Date(timeIntervalSinceNow: 0)
-                        .timeIntervalSince(peer.creationTime!)
-                    handler(Int(diff))
-                } else {
-                    handler(nil)
-                }
-            } else {
-                handler(nil)
-            }
-        }
-        RunLoop.main.add(connectionTimer!, forMode: .commonModes)
+    func addMediaStream(mediaStream: MediaStream) {
+        mediaStreams.append(mediaStream)
     }
     
-    public func stopConnectionTimer() {
-        eventLog.markFormat(type: eventType, format: "stop timer")
-        connectionTimer?.invalidate()
-        connectionTimer = nil
-        connectionTimerHandler = nil
+    func removeMediaStream(mediaStreamId: String) {
+        mediaStreams = mediaStreams.filter {
+            e in
+            return e.mediaStreamId != mediaStreamId
+        }
     }
     
     // MARK: イベントハンドラ

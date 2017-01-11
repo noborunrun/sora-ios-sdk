@@ -16,7 +16,7 @@ public class MediaStream {
     
     public weak var peerConnection: PeerConnection?
     public var nativeMediaStream: RTCMediaStream
-    public var creationTime: Date?
+    public var creationTime: Date
 
     var eventLog: EventLog? {
         get { return peerConnection?.eventLog }
@@ -86,6 +86,43 @@ public class MediaStream {
     init(peerConnection: PeerConnection, nativeMediaStream: RTCMediaStream) {
         self.peerConnection = peerConnection
         self.nativeMediaStream = nativeMediaStream
+        creationTime = Date()
+    }
+    
+    func terminate() {
+        stopConnectionTimer()
+    }
+    
+    // MARK: タイマー
+    
+    var connectionTimer: Timer?
+    var connectionTimerHandler: ((Int?) -> Void)?
+    
+    public func startConnectionTimer(timeInterval: TimeInterval,
+                                     handler: @escaping ((Int?) -> Void)) {
+        eventLog?.markFormat(type: .MediaStream,
+                             format: "start timer (interval %f)",
+                             arguments: timeInterval)
+        connectionTimerHandler = handler
+        connectionTimer?.invalidate()
+        connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
+            timer in
+            if self.isAvailable {
+                let diff = Date(timeIntervalSinceNow: 0)
+                    .timeIntervalSince(self.creationTime)
+                handler(Int(diff))
+            } else {
+                handler(nil)
+            }
+        }
+        RunLoop.main.add(connectionTimer!, forMode: .commonModes)
+    }
+    
+    public func stopConnectionTimer() {
+        eventLog?.markFormat(type: .MediaStream, format: "stop timer")
+        connectionTimer?.invalidate()
+        connectionTimer = nil
+        connectionTimerHandler = nil
     }
     
     // MARK: 統計情報
