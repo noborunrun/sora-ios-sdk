@@ -30,13 +30,16 @@ public class MediaConnection {
     public var peerConnection: PeerConnection?
     public var mediaOption: MediaOption = MediaOption()
     public var multistreamEnabled: Bool = false
+    public var mediaStreams: [MediaStream] = []
     
     public var state: State {
         willSet {
             onChangeStateHandler?(newValue)
         }
+    public var mainMediaStream: MediaStream? {
+        get { return mediaStreams.first }
     }
-    
+
     public var webSocketEventHandlers: WebSocketEventHandlers?
     public var signalingEventHandlers: SignalingEventHandlers?
     public var peerConnectionEventHandlers: PeerConnectionEventHandlers?
@@ -110,6 +113,10 @@ public class MediaConnection {
         case .connected, .connecting:
             state = .disconnecting
             stopConnectionTimer()
+            for stream in mediaStreams {
+                stream.terminate()
+            }
+            mediaStreams = []
             peerConnection!.disconnect {
                 error in
                 self.state = .disconnected
