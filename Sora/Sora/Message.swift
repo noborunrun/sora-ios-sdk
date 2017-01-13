@@ -160,7 +160,7 @@ enum SignalingVideoCodec: String, UnboxableEnum {
 
 enum SignalingAudioCodec: String, UnboxableEnum {
     
-    case Opus = "Opus"
+    case Opus = "OPUS"
     case PCMU = "PCMU"
     
 }
