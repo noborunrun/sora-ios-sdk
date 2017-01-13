@@ -11,15 +11,13 @@ public protocol VideoRenderer {
 class VideoRendererAdapter: NSObject, RTCVideoRenderer {
     
     weak var connection: Connection?
-    weak var mediaStream: MediaStream?
     var videoRenderer: VideoRenderer
     
     var eventLog: EventLog? {
         get { return connection?.eventLog }
     }
     
-    init(mediaStream: MediaStream, videoRenderer: VideoRenderer) {
-        self.mediaStream = mediaStream
+    init(videoRenderer: VideoRenderer) {
         self.videoRenderer = videoRenderer
     }
     
