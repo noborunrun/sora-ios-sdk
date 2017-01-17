@@ -10,7 +10,7 @@ public enum MediaStreamRole {
 
 public enum VideoCodec {
     
-    case unspecified
+    case `default`
     case VP8
     case VP9
     case H264
@@ -19,7 +19,7 @@ public enum VideoCodec {
 
 public enum AudioCodec {
     
-    case unspecified
+    case `default`
     case Opus
     case PCMU
     
@@ -27,8 +27,8 @@ public enum AudioCodec {
 
 public class MediaOption {
     
-    public var videoCodec: VideoCodec = .unspecified
-    public var audioCodec: AudioCodec = .unspecified
+    public var videoCodec: VideoCodec = .default
+    public var audioCodec: AudioCodec = .default
     public var videoEnabled: Bool = true
     public var audioEnabled: Bool = true
     

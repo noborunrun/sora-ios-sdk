@@ -241,7 +241,7 @@ extension SignalingConnect: Messageable {
         } else {
             var video: [String: Any] = [:]
             switch mediaOption.videoCodec {
-            case .unspecified:
+            case .default:
                 break
             case .VP8:
                 video["codec_type"] = SignalingVideoCodec.VP8.rawValue
@@ -265,7 +265,7 @@ extension SignalingConnect: Messageable {
         } else {
             var audio: [String: Any] = [:]
             switch mediaOption.audioCodec {
-            case .unspecified:
+            case .default:
                 break
             case .Opus:
                 audio["codec_type"] = SignalingAudioCodec.Opus.rawValue
