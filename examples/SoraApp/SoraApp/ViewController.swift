@@ -51,8 +51,10 @@ class ViewController: UIViewController {
                     return
                 }
                 self.disconnectButton.isEnabled = true
-                self.connection.mediaPublisher.videoRenderer = self.publisherVideoView
-                self.connection.mediaSubscriber.videoRenderer = self.subscriberVideoView
+                self.connection.mediaPublisher.mainMediaStream!
+                    .videoRenderer = self.publisherVideoView
+                self.connection.mediaSubscriber.mainMediaStream!
+                    .videoRenderer = self.subscriberVideoView
             }
         }
     }
