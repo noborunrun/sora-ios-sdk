@@ -78,11 +78,15 @@ public class MediaConnection {
                 self.onConnectHandler?(error)
                 handler(error)
             } else {
+                self.internalOnConnect()
                 self.onConnectHandler?(nil)
                 handler(nil)
             }
         }
     }
+    
+    // 内部用のコールバック
+    func internalOnConnect() {}
     
     public func disconnect(handler: @escaping (ConnectionError?) -> Void) {
         switch peerConnection?.state {
@@ -197,7 +201,7 @@ public class MediaPublisher: MediaConnection {
     public var captureSession: AVCaptureSession? {
         get { return mediaCapturer?.videoCaptureSource.captureSession }
     }
-    
+
     var _cameraPosition: CameraPosition?
     
     public var cameraPosition: CameraPosition? {
@@ -232,6 +236,22 @@ public class MediaPublisher: MediaConnection {
         
     }
     
+    public var autofocusEnabled = false {
+        didSet {
+            if let session = captureSession {
+                for input in session.inputs {
+                    if let device = input as? AVCaptureDevice {
+                        if autofocusEnabled {
+                            device.focusMode = .autoFocus
+                        } else {
+                            device.focusMode = .locked
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     override var eventType: Event.EventType {
         get { return .MediaPublisher }
     }
@@ -244,6 +264,10 @@ public class MediaPublisher: MediaConnection {
         get { return peerConnection?.mediaCapturer }
     }
 
+    override func internalOnConnect() {
+        autofocusEnabled = false
+    }
+    
     public func flipCameraPosition() {
         cameraPosition = cameraPosition?.flip()
     }
