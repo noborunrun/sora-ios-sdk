@@ -437,7 +437,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         if peerConnection!.mediaOption.audioEnabled {
             upstream.addAudioTrack(mediaCapturer!.audioCaptureTrack)
         }
+        
         nativePeerConnection.add(upstream)
+        let wrap = MediaStream(peerConnection: peerConnection!,
+                               nativeMediaStream: upstream)
+        mediaConnection?.addMediaStream(mediaStream: wrap)
         return nil
     }
     
