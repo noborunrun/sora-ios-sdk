@@ -75,15 +75,20 @@ public class MediaStream {
         connectionTimer?.invalidate()
         connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
             timer in
-            if self.isAvailable {
-                let diff = Date(timeIntervalSinceNow: 0)
-                    .timeIntervalSince(self.creationTime)
-                handler(Int(diff))
-            } else {
-                handler(nil)
-            }
+            self.updateConnectionTime(timer)
         }
+        updateConnectionTime(connectionTimer!)
         RunLoop.main.add(connectionTimer!, forMode: .commonModes)
+    }
+    
+    func updateConnectionTime(_ timer: Timer) {
+        if isAvailable {
+            let diff = Date(timeIntervalSinceNow: 0)
+                .timeIntervalSince(self.creationTime)
+            connectionTimerHandler?(Int(diff))
+        } else {
+            connectionTimerHandler?(nil)
+        }
     }
     
     public func stopConnectionTimer() {
