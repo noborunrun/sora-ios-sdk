@@ -281,7 +281,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     private var disconnectingErrors: [ConnectionError] = []
     
     func proceedDisconnecting(error: ConnectionError? = nil) {
-        print("begin proceedDisconnecting")
         if let error = error {
             disconnectingErrors.append(error)
         }
@@ -320,9 +319,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             mediaConnection?.onDisconnectHandler?(aggregateError)
             peerConnection?.terminate()
             peerConnection = nil
-        }
-        print("end proceedDisconnecting")
-        
+        }        
     }
     
     func send(_ message: Messageable) -> ConnectionError? {
