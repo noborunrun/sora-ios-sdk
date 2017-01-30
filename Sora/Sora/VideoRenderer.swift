@@ -50,15 +50,25 @@ public class VideoView: UIView, VideoRenderer {
                                                   width: self.frame.width,
                                                   height: self.frame.height))
         self.addSubview(view)
-        self.setNeedsDisplay()
+        if self.canRender {
+            self.setNeedsDisplay()
+        }
         return view
     }()
+    
+    var canRender: Bool {
+        get {
+            return !(isHidden || window == nil || !window!.isKeyWindow)
+        }
+    }
     
     public func onChangedSize(_ size: CGSize) {
         remoteVideoView.setSize(size)
     }
     
     public func renderVideoFrame(_ frame: VideoFrame?) {
+        guard canRender else { return }
+        
         if let frame = frame {
             if let handle = frame.videoFrameHandle {
                 switch handle {
