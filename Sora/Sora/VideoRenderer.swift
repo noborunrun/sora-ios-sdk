@@ -25,15 +25,19 @@ class VideoRendererAdapter: NSObject, RTCVideoRenderer {
         eventLog?.markFormat(type: .VideoRenderer,
                              format: "set size %@ for %@",
                              arguments: size.debugDescription, self)
-        videoRenderer.onChangedSize(size)
+        DispatchQueue.main.async {
+            self.videoRenderer.onChangedSize(size)
+        }
     }
     
     func renderFrame(_ frame: RTCVideoFrame?) {
-        if let frame = frame {
-            let frame = RemoteVideoFrame(nativeVideoFrame: frame)
-            videoRenderer.renderVideoFrame(frame)
-        } else {
-            videoRenderer.renderVideoFrame(nil)
+        DispatchQueue.main.async {
+            if let frame = frame {
+                let frame = RemoteVideoFrame(nativeVideoFrame: frame)
+                self.videoRenderer.renderVideoFrame(frame)
+            } else {
+                self.videoRenderer.renderVideoFrame(nil)
+            }
         }
     }
     
