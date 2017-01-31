@@ -62,13 +62,25 @@ public class VideoView: UIView, VideoRenderer {
         }
     }
     
+    var sizeToChange: CGSize?
+    
     public func onChangedSize(_ size: CGSize) {
+        if canRender {
+            setRemoteVideoViewSize(size)
+        } else {
+            sizeToChange = size
+        }
+    }
+    
+    func setRemoteVideoViewSize(_ size: CGSize) {
         remoteVideoView.setSize(size)
+        sizeToChange = nil
     }
     
     public func renderVideoFrame(_ frame: VideoFrame?) {
         guard canRender else { return }
-        
+        updateSize()
+
         if let frame = frame {
             if let handle = frame.videoFrameHandle {
                 switch handle {
@@ -84,6 +96,18 @@ public class VideoView: UIView, VideoRenderer {
     public override func draw(_ frame: CGRect) {
         super.draw(frame)
         remoteVideoView.draw(frame)
+    }
+    
+    public override func didMoveToWindow() {
+        updateSize()
+    }
+
+    func updateSize() {
+        if let size = sizeToChange {
+            if canRender {
+                setRemoteVideoViewSize(size)
+            }
+        }
     }
     
 }
