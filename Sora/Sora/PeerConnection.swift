@@ -395,6 +395,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             // シグナリング connect を送信する
             let connect = SignalingConnect(role: SignalingRole.from(role),
                                            channel_id: connection.mediaChannelId,
+                                           multistream: mediaConnection.multistreamEnabled,
                                            mediaOption: peerConnection!.mediaOption)
             eventLog?.markFormat(type: .Signaling,
                                  format: "send connect message: %@",
