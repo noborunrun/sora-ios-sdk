@@ -29,9 +29,12 @@ public class MediaConnection {
         get { return mediaStreams.first }
     }
 
-    public var webSocketEventHandlers: WebSocketEventHandlers?
-    public var signalingEventHandlers: SignalingEventHandlers?
-    public var peerConnectionEventHandlers: PeerConnectionEventHandlers?
+    public var webSocketEventHandlers: WebSocketEventHandlers
+        = WebSocketEventHandlers()
+    public var signalingEventHandlers: SignalingEventHandlers
+        = SignalingEventHandlers()
+    public var peerConnectionEventHandlers: PeerConnectionEventHandlers
+        = PeerConnectionEventHandlers()
     
     public var isAvailable: Bool {
         get { return peerConnection?.isAvailable ?? false }
