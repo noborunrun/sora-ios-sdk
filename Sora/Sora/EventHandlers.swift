@@ -10,6 +10,8 @@ open class WebSocketEventHandlers {
     var onMessageHandler: ((SRWebSocket, AnyObject) -> ())?
     var onCloseHandler: ((SRWebSocket, Int, String?, Bool) -> ())?
 
+    public init() {}
+    
     public func onOpen(handler: @escaping (SRWebSocket) -> ()) {
         onOpenHandler = handler
     }
@@ -42,6 +44,8 @@ open class SignalingEventHandlers {
     var onPingHandler: ((Void) -> Void)?
     var onNotifyHandler: ((SignalingNotify) -> Void)?
     
+    public init() {}
+
     public func onReceive(handler: @escaping ((Message) -> Void)) {
         onReceiveHandler = handler
     }
@@ -93,6 +97,8 @@ open class PeerConnectionEventHandlers {
     var onRemoveCandidatesHandler:
     ((RTCPeerConnection, [RTCIceCandidate]) -> Void)?
     
+    public init() {}
+
     public func onConnect(handler: @escaping ((RTCPeerConnection) -> Void)) {
         onConnectHandler = handler
     }
