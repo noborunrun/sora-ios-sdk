@@ -689,10 +689,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                     if let error = error {
                         self.eventLog?.markFormat(type: .Signaling,
                                                   format: "creating answer failed")
-                        self.peerConnectionEventHandlers?
-                            .onFailureHandler?(self.nativePeerConnection, error)
-                        self.terminate(error:
-                            ConnectionError.peerConnectionError(error))
+                        self.terminateByPeerConnection(error)
                         return
                     }
                     self.eventLog?.markFormat(type: .Signaling,
