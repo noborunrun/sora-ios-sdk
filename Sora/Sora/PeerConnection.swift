@@ -273,7 +273,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
     
-    func terminateByPeerConnection(error: Error) {
+    func terminateByPeerConnection(_ error: Error) {
         peerConnectionEventHandlers?.onFailureHandler?(nativePeerConnection, error)
         terminate(error: ConnectionError.peerConnectionError(error))
     }
@@ -676,7 +676,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 if let error = error {
                     self.eventLog?.markFormat(type: .Signaling,
                                               format: "set remote description failed")
-                    self.terminateByPeerConnection(error: error)
+                    self.terminateByPeerConnection(error)
                     return
                 }
                 
