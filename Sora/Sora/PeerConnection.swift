@@ -207,6 +207,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                             connection!.URL.description))
         state = .signalingConnecting
         connectCompletionHandler = handler
+        terminationErrors = []
         
         startTimeoutTimer(timeout: timeout) {
             timer in
@@ -252,13 +253,21 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         RunLoop.main.add(timeoutTimer!, forMode: .commonModes)
     }
     
+    // MARK: 終了処理
+    
+    var terminationErrors: [ConnectionError]?
+    
     func terminate(_ error: ConnectionError? = nil) {
+        if let error = error {
+            terminationErrors!.append(error)
+        }
+        
         switch state {
         case .disconnected:
             break
             
         case .disconnecting:
-            proceedDisconnecting(error)
+            proceedDisconnecting()
             
         default:
             eventLog!.markFormat(type: .Signaling, format: "terminate all connections")
@@ -278,11 +287,9 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         terminate(ConnectionError.peerConnectionError(error))
     }
     
-    private var disconnectingErrors: [ConnectionError] = []
-    
     func proceedDisconnecting(_ error: ConnectionError? = nil) {
         if let error = error {
-            disconnectingErrors.append(error)
+            terminationErrors!.append(error)
         }
         
         if webSocket?.readyState == SRReadyState.CLOSED &&
@@ -292,11 +299,12 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                  format: "finish disconnecting")
             
             var aggregateError: ConnectionError? = nil
-            if !disconnectingErrors.isEmpty {
+            if !terminationErrors!.isEmpty {
                 aggregateError =
-                    ConnectionError.aggregateError(disconnectingErrors)
+                    ConnectionError.aggregateError(terminationErrors!)
             }
             peerConnectionEventHandlers?.onDisconnectHandler?(nativePeerConnection)
+            terminationErrors = nil
             
             // この順にクリアしないと落ちる
             mediaCapturer = nil
