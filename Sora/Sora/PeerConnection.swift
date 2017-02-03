@@ -393,12 +393,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 with: peerConnection!.mediaOption.configuration,
                 constraints: peerConnection!.mediaOption.peerConnectionMediaConstraints,
                 delegate: self)
-            if role == MediaStreamRole.upstream {
-                if let error = createMediaCapturer() {
-                    terminate(error)
-                    return
-                }
-            }
             
             // シグナリング connect を送信する
             let connect = SignalingConnect(role: SignalingRole.from(role),
@@ -839,10 +833,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                     eventLog?.markFormat(type: .PeerConnection,
                                          format: "remote peer connected",
                                          arguments: newState.description)
-                    state = .connected
-                    peerConnectionEventHandlers?.onConnectHandler?(nativePeerConnection)
-                    connectCompletionHandler?(nil)
-                    connectCompletionHandler = nil
+                    finishConnection()
+                    
                 default:
                     eventLog?.markFormat(type: .PeerConnection,
                                          format: "ICE connection completed but invalid state %@",
@@ -862,6 +854,19 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 break
             }
         }
+    }
+    
+    func finishConnection() {
+        state = .connected
+        if role == MediaStreamRole.upstream {
+            if let error = createMediaCapturer() {
+                terminate(error)
+                return
+            }
+        }
+        peerConnectionEventHandlers?.onConnectHandler?(nativePeerConnection)
+        connectCompletionHandler?(nil)
+        connectCompletionHandler = nil
     }
     
     func peerConnection(_ nativePeerConnection: RTCPeerConnection,
