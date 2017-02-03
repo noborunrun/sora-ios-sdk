@@ -135,7 +135,7 @@ public class MediaConnection {
     var onConnectHandler: ((ConnectionError?) -> Void)?
     var onDisconnectHandler: ((ConnectionError?) -> Void)?
     var onFailureHandler: ((ConnectionError) -> Void)?
-    var onUpdateHandler: ((Statistics) -> Void)?
+    var onStatisticsHandler: ((Statistics) -> Void)?
     var onNotifyHandler: ((Notification) -> Void)?
 
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
@@ -150,8 +150,8 @@ public class MediaConnection {
         onFailureHandler = handler
     }
     
-    public func onUpdate(handler: @escaping ((Statistics) -> Void)) {
-        onUpdateHandler = handler
+    public func onStatistics(handler: @escaping (Statistics) -> Void) {
+        onStatisticsHandler = handler
     }
     
     public func onNotify(handler: @escaping ((Notification) -> Void)) {

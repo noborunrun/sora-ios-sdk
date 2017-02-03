@@ -590,8 +590,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                  arguments: stats.description)
             
             let mediaStats = MediaConnection.Statistics(signalingStats: stats)
-            signalingEventHandlers?.onUpdateHandler?(stats)
-            mediaConnection?.onUpdateHandler?(mediaStats)
+            signalingEventHandlers?.onStatisticsHandler?(stats)
+            mediaConnection?.onStatisticsHandler?(mediaStats)
             
         default:
             break
