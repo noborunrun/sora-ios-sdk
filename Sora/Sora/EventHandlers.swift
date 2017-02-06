@@ -43,7 +43,8 @@ open class SignalingEventHandlers {
     var onFailureHandler: ((ConnectionError) -> Void)?
     var onPingHandler: ((Void) -> Void)?
     var onNotifyHandler: ((SignalingNotify) -> Void)?
-    
+    var onUpdateHandler: ((SignalingUpdateOffer) -> Void)?
+
     public init() {}
 
     public func onReceive(handler: @escaping ((Message) -> Void)) {
@@ -72,6 +73,10 @@ open class SignalingEventHandlers {
     
     public func onNotify(handler: @escaping ((SignalingNotify) -> Void)) {
         onNotifyHandler = handler
+    }
+    
+    public func onUpdate(handler: @escaping ((SignalingUpdateOffer) -> Void)) {
+        onUpdateHandler = handler
     }
     
 }

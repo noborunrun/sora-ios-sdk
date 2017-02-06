@@ -130,6 +130,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         case peerConnectionAnswering
         case peerConnectionAnswered
         case peerConnectionConnecting
+        case updateOffered
+        case updateAnswered
         case connected
         case disconnecting
         case disconnected
@@ -551,6 +553,9 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 case .offer?:
                     receiveSignalingOffer(json: json)
                     
+                case .update?:
+                    receiveSignalingUpdate(json)
+                    
                 default:
                     return
                 }
@@ -669,62 +674,113 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 }
             }
             
-            state = .peerConnectionOffered
-            let sdp = offer.sessionDescription()
-            eventLog?.markFormat(type: .Signaling,
-                                 format: "set remote description")
-            nativePeerConnection.setRemoteDescription(sdp) {
-                error in
-                if let error = error {
-                    self.eventLog?.markFormat(type: .Signaling,
-                                              format: "set remote description failed")
-                    self.terminateByPeerConnection(error)
-                    return
-                }
-                
-                self.eventLog?.markFormat(type: .Signaling,
-                                          format: "create answer")
-                self.nativePeerConnection.answer(for: self
-                    .peerConnection!.mediaOption.signalingAnswerMediaConstraints)
-                {
-                    (sdp, error) in
-                    if let error = error {
-                        self.eventLog?.markFormat(type: .Signaling,
-                                                  format: "creating answer failed")
-                        self.terminateByPeerConnection(error)
-                        return
-                    }
-                    self.eventLog?.markFormat(type: .Signaling,
-                                              format: "generated answer: %@",
-                                              arguments: sdp!)
-                    self.nativePeerConnection.setLocalDescription(sdp!) {
-                        error in
-                        if let error = error {
-                            self.eventLog?.markFormat(type: .Signaling,
-                                                      format: "set local description failed")
-                            self.peerConnectionEventHandlers?
-                                .onFailureHandler?(self.nativePeerConnection, error)
-                            self.terminate(ConnectionError.peerConnectionError(error))
-                            return
-                        }
-                        
-                        self.eventLog?.markFormat(type: .Signaling,
-                                                  format: "send answer")
-                        let answer = SignalingAnswer(sdp: sdp!.sdp)
-                        if let error = self.send(answer) {
-                            self.terminate(ConnectionError.peerConnectionError(error))
-                            return
-                        }
-                        self.state = .peerConnectionAnswered
-                    }
-                }
-            }
+            createAndSendAnswer(sdp: offer.sessionDescription(),
+                                isUpdate: false)
             
         default:
             eventLog?.markFormat(type: .Signaling,
                                  format: "offer: invalid state %@",
                                  arguments: state.rawValue)
             terminate(ConnectionError.connectionTerminated)
+        }
+    }
+    
+    func createAndSendAnswer(sdp: RTCSessionDescription, isUpdate: Bool) {
+        if isUpdate {
+            state = .updateOffered
+        } else {
+            state = .peerConnectionOffered
+        }
+
+        print("signaling state: ", nativePeerConnection.signalingState)
+        print("ice gathering state: ", nativePeerConnection.iceGatheringState)
+        print("ice connection state: ", nativePeerConnection.iceConnectionState)
+        eventLog?.markFormat(type: .Signaling,
+                             format: "set remote description")
+        nativePeerConnection.setRemoteDescription(sdp) {
+            error in
+            if let error = error {
+                self.eventLog?.markFormat(type: .Signaling,
+                                          format: "set remote description failed")
+                self.terminateByPeerConnection(error)
+                return
+            }
+            
+            self.eventLog?.markFormat(type: .Signaling,
+                                      format: "create answer")
+            self.nativePeerConnection.answer(for: self
+                .peerConnection!.mediaOption.signalingAnswerMediaConstraints)
+            {
+                (sdp, error) in
+                if let error = error {
+                    self.eventLog?.markFormat(type: .Signaling,
+                                              format: "creating answer failed")
+                    self.terminateByPeerConnection(error)
+                    return
+                }
+                self.eventLog?.markFormat(type: .Signaling,
+                                          format: "generated answer: %@",
+                                          arguments: sdp!)
+                self.nativePeerConnection.setLocalDescription(sdp!) {
+                    error in
+                    if let error = error {
+                        self.eventLog?.markFormat(type: .Signaling,
+                                                  format: "set local description failed")
+                        self.peerConnectionEventHandlers?
+                            .onFailureHandler?(self.nativePeerConnection, error)
+                        self.terminate(ConnectionError.peerConnectionError(error))
+                        return
+                    }
+                    
+                    self.eventLog?.markFormat(type: .Signaling,
+                                              format: "send answer")
+                    let answer: Message!
+                    if isUpdate {
+                        answer = SignalingUpdateAnswer(sdp: sdp!.sdp).message()
+                    } else {
+                        answer = SignalingAnswer(sdp: sdp!.sdp).message()
+                    }
+                    if let error = self.send(answer) {
+                        self.terminate(ConnectionError.peerConnectionError(error))
+                        return
+                    }
+                    
+                    if isUpdate {
+                        self.state = .updateAnswered
+                    } else {
+                        self.state = .peerConnectionAnswered
+                    }
+                }
+            }
+        }
+    }
+    
+    func receiveSignalingUpdate(_ json: [String: Any]) {
+        switch state {
+        case .connected:
+            eventLog?.markFormat(type: .Signaling, format: "received 'update'",
+                                 arguments: json.description)
+            if !mediaConnection.multistreamEnabled {
+                eventLog?.markFormat(type: .Signaling,
+                                     format: "ignore 'update' in single stream mode")
+                return
+            }
+            
+            let update: SignalingUpdateOffer!
+            do {
+                update = Optional.some(try unbox(dictionary: json))
+            } catch {
+                eventLog?.markFormat(type: .Signaling,
+                                     format: "parsing 'update' failed")
+                return
+            }
+            
+            signalingEventHandlers?.onUpdateHandler?(update)
+            createAndSendAnswer(sdp: update.sessionDescription(),
+                                isUpdate: true)
+            
+        default:
+            return
         }
     }
     

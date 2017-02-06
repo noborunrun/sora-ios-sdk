@@ -13,6 +13,7 @@ public class Message {
         case pong = "pong"
         case stats = "stats"
         case notify = "notify"
+        case update = "update"
     }
     
     public var type: MessageType?
@@ -432,6 +433,38 @@ extension SignalingNotify: Unboxable {
     
     public init(unboxer: Unboxer) throws {
         notifyMessage = try unboxer.unbox(key: "message")
+    }
+    
+}
+
+public struct SignalingUpdateOffer {
+    
+    var sdp: String
+ 
+    func sessionDescription() -> RTCSessionDescription {
+        return RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp)
+    }
+    
+}
+
+extension SignalingUpdateOffer: Unboxable {
+    
+    public init(unboxer: Unboxer) throws {
+        sdp = try unboxer.unbox(key: "sdp")
+    }
+    
+}
+
+struct SignalingUpdateAnswer {
+    
+    var sdp: String
+    
+}
+
+extension SignalingUpdateAnswer: Messageable {
+    
+    func message() -> Message {
+        return Message(type: .update, data: ["sdp": sdp as Any])
     }
     
 }
