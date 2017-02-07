@@ -3,7 +3,7 @@ import WebRTC
 import SocketRocket
 import UIKit
 
-public enum ConnectionError: Error {
+public indirect enum ConnectionError: Error {
     case failureSetConfiguration(RTCConfiguration)
     case connectionWaitTimeout
     case connectionDisconnected
@@ -16,6 +16,7 @@ public enum ConnectionError: Error {
     case iceConnectionDisconnected
     case mediaCapturerFailed
     case aggregateError([ConnectionError])
+    case updateError(ConnectionError)
 }
 
 public class Connection {
