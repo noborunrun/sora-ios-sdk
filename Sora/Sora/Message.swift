@@ -235,6 +235,7 @@ extension SignalingConnect: Messageable {
         }
         if multistream {
             data["multistream"] = true
+            data["plan_b"] = true
         }
         
         if !mediaOption.videoEnabled {
