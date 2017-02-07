@@ -131,7 +131,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         case peerConnectionAnswered
         case peerConnectionConnecting
         case updateOffered
-        case updateAnswered
         case connected
         case disconnecting
         case disconnected
@@ -674,8 +673,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 }
             }
             
-            createAndSendAnswer(sdp: offer.sessionDescription(),
-                                isUpdate: false)
+            createAndSendAnswer(sdp: offer.sessionDescription())
             
         default:
             eventLog?.markFormat(type: .Signaling,
@@ -685,16 +683,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
     
-    func createAndSendAnswer(sdp: RTCSessionDescription, isUpdate: Bool) {
-        if isUpdate {
-            state = .updateOffered
-        } else {
-            state = .peerConnectionOffered
-        }
-
-        print("signaling state: ", nativePeerConnection.signalingState)
-        print("ice gathering state: ", nativePeerConnection.iceGatheringState)
-        print("ice connection state: ", nativePeerConnection.iceConnectionState)
+    func createAndSendAnswer(sdp: RTCSessionDescription) {
+        state = .peerConnectionOffered
         eventLog?.markFormat(type: .Signaling,
                              format: "set remote description")
         nativePeerConnection.setRemoteDescription(sdp) {
@@ -734,22 +724,13 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                     
                     self.eventLog?.markFormat(type: .Signaling,
                                               format: "send answer")
-                    let answer: Message!
-                    if isUpdate {
-                        answer = SignalingUpdateAnswer(sdp: sdp!.sdp).message()
-                    } else {
-                        answer = SignalingAnswer(sdp: sdp!.sdp).message()
-                    }
+                    let answer = SignalingAnswer(sdp: sdp!.sdp).message()
                     if let error = self.send(answer) {
                         self.terminate(ConnectionError.peerConnectionError(error))
                         return
                     }
                     
-                    if isUpdate {
-                        self.state = .updateAnswered
-                    } else {
-                        self.state = .peerConnectionAnswered
-                    }
+                    self.state = .peerConnectionAnswered
                 }
             }
         }
@@ -776,12 +757,76 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             }
             
             signalingEventHandlers?.onUpdateHandler?(update)
-            createAndSendAnswer(sdp: update.sessionDescription(),
-                                isUpdate: true)
+            createAndSendUpdateAnswer(sdp: update.sessionDescription())
             
         default:
             return
         }
+    }
+    
+    
+    func createAndSendUpdateAnswer(sdp: RTCSessionDescription) {
+        state = .updateOffered
+        eventLog?.markFormat(type: .Signaling,
+                             format: "set remote description to update-offer")
+        nativePeerConnection.setRemoteDescription(sdp) {
+            error in
+            if let error = error {
+                self.eventLog?.markFormat(type: .Signaling,
+                                          format: "set remote description to update-offer failed")
+                self.terminateUpdate(error)
+                return
+            }
+            
+            self.eventLog?.markFormat(type: .Signaling,
+                                      format: "create update-answer")
+            self.nativePeerConnection.answer(for: self
+                .peerConnection!.mediaOption.signalingAnswerMediaConstraints)
+            {
+                (sdp, error) in
+                if let error = error {
+                    self.eventLog?.markFormat(type: .Signaling,
+                                              format: "creating update-answer failed")
+                    self.terminateUpdate(error)
+                    return
+                }
+                self.eventLog?.markFormat(type: .Signaling,
+                                          format: "generated update-answer: %@",
+                                          arguments: sdp!)
+                self.nativePeerConnection.setLocalDescription(sdp!) {
+                    error in
+                    if let error = error {
+                        self.eventLog?.markFormat(type: .Signaling,
+                                                  format: "set local description to update-answer failed")
+                        self.terminateUpdate(error)
+                        return
+                    }
+                    
+                    self.eventLog?.markFormat(type: .Signaling,
+                                              format: "send update-answer")
+                    let answer: Message!
+                    answer = SignalingUpdateAnswer(sdp: sdp!.sdp).message()
+                    if let error = self.send(answer) {
+                        self.terminateUpdate(error)
+                        return
+                    }
+                    
+                    // Answer 送信後に RTCPeerConnection の状態に変化はない
+                    // (デリゲートのメソッドが呼ばれない) ため、
+                    // Answer を送信したら接続完了とみなす
+                    self.state = .connected
+                }
+            }
+        }
+    }
+
+    func terminateUpdate(_ error: Error) {
+        state = .connected
+        let connError = ConnectionError.peerConnectionError(error)
+        let updateError = ConnectionError.updateError(connError)
+        peerConnectionEventHandlers?
+            .onFailureHandler?(nativePeerConnection, updateError)
+        mediaConnection?.onFailureHandler?(updateError)
     }
     
     // MARK: RTCPeerConnectionDelegate
