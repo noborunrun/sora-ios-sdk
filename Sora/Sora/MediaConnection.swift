@@ -67,6 +67,7 @@ public class MediaConnection {
     public func connect(accessToken: String? = nil,
                         timeout: Int = 30,
                         handler: @escaping ((ConnectionError?) -> Void)) {
+        eventLog.markFormat(type: eventType, format: "try connect")
         peerConnection = PeerConnection(connection: connection,
                                         mediaConnection: self,
                                         role: role,
@@ -76,11 +77,15 @@ public class MediaConnection {
         peerConnection!.connect(timeout: timeout) {
             error in
             if let error = error {
+                self.eventLog.markFormat(type: self.eventType,
+                                         format: "connect error: %@",
+                                         arguments: error.localizedDescription)
                 self.peerConnection = nil
                 self.onFailureHandler?(error)
                 self.onConnectHandler?(error)
                 handler(error)
             } else {
+                self.eventLog.markFormat(type: self.eventType, format: "connect ok")
                 self.internalOnConnect()
                 self.onConnectHandler?(nil)
                 handler(nil)
@@ -92,12 +97,18 @@ public class MediaConnection {
     func internalOnConnect() {}
     
     public func disconnect(handler: @escaping (ConnectionError?) -> Void) {
+        eventLog.markFormat(type: eventType, format: "try disconnect")
         switch peerConnection?.state {
         case nil, .disconnected?:
+            eventLog.markFormat(type: eventType,
+                                format: "error: already disconnected")
             handler(ConnectionError.connectionDisconnected)
         case .disconnecting?:
+            eventLog.markFormat(type: eventType,
+                                format: "error: connection is busy")
             handler(ConnectionError.connectionBusy)
         case .connected?, .connecting?:
+            eventLog.markFormat(type: eventType, format: "disconnect ok")
             for stream in mediaStreams {
                 stream.terminate()
             }
@@ -110,6 +121,7 @@ public class MediaConnection {
     }
     
     public func send(message: Messageable) -> ConnectionError? {
+        eventLog.markFormat(type: eventType, format: "send message")
         if isAvailable {
             return peerConnection!.send(message: message)
         } else {
@@ -120,10 +132,12 @@ public class MediaConnection {
     // MARK: マルチストリーム
     
     func addMediaStream(mediaStream: MediaStream) {
+        eventLog.markFormat(type: eventType, format: "add media stream")
         mediaStreams.append(mediaStream)
     }
     
     func removeMediaStream(mediaStreamId: String) {
+        eventLog.markFormat(type: eventType, format: "remove media stream")
         mediaStreams = mediaStreams.filter {
             e in
             return e.mediaStreamId != mediaStreamId
