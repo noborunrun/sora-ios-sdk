@@ -213,11 +213,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         startTimeoutTimer(timeout: timeout) {
             timer in
             switch self.state {
-            case .disconnecting, .disconnected:
-                break
-            case .connected:
-                self.timeoutTimer?.invalidate()
-                self.timeoutTimer = nil
+            case .connected, .updateOffered, .disconnecting, .disconnected:
+                self.clearTimeoutTimer()
             default:
                 self.eventLog?.markFormat(type: .PeerConnection,
                                           format: "timeout connecting")
@@ -245,6 +242,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
     
+    // MARK: タイムアウト
+    
     func startTimeoutTimer(timeout: Int, handler: @escaping ((Timer) -> ())) {
         timeoutTimer?.invalidate()
         timeoutTimer = Timer(timeInterval: Double(timeout), repeats: false) {
@@ -252,6 +251,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             handler(timer)
         }
         RunLoop.main.add(timeoutTimer!, forMode: .commonModes)
+    }
+    
+    func clearTimeoutTimer() {
+        timeoutTimer?.invalidate()
+        timeoutTimer = nil
     }
     
     // MARK: 終了処理
@@ -263,6 +267,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             terminationErrors!.append(error)
         }
         
+        clearTimeoutTimer()
         switch state {
         case .disconnected:
             break
@@ -959,6 +964,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     
     func finishConnection() {
         state = .connected
+        clearTimeoutTimer()
         if role == MediaStreamRole.upstream {
             if let error = createMediaCapturer() {
                 terminate(error)
