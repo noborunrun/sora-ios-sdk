@@ -171,9 +171,10 @@ class ConnectionViewController: UITableViewController {
                                enableVideoLabel, videoCodecLabel,
                                videoCodecValueLabel,
                                enableAudioLabel, audioCodecLabel,
-                               audioCodecValueLabel, autofocusLabel] {
-                                label.font = UIFont.preferredFont(forTextStyle: .body)
-                                label.adjustsFontForContentSizeCategory = true
+                               audioCodecValueLabel, autofocusLabel]
+        {
+            label.font = UIFont.preferredFont(forTextStyle: .body)
+            label.adjustsFontForContentSizeCategory = true
         }
         for field: UITextField in [URLTextField, channelIdTextField] {
             field.font = UIFont.preferredFont(forTextStyle: .body)
