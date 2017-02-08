@@ -46,7 +46,8 @@ public class ConnectionController: UIViewController {
                 channelId: String? = nil) {
         super.init(nibName: nil, bundle: nil)
         connectionControllerStoryboard =
-            UIStoryboard(name: "ConnectionController", bundle: nil)
+            UIStoryboard(name: "ConnectionController",
+                         bundle: Bundle(for: ConnectionController.self))
         guard let navi = connectionControllerStoryboard?
             .instantiateViewController(withIdentifier: "Navigation")
             as! ConnectionNavigationController? else {
