@@ -36,8 +36,8 @@ public class ConnectionController: UIViewController {
     var connectionControllerStoryboard: UIStoryboard?
     var connectionNavigationController: ConnectionNavigationController!
     
-    var URL: String?
-    var channelId: String?
+    public var URL: String?
+    public var channelId: String?
     
     public var userDefaults: UserDefaults? =
         UserDefaults(suiteName: "jp.shiguredo.SoraConnectionController")
