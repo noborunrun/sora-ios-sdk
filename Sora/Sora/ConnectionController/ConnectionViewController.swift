@@ -409,6 +409,10 @@ class ConnectionViewController: UITableViewController {
     }
     
     @IBAction func cancel(_ sender: AnyObject) {
+        back()
+    }
+    
+    func back() {
         saveSettings()
         connectionController?.dismiss(animated: true) {
             self.connectionController!.onCancelHandler?()
@@ -576,6 +580,7 @@ class ConnectionViewController: UITableViewController {
             }
         }
         connectionController!.onConnectHandler?(connection, role, nil)
+        back()
     }
     
     func presentSimpleAlert(title: String? = nil, message: String? = nil) {
