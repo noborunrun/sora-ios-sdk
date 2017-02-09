@@ -28,7 +28,6 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var connectionTimeValueLabel: UILabel!
     @IBOutlet weak var URLTextField: UITextField!
     @IBOutlet weak var channelIdTextField: UITextField!
-    @IBOutlet weak var roleValueLabel: UILabel!
     @IBOutlet weak var enableMultistreamSwitch: UISwitch!
     @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var enableVideoSwitch: UISwitch!
@@ -93,18 +92,7 @@ class ConnectionViewController: UITableViewController {
         set { channelIdTextField.text = newValue }
     }
     
-    var role: ConnectionController.Role? {
-        didSet {
-            switch role {
-            case .all?, nil:
-                roleValueLabel.text = "All"
-            case .publisher?:
-                roleValueLabel.text = "Publisher"
-            case .subscriber?:
-                roleValueLabel.text = "Subscriber"
-            }
-        }
-    }
+    var roles: [ConnectionController.Role] = []
     
     var multistreamEnabled: Bool {
         get { return enableMultistreamSwitch.isOn }
@@ -165,8 +153,7 @@ class ConnectionViewController: UITableViewController {
         for label: UILabel in [connectionTimeLabel,
                                connectionTimeValueLabel,
                                URLLabel, channelIdLabel,
-                               roleLabel, roleValueLabel,
-                               enableMultistreamLabel,
+                               roleLabel, enableMultistreamLabel,
                                connectButton.titleLabel!,
                                enableVideoLabel, videoCodecLabel,
                                videoCodecValueLabel,
@@ -188,7 +175,7 @@ class ConnectionViewController: UITableViewController {
                          object: nil)
         
         state = .disconnected
-        role = .all
+        roles = [.publisher, .subscriber]
         videoCodec = .default
         audioCodec = .default
         autofocusSwitch.setOn(false, animated: false)
@@ -219,6 +206,18 @@ class ConnectionViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func addRole(_ role: ConnectionController.Role) {
+        if !roles.contains(role) {
+            roles.append(role)
+        }
+    }
+    
+    func removeRole(_ role: ConnectionController.Role) {
+        roles = roles.filter {
+            each in return each != role
+        }
+    }
+    
     // MARK: 設定の保存
     
     func loadSettings() {
@@ -240,14 +239,16 @@ class ConnectionViewController: UITableViewController {
             }
         }
         
-        switch defaults.string(forKey:
-            ConnectionController.UserDefaultsKey.role.rawValue) {
-        case "Publisher"?:
-            role = .publisher
-        case "Subscriber"?:
-            role = .subscriber
-        default:
-            role = .all
+        roles = [.publisher]
+        if let roleValue = defaults.string(forKey:
+            ConnectionController.UserDefaultsKey.roles.rawValue) {
+            roles = []
+            if roleValue.contains("p") {
+                roles.append(.publisher)
+            }
+            if roleValue.contains("s") {
+                roles.append(.subscriber)
+            }
         }
         
         initSwitchValue(switch_: enableMultistreamSwitch,
@@ -314,19 +315,20 @@ class ConnectionViewController: UITableViewController {
                 ConnectionController.UserDefaultsKey.channelId.rawValue)
         }
         
-        var roleValue: String?
-        switch role {
-        case .all?, nil:
-            roleValue = "All"
-        case .publisher?:
-            roleValue = "Publisher"
-        case .subscriber?:
-            roleValue = "Subscriber"
+        var roleValue = ""
+        if roles.contains(.publisher) {
+            roleValue.append("p")
+        }
+        if roles.contains(.subscriber) {
+            roleValue.append("s")
+        }
+        if roleValue.isEmpty {
+            roleValue = "ps"
         }
         
         defaults.set(roleValue,
                      forKey:
-            ConnectionController.UserDefaultsKey.role.rawValue)
+            ConnectionController.UserDefaultsKey.roles.rawValue)
         defaults.set(multistreamEnabled,
                      forKey:
             ConnectionController.UserDefaultsKey.multistreamEnabled.rawValue)
@@ -377,8 +379,7 @@ class ConnectionViewController: UITableViewController {
     
     func enableControls(_ isEnabled: Bool) {
         let labels: [UILabel] = [
-            URLLabel, channelIdLabel, roleLabel, roleValueLabel,
-            enableMultistreamLabel,
+            URLLabel, channelIdLabel, roleLabel, enableMultistreamLabel,
             enableVideoLabel, videoCodecLabel, videoCodecValueLabel,
             enableAudioLabel, audioCodecLabel, audioCodecValueLabel,
             ]
@@ -409,13 +410,15 @@ class ConnectionViewController: UITableViewController {
     }
     
     @IBAction func cancel(_ sender: AnyObject) {
-        back()
+        back(isCancel: true)
     }
     
-    func back() {
+    func back(isCancel: Bool) {
         saveSettings()
         connectionController?.dismiss(animated: true) {
-            self.connectionController!.onCancelHandler?()
+            if isCancel {
+                self.connectionController!.onCancelHandler?()
+            }
             self.connectionController!.URL = self.URLLabel.text
             self.connectionController!.channelId = self.channelIdLabel.text
         }
@@ -439,6 +442,7 @@ class ConnectionViewController: UITableViewController {
                                    message: "Input server URL")
                 return
             }
+            
             if channelId == nil || channelId!.isEmpty {
                 presentSimpleAlert(title: "Error",
                                    message: "Input channel ID")
@@ -451,11 +455,17 @@ class ConnectionViewController: UITableViewController {
                 return
             }
             
+            if roles.isEmpty {
+                presentSimpleAlert(title: "Error",
+                                   message: "Select roles")
+                return
+            }
+            
             connection = Connection(URL: URL, mediaChannelId: channelId!)
             let request = ConnectionController
                 .Request(URL: URL,
                          channelId: channelId!,
-                         role: role ?? .all,
+                         roles: roles,
                          multistreamEnabled: multistreamEnabled,
                          videoEnabled: videoEnabled,
                          videoCodec: videoCodec ?? .default,
@@ -484,25 +494,14 @@ class ConnectionViewController: UITableViewController {
             }
             
             state = .connecting
-            switch role {
-            case .all?, nil:
-                connectPublisher()
-            case .publisher?:
-                connectPublisher()
-            case .subscriber?:
-                connectSubscriber()
+            if roles.contains(.publisher) {
+                self.connectPublisher()
+            } else if roles.contains(.subscriber) {
+                self.connectSubscriber()
+            } else {
+                assertionFailure("roles must not be empty")
             }
         }
-        
-    }
-    
-    func disconnect() {
-        if let conn = connection {
-            conn.mediaPublisher.disconnect { _ in () }
-            conn.mediaSubscriber.disconnect { _ in () }
-        }
-        state = .disconnected
-        connectingAlertController = nil
     }
     
     func connectPublisher() {
@@ -516,7 +515,7 @@ class ConnectionViewController: UITableViewController {
                     return
                 }
                 
-                if self.role == .all {
+                if self.roles.contains(.subscriber) {
                     self.connectSubscriber()
                 } else {
                     self.finishConnection(self.connection!.mediaPublisher)
@@ -540,6 +539,16 @@ class ConnectionViewController: UITableViewController {
         }
     }
     
+    
+    func disconnect() {
+        if let conn = connection {
+            conn.mediaPublisher.disconnect { _ in () }
+            conn.mediaSubscriber.disconnect { _ in () }
+        }
+        state = .disconnected
+        connectingAlertController = nil
+    }
+
     func setMediaConnectionSettings(_ mediaConn: MediaConnection) {
         mediaConn.multistreamEnabled = multistreamEnabled
         mediaConn.mediaOption.videoEnabled = videoEnabled
@@ -579,8 +588,8 @@ class ConnectionViewController: UITableViewController {
                 }
             }
         }
-        connectionController!.onConnectHandler?(connection, role, nil)
-        back()
+        connectionController!.onConnectHandler?(connection, roles, nil)
+        back(isCancel: false)
     }
     
     func presentSimpleAlert(title: String? = nil, message: String? = nil) {

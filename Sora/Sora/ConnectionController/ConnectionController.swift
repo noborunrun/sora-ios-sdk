@@ -3,15 +3,24 @@ import UIKit
 public class ConnectionController: UIViewController {
 
     public enum Role {
-        case all
         case publisher
         case subscriber
+        
+        public static func containsAll(_ roles: [Role]) -> Bool {
+            let allRoles: [Role] = [.publisher, .subscriber]
+            for role in roles {
+                if !allRoles.contains(role) {
+                    return false
+                }
+            }
+            return true
+        }
     }
     
     public struct Request {
         public var URL: URL
         public var channelId: String
-        public var role: Role
+        public var roles: [Role]
         public var multistreamEnabled: Bool
         public var videoEnabled: Bool
         public var videoCodec: VideoCodec
@@ -22,7 +31,7 @@ public class ConnectionController: UIViewController {
     enum UserDefaultsKey: String {
         case URL = "SoraConnectionControllerURL"
         case channelId = "SoraConnectionControllerChannelId"
-        case role = "SoraConnectionControllerRole"
+        case roles = "SoraConnectionControllerRoles"
         case multistreamEnabled = "SoraConnectionControllerMultistreamEnabled"
         case videoEnabled = "SoraConnectionControllerVideoEnabled"
         case videoCodec = "SoraConnectionControllerVideoCodec"
@@ -90,7 +99,7 @@ public class ConnectionController: UIViewController {
     */
 
     var onRequestHandler: ((Connection, Request) -> Void)?
-    var onConnectHandler: ((Connection?, Role?, ConnectionError?) -> Void)?
+    var onConnectHandler: ((Connection?, [Role]?, ConnectionError?) -> Void)?
     var onCancelHandler: (() -> Void)?
 
     public func onRequest(handler: @escaping (Connection, Request) -> Void) {
@@ -98,7 +107,7 @@ public class ConnectionController: UIViewController {
     }
     
     public func onConnect(handler:
-        @escaping (Connection?, Role?, ConnectionError?) -> Void) {
+        @escaping (Connection?, [Role]?, ConnectionError?) -> Void) {
         onConnectHandler = handler
     }
     

@@ -2,18 +2,20 @@ import UIKit
 
 class RoleViewController: UITableViewController {
 
-    @IBOutlet weak var allLabel: UILabel!
-    @IBOutlet weak var allCell: UITableViewCell!
     @IBOutlet weak var publisherLabel: UILabel!
     @IBOutlet weak var publisherCell: UITableViewCell!
     @IBOutlet weak var subscriberLabel: UILabel!
     @IBOutlet weak var subscriberCell: UITableViewCell!
 
+    var main: ConnectionViewController {
+        get { return ConnectionViewController.main! }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        for label: UILabel in [allLabel, publisherLabel, subscriberLabel] {
+        for label: UILabel in [publisherLabel, subscriberLabel] {
             label.font = UIFont.preferredFont(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
         }
@@ -21,12 +23,9 @@ class RoleViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         clearCheckmarks()
-        switch ConnectionViewController.main?.role {
-        case .all?, nil:
-            allCell.accessoryType = .checkmark
-        case .publisher?:
+        if main.roles.contains(.publisher) {
             publisherCell.accessoryType = .checkmark
-        case .subscriber?:
+        } else if main.roles.contains(.subscriber) {
             subscriberCell.accessoryType = .checkmark
         }
     }
@@ -48,24 +47,29 @@ class RoleViewController: UITableViewController {
     */
 
     func clearCheckmarks() {
-        allCell?.accessoryType = .none
         publisherCell?.accessoryType = .none
         subscriberCell?.accessoryType = .none
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        clearCheckmarks()
         switch indexPath.row {
         case 0:
-            ConnectionViewController.main?.role = .all
-            allCell?.accessoryType = .checkmark
+            if main.roles.count > 1 && main.roles.contains(.publisher) {
+                main.removeRole(.publisher)
+                publisherCell.accessoryType = .none
+            } else {
+                main.addRole(.publisher)
+                publisherCell.accessoryType = .checkmark
+            }
         case 1:
-            ConnectionViewController.main?.role = .publisher
-            publisherCell?.accessoryType = .checkmark
-        case 2:
-            ConnectionViewController.main?.role = .subscriber
-            subscriberCell?.accessoryType = .checkmark
+            if main.roles.count > 1 && main.roles.contains(.subscriber) {
+                main.removeRole(.subscriber)
+                subscriberCell.accessoryType = .none
+            } else {
+                main.addRole(.subscriber)
+                subscriberCell.accessoryType = .checkmark
+            }
         default:
             break
         }
