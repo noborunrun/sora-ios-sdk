@@ -6,6 +6,8 @@ public class ConnectionController: UIViewController {
         case publisher
         case subscriber
         
+        public static var allRoles: [Role] = [.publisher, .subscriber]
+        
         public static func containsAll(_ roles: [Role]) -> Bool {
             let allRoles: [Role] = [.publisher, .subscriber]
             for role in roles {
@@ -47,12 +49,14 @@ public class ConnectionController: UIViewController {
     
     public var URL: String?
     public var channelId: String?
+    public var availableRoles: [Role] = [.publisher, .subscriber]
     
     public var userDefaults: UserDefaults? =
         UserDefaults(suiteName: "jp.shiguredo.SoraConnectionController")
     
     public init(URL: String? = nil,
-                channelId: String? = nil) {
+                channelId: String? = nil,
+                availableRoles: [Role]? = nil) {
         super.init(nibName: nil, bundle: nil)
         connectionControllerStoryboard =
             UIStoryboard(name: "ConnectionController",
@@ -71,6 +75,9 @@ public class ConnectionController: UIViewController {
         
         self.URL = URL
         self.channelId = channelId
+        if let roles = availableRoles {
+            self.availableRoles = roles
+        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
