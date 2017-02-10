@@ -2,6 +2,11 @@ import UIKit
 
 class RoleViewController: UITableViewController {
 
+    struct Component {
+        var label: UILabel
+        var cell: UITableViewCell
+    }
+    
     @IBOutlet weak var publisherLabel: UILabel!
     @IBOutlet weak var publisherCell: UITableViewCell!
     @IBOutlet weak var subscriberLabel: UILabel!
@@ -10,6 +15,11 @@ class RoleViewController: UITableViewController {
     var main: ConnectionViewController {
         get { return ConnectionViewController.main! }
     }
+    
+    lazy var components: [ConnectionController.Role: Component] = [
+        .publisher: Component(label: self.publisherLabel, cell: self.publisherCell),
+        .subscriber: Component(label: self.subscriberLabel, cell: self.subscriberCell)
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,10 +33,8 @@ class RoleViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         clearCheckmarks()
-        if main.roles.contains(.publisher) {
-            publisherCell.accessoryType = .checkmark
-        } else if main.roles.contains(.subscriber) {
-            subscriberCell.accessoryType = .checkmark
+        for role in main.roles {
+            components[role]?.cell.accessoryType = .checkmark
         }
     }
     
@@ -55,23 +63,21 @@ class RoleViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            if main.roles.count > 1 && main.roles.contains(.publisher) {
-                main.removeRole(.publisher)
-                publisherCell.accessoryType = .none
-            } else {
-                main.addRole(.publisher)
-                publisherCell.accessoryType = .checkmark
-            }
+            selectRole(.publisher)
         case 1:
-            if main.roles.count > 1 && main.roles.contains(.subscriber) {
-                main.removeRole(.subscriber)
-                subscriberCell.accessoryType = .none
-            } else {
-                main.addRole(.subscriber)
-                subscriberCell.accessoryType = .checkmark
-            }
+            selectRole(.subscriber)
         default:
             break
+        }
+    }
+    
+    func selectRole(_ role: ConnectionController.Role) {
+        if main.roles.count > 1 && main.roles.contains(role) {
+            main.removeRole(role)
+            components[role]?.cell.accessoryType = .none
+        } else {
+            main.addRole(role)
+            components[role]?.cell.accessoryType = .checkmark
         }
     }
     
