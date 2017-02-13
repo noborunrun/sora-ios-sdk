@@ -143,6 +143,8 @@ class ConnectionViewController: UITableViewController {
     
     var connection: Connection?
     
+    // MARK: - View Controller
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
         
@@ -184,6 +186,10 @@ class ConnectionViewController: UITableViewController {
         URLTextField.placeholder = "www.example.com"
         channelIdTextField.text = connectionController?.channelId
         channelIdTextField.placeholder = "your channel ID"
+        if !connectionController!.multistreamEnabled {
+            enableMultistreamLabel.textColor = UIColor.lightGray
+            enableMultistreamSwitch.isEnabled = false
+        }
         
         loadSettings()
     }
@@ -384,10 +390,12 @@ class ConnectionViewController: UITableViewController {
             enableAudioLabel, audioCodecLabel, audioCodecValueLabel,
             ]
         for label in labels {
-            if isEnabled {
-                label.textColor = nil
-            } else {
+            if !isEnabled ||
+                (!connectionController!.multistreamEnabled &&
+                    label == enableMultistreamLabel) {
                 label.textColor = UIColor.lightGray
+            } else {
+                label.textColor = nil
             }
         }
         
