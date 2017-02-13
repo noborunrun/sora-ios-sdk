@@ -33,8 +33,19 @@ class RoleViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         clearCheckmarks()
-        for role in main.roles {
-            components[role]?.cell.accessoryType = .checkmark
+        for role in ConnectionController.Role.allRoles {
+            let comp = components[role]!
+            if main.connectionController!.availableRoles.contains(role) {
+                comp.label.textColor = UIColor.black
+                comp.cell.isUserInteractionEnabled = true
+                if main.roles.contains(role) {
+                    comp.cell.accessoryType = .checkmark
+                }
+            } else {
+                comp.label.textColor = UIColor.lightGray
+                comp.cell.accessoryType = .none
+                comp.cell.isUserInteractionEnabled = false
+            }
         }
     }
     
@@ -72,6 +83,10 @@ class RoleViewController: UITableViewController {
     }
     
     func selectRole(_ role: ConnectionController.Role) {
+        guard main.connectionController!.availableRoles.contains(role) else {
+            return
+        }
+        
         if main.roles.count > 1 && main.roles.contains(role) {
             main.removeRole(role)
             components[role]?.cell.accessoryType = .none
