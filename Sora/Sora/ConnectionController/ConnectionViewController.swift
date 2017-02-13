@@ -28,6 +28,7 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var connectionTimeValueLabel: UILabel!
     @IBOutlet weak var URLTextField: UITextField!
     @IBOutlet weak var channelIdTextField: UITextField!
+    @IBOutlet weak var rollValueLabel: UILabel!
     @IBOutlet weak var enableMultistreamSwitch: UISwitch!
     @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var enableVideoSwitch: UISwitch!
@@ -92,7 +93,18 @@ class ConnectionViewController: UITableViewController {
         set { channelIdTextField.text = newValue }
     }
     
-    var roles: [ConnectionController.Role] = []
+    var roles: [ConnectionController.Role] = [] {
+        didSet {
+            var s: [String] = []
+            if roles.contains(.publisher) {
+                s.append("Publisher")
+            }
+            if roles.contains(.subscriber) {
+                s.append("Subscriber")
+            }
+            rollValueLabel.text = s.joined(separator: ",")
+        }
+    }
     
     var multistreamEnabled: Bool {
         get { return enableMultistreamSwitch.isOn }
@@ -155,7 +167,8 @@ class ConnectionViewController: UITableViewController {
         for label: UILabel in [connectionTimeLabel,
                                connectionTimeValueLabel,
                                URLLabel, channelIdLabel,
-                               roleLabel, enableMultistreamLabel,
+                               roleLabel, rollValueLabel,
+                               enableMultistreamLabel,
                                connectButton.titleLabel!,
                                enableVideoLabel, videoCodecLabel,
                                videoCodecValueLabel,
@@ -385,7 +398,8 @@ class ConnectionViewController: UITableViewController {
     
     func enableControls(_ isEnabled: Bool) {
         let labels: [UILabel] = [
-            URLLabel, channelIdLabel, roleLabel, enableMultistreamLabel,
+            URLLabel, channelIdLabel, roleLabel, rollValueLabel,
+            enableMultistreamLabel,
             enableVideoLabel, videoCodecLabel, videoCodecValueLabel,
             enableAudioLabel, audioCodecLabel, audioCodecValueLabel,
             ]

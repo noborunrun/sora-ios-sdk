@@ -168,18 +168,30 @@
                                         <rect key="frame" x="0.0" y="319.5" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ARI-yf-RV5" id="SdE-P6-jDR">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="51"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Role" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wpG-aY-EmM">
-                                                    <rect key="frame" x="20" y="16" width="34" height="21"/>
+                                                    <rect key="frame" x="20" y="15" width="34" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guX-OM-hXg">
+                                                    <rect key="frame" x="114" y="15" width="173" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="FB2-z7-bYg"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="173" id="kYx-gx-Ffh"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="guX-OM-hXg" secondAttribute="trailing" id="eJj-8U-63L"/>
                                                 <constraint firstItem="wpG-aY-EmM" firstAttribute="centerY" secondItem="SdE-P6-jDR" secondAttribute="centerY" id="iKV-aU-TNG"/>
+                                                <constraint firstItem="guX-OM-hXg" firstAttribute="centerY" secondItem="SdE-P6-jDR" secondAttribute="centerY" id="mK2-x1-Btg"/>
                                                 <constraint firstItem="wpG-aY-EmM" firstAttribute="leading" secondItem="SdE-P6-jDR" secondAttribute="leadingMargin" constant="12" id="nb1-th-cZe"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -417,6 +429,7 @@
                         <outlet property="enableVideoSwitch" destination="if8-Ug-MaX" id="sda-fd-33g"/>
                         <outlet property="roleCell" destination="ARI-yf-RV5" id="IYv-iE-rFB"/>
                         <outlet property="roleLabel" destination="wpG-aY-EmM" id="p9q-B1-jJ0"/>
+                        <outlet property="rollValueLabel" destination="guX-OM-hXg" id="Jc3-a2-YDW"/>
                         <outlet property="videoCodecCell" destination="xM0-cG-P5x" id="Nn6-k9-RUr"/>
                         <outlet property="videoCodecLabel" destination="jct-MC-Ao5" id="elj-R5-isQ"/>
                         <outlet property="videoCodecValueLabel" destination="xFX-aC-d6I" id="Hgz-KV-STe"/>
