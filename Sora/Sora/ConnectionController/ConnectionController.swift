@@ -50,7 +50,7 @@ public class ConnectionController: UIViewController {
     public var URL: String?
     public var channelId: String?
     public var availableRoles: [Role] = [.publisher, .subscriber]
-    var multistreamEnabled: Bool = true
+    var allowsMultistream: Bool = true
     
     public var userDefaults: UserDefaults? =
         UserDefaults(suiteName: "jp.shiguredo.SoraConnectionController")
@@ -58,7 +58,7 @@ public class ConnectionController: UIViewController {
     public init(URL: String? = nil,
                 channelId: String? = nil,
                 availableRoles: [Role]? = nil,
-                multistreamEnabled: Bool = true) {
+                allowsMultistream: Bool = true) {
         super.init(nibName: nil, bundle: nil)
         connectionControllerStoryboard =
             UIStoryboard(name: "ConnectionController",
@@ -80,7 +80,7 @@ public class ConnectionController: UIViewController {
         if let roles = availableRoles {
             self.availableRoles = roles
         }
-        self.multistreamEnabled = multistreamEnabled
+        self.allowsMultistream = allowsMultistream
     }
     
     required public init?(coder aDecoder: NSCoder) {

@@ -186,7 +186,7 @@ class ConnectionViewController: UITableViewController {
         URLTextField.placeholder = "www.example.com"
         channelIdTextField.text = connectionController?.channelId
         channelIdTextField.placeholder = "your channel ID"
-        if !connectionController!.multistreamEnabled {
+        if !connectionController!.allowsMultistream {
             enableMultistreamLabel.textColor = UIColor.lightGray
             enableMultistreamSwitch.isEnabled = false
         }
@@ -391,7 +391,7 @@ class ConnectionViewController: UITableViewController {
             ]
         for label in labels {
             if !isEnabled ||
-                (!connectionController!.multistreamEnabled &&
+                (!connectionController!.allowsMultistream &&
                     label == enableMultistreamLabel) {
                 label.textColor = UIColor.lightGray
             } else {
