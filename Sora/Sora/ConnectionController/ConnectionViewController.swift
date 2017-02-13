@@ -398,10 +398,10 @@ class ConnectionViewController: UITableViewController {
     
     func enableControls(_ isEnabled: Bool) {
         let labels: [UILabel] = [
-            URLLabel, channelIdLabel, roleLabel, rollValueLabel,
+            URLLabel, channelIdLabel, roleLabel,
             enableMultistreamLabel,
-            enableVideoLabel, videoCodecLabel, videoCodecValueLabel,
-            enableAudioLabel, audioCodecLabel, audioCodecValueLabel,
+            enableVideoLabel, videoCodecLabel,
+            enableAudioLabel, audioCodecLabel,
             ]
         for label in labels {
             if !isEnabled ||
