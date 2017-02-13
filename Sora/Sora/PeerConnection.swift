@@ -276,7 +276,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             proceedDisconnecting()
             
         default:
-            eventLog!.markFormat(type: .Signaling, format: "terminate all connections")
+            eventLog?.markFormat(type: .Signaling, format: "terminate all connections")
             state = .disconnecting
             if let error = error {
                 webSocketEventHandlers?.onFailureHandler?(webSocket!, error)
@@ -339,22 +339,22 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     func send(_ message: Messageable) -> ConnectionError? {
         switch state {
         case .disconnected, .terminated:
-            eventLog!.markFormat(type: .WebSocket,
+            eventLog?.markFormat(type: .WebSocket,
                                  format: "failed sending message (connection disconnected)")
             return ConnectionError.connectionDisconnected
             
         case .signalingConnecting, .disconnecting:
-            eventLog!.markFormat(type: .WebSocket,
+            eventLog?.markFormat(type: .WebSocket,
                                  format: "failed sending message (connection busy)")
             return ConnectionError.connectionBusy
             
         default:
             let message = message.message()
-            eventLog!.markFormat(type: .WebSocket,
+            eventLog?.markFormat(type: .WebSocket,
                                  format: "send message (state %@): %@",
                                  arguments: state.rawValue, message.description)
             let s = message.JSONRepresentation()
-            eventLog!.markFormat(type: .WebSocket,
+            eventLog?.markFormat(type: .WebSocket,
                                  format: "send message as JSON: %@",
                                  arguments: s)
             webSocket!.send(message.JSONRepresentation())
@@ -1009,7 +1009,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             peerConnectionEventHandlers?
                 .onGenerateIceCandidateHandler?(nativePeerConnection, candidate)
             if let error = send(SignalingICECandidate(candidate: candidate.sdp)) {
-                eventLog!.markFormat(type: .PeerConnection,
+                eventLog?.markFormat(type: .PeerConnection,
                                      format: "send candidate to server failed")
                 terminate(error)
             }
