@@ -400,6 +400,14 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 constraints: peerConnection!.mediaOption.peerConnectionMediaConstraints,
                 delegate: self)
             
+            // デバイスの初期化 (Upstream)
+            if role == MediaStreamRole.upstream {
+                if let error = createMediaCapturer() {
+                    terminate(error)
+                    return
+                }
+            }
+            
             // シグナリング connect を送信する
             let connect = SignalingConnect(role: SignalingRole.from(role),
                                            channel_id: connection.mediaChannelId,
@@ -434,6 +442,13 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                  format: "create media capturer failed")
             return ConnectionError.mediaCapturerFailed
         }
+        
+        eventLog?.markFormat(type: .PeerConnection,
+                             format: "video capturer track ID: %@",
+                             arguments: mediaCapturer!.videoCaptureTrack.trackId)
+        eventLog?.markFormat(type: .PeerConnection,
+                             format: "audio capturer track ID: %@",
+                             arguments: mediaCapturer!.audioCaptureTrack.trackId)
         
         let upstream = nativePeerConnectionFactory.mediaStream(withStreamId:
             peerConnection!.mediaStreamId ?? MediaStream.defaultStreamId)
@@ -965,12 +980,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     func finishConnection() {
         state = .connected
         clearTimeoutTimer()
-        if role == MediaStreamRole.upstream {
-            if let error = createMediaCapturer() {
-                terminate(error)
-                return
-            }
-        }
         peerConnectionEventHandlers?.onConnectHandler?(nativePeerConnection)
         connectCompletionHandler?(nil)
         connectCompletionHandler = nil
