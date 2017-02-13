@@ -41,7 +41,7 @@ public class MediaConnection {
     }
     
     var eventLog: EventLog? {
-        get { return connection.eventLog }
+        get { return connection?.eventLog }
     }
     
     var eventType: Event.EventType {
