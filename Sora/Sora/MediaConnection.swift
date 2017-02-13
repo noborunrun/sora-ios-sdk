@@ -188,10 +188,10 @@ class MediaCapturer {
         videoCaptureTrack = factory
             .videoTrack(with: videoCaptureSource,
                         trackId: mediaOption?.videoCaptureTrackId ??
-                            MediaOption.defaultVideoCaptureTrackId)
+                            MediaOption.createCaptureTrackId())
         audioCaptureTrack = factory
             .audioTrack(withTrackId: mediaOption?.audioCaptureTrackId ??
-                MediaOption.defaultAudioCaptureTrackId)
+                MediaOption.createCaptureTrackId())
     }
     
 }
