@@ -433,14 +433,27 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
     
+    // 同一の RTCPeerConnectionFactory に対して MediaCapturer を再利用する
+    // MediaCapturer を複数回生成すると落ちる可能性がある
+    static var sharedMediaCapturers: [RTCPeerConnectionFactory: MediaCapturer] = [:]
+    
     func createMediaCapturer() -> ConnectionError? {
         eventLog?.markFormat(type: .PeerConnection, format: "create media capturer")
-        mediaCapturer = MediaCapturer(factory: nativePeerConnectionFactory,
-                                      mediaOption: peerConnection!.mediaOption)
-        if mediaCapturer == nil {
+        if let shared = PeerConnectionContext
+            .sharedMediaCapturers[nativePeerConnectionFactory] {
             eventLog?.markFormat(type: .PeerConnection,
-                                 format: "create media capturer failed")
-            return ConnectionError.mediaCapturerFailed
+                                 format: "use shared media capturer")
+            mediaCapturer = shared
+        } else {
+            mediaCapturer = MediaCapturer(factory: nativePeerConnectionFactory,
+                                          mediaOption: peerConnection!.mediaOption)
+            if mediaCapturer == nil {
+                eventLog?.markFormat(type: .PeerConnection,
+                                     format: "create media capturer failed")
+                return ConnectionError.mediaCapturerFailed
+            }
+            PeerConnectionContext
+                .sharedMediaCapturers[nativePeerConnectionFactory] = mediaCapturer
         }
         
         eventLog?.markFormat(type: .PeerConnection,
