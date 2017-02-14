@@ -437,7 +437,7 @@ class ConnectionViewController: UITableViewController {
     
     func back(isCancel: Bool) {
         saveSettings()
-        connectionController?.dismiss(animated: true) {
+        dismiss(animated: true) {
             if isCancel {
                 self.connectionController!.onCancelHandler?()
             }
@@ -506,8 +506,8 @@ class ConnectionViewController: UITableViewController {
                 UIAlertAction(title: "Cancel", style: .cancel)
                 {
                     _ in
+                    self.connectingAlertController.dismiss(animated: true)
                     self.disconnect()
-                    self.connectingAlertController = nil
                 }
             )
             DispatchQueue.main.async {
