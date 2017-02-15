@@ -199,12 +199,23 @@ class ConnectionViewController: UITableViewController {
         URLTextField.placeholder = "www.example.com"
         channelIdTextField.text = connectionController?.channelId
         channelIdTextField.placeholder = "your channel ID"
-        if !connectionController!.allowsMultistream {
+        
+        loadSettings()
+
+        switch (connectionController!.allowsSingleStream,
+                connectionController!.allowsMultistream) {
+        case (true, true), (false, false):
+            break
+        case (true, false):
             enableMultistreamLabel.textColor = UIColor.lightGray
+            enableMultistreamSwitch.isOn = false
+            enableMultistreamSwitch.isEnabled = false
+        case (false, true):
+            enableMultistreamLabel.textColor = UIColor.lightGray
+            enableMultistreamSwitch.isOn = true
             enableMultistreamSwitch.isEnabled = false
         }
         
-        loadSettings()
     }
     
     func applicationDidEnterBackground(_ notification: Notification) {
@@ -399,18 +410,19 @@ class ConnectionViewController: UITableViewController {
     func enableControls(_ isEnabled: Bool) {
         let labels: [UILabel] = [
             URLLabel, channelIdLabel, roleLabel,
-            enableMultistreamLabel,
             enableVideoLabel, videoCodecLabel,
             enableAudioLabel, audioCodecLabel,
             ]
         for label in labels {
-            if !isEnabled ||
-                (!connectionController!.allowsMultistream &&
-                    label == enableMultistreamLabel) {
-                label.textColor = UIColor.lightGray
-            } else {
-                label.textColor = nil
-            }
+            label.textColor = isEnabled ? nil : UIColor.lightGray
+        }
+        
+        switch (connectionController!.allowsSingleStream,
+                connectionController!.allowsMultistream) {
+        case (true, false), (false, true):
+            enableMultistreamLabel.textColor = UIColor.lightGray
+        default:
+            enableMultistreamLabel.textColor = nil
         }
         
         let fields: [UITextField] = [URLTextField, channelIdTextField]
