@@ -19,6 +19,11 @@ public class ConnectionController: UIViewController {
         }
     }
     
+    public enum StreamType {
+        case single
+        case multiple
+    }
+    
     public struct Request {
         public var URL: URL
         public var channelId: String
@@ -50,17 +55,22 @@ public class ConnectionController: UIViewController {
     public var URL: String?
     public var channelId: String?
     public var availableRoles: [Role] = [.publisher, .subscriber]
-    var allowsSingleStream: Bool = true
-    var allowsMultistream: Bool = true
+    public var availableStreamTypes: [StreamType] = [.single, .multiple]
     
     public var userDefaults: UserDefaults? =
         UserDefaults(suiteName: "jp.shiguredo.SoraConnectionController")
     
+    var tupleOfAvailableStreamTypes: (Bool, Bool) {
+        get {
+            return (availableStreamTypes.contains(.single),
+                    availableStreamTypes.contains(.multiple))
+        }
+    }
+    
     public init(URL: String? = nil,
                 channelId: String? = nil,
                 availableRoles: [Role]? = nil,
-                allowsSingleStream: Bool = true,
-                allowsMultistream: Bool = true) {
+                availableStreamTypes: [StreamType]? = nil) {
         super.init(nibName: nil, bundle: nil)
         connectionControllerStoryboard =
             UIStoryboard(name: "ConnectionController",
@@ -82,8 +92,9 @@ public class ConnectionController: UIViewController {
         if let roles = availableRoles {
             self.availableRoles = roles
         }
-        self.allowsSingleStream = allowsSingleStream
-        self.allowsMultistream = allowsMultistream
+        if let streamTypes = availableStreamTypes {
+            self.availableStreamTypes = streamTypes
+        }
     }
     
     required public init?(coder aDecoder: NSCoder) {

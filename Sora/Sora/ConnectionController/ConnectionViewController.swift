@@ -202,8 +202,7 @@ class ConnectionViewController: UITableViewController {
         
         loadSettings()
 
-        switch (connectionController!.allowsSingleStream,
-                connectionController!.allowsMultistream) {
+        switch connectionController!.tupleOfAvailableStreamTypes {
         case (true, true), (false, false):
             break
         case (true, false):
@@ -417,8 +416,7 @@ class ConnectionViewController: UITableViewController {
             label.textColor = isEnabled ? nil : UIColor.lightGray
         }
         
-        switch (connectionController!.allowsSingleStream,
-                connectionController!.allowsMultistream) {
+        switch connectionController!.tupleOfAvailableStreamTypes {
         case (true, false), (false, true):
             enableMultistreamLabel.textColor = UIColor.lightGray
         default:
