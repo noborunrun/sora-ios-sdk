@@ -21,6 +21,22 @@ public indirect enum ConnectionError: Error {
 
 public class Connection {
     
+    public struct NotificationKey {
+        
+        public enum UserInfo: String {
+            case connectionError = "Sora.Connection.UserInfo.connectionError"
+            case mediaConnection = "Sora.Connection.UserInfo.mediaConnection"
+        }
+        
+        public static var onConnect =
+            Notification.Name("Sora.Connection.Notification.onConnect")
+        public static var onDisconnect =
+            Notification.Name("Sora.Connection.Notification.onDisconnect")
+        public static var onFailure =
+            Notification.Name("Sora.Connection.Notification.onFailure")
+        
+    }
+    
     public var URL: Foundation.URL
     public var mediaChannelId: String
     public var eventLog: EventLog

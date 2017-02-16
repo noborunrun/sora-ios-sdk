@@ -323,14 +323,14 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             state = .disconnected
             if let error = aggregateError {
                 signalingEventHandlers?.onFailureHandler?(error)
-                mediaConnection?.onFailureHandler?(error)
+                mediaConnection?.callOnFailureHandler(error)
             }
             signalingEventHandlers?.onDisconnectHandler?()
             connectCompletionHandler?(aggregateError)
             connectCompletionHandler = nil
             disconnectCompletionHandler?(aggregateError)
             disconnectCompletionHandler = nil
-            mediaConnection?.onDisconnectHandler?(aggregateError)
+            mediaConnection?.callOnDisconnectHandler(aggregateError)
             peerConnection?.terminate()
             peerConnection = nil
         }        
@@ -602,7 +602,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         case .connected:
             signalingEventHandlers?.onPingHandler?()
             if let error = self.send(SignalingPong()) {
-                mediaConnection?.onFailureHandler?(error)
+                mediaConnection?.callOnFailureHandler(error)
             }
             
         default:
@@ -859,7 +859,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         let updateError = ConnectionError.updateError(connError)
         peerConnectionEventHandlers?
             .onFailureHandler?(nativePeerConnection, updateError)
-        mediaConnection?.onFailureHandler?(updateError)
+        mediaConnection?.callOnFailureHandler(updateError)
     }
     
     // MARK: RTCPeerConnectionDelegate
@@ -981,7 +981,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 
             case .failed:
                 let error = ConnectionError.iceConnectionFailed
-                mediaConnection?.onFailureHandler?(error)
+                mediaConnection?.callOnFailureHandler(error)
                 terminate(error)
                 
             default:

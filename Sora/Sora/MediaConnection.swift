@@ -2,7 +2,22 @@ import Foundation
 import WebRTC
 
 public class MediaConnection {
-
+    
+    public struct NotificationKey {
+        
+        public enum UserInfo: String {
+            case connectionError = "Sora.MediaConnection.UserInfo.connectionError"
+        }
+        
+        public static var onConnect =
+            Notification.Name("Sora.MediaConnection.Notification.onConnect")
+        public static var onDisconnect =
+            Notification.Name("Sora.MediaConnection.Notification.onDisconnect")
+        public static var onFailure =
+            Notification.Name("Sora.MediaConnection.Notification.onFailure")
+        
+    }
+    
     public struct Statistics {
         
         public var numberOfUpstreamConnections: Int?
@@ -13,10 +28,6 @@ public class MediaConnection {
             self.numberOfDownstreamConnections = signalingStats.numberOfUpstreamConnections
         }
         
-    }
-    
-    public enum Notification: String {
-        case disconnectedUpstream = "DISCONNECTED-UPSTREAM"
     }
     
     public weak var connection: Connection!
@@ -82,12 +93,12 @@ public class MediaConnection {
                                           arguments: error.localizedDescription)
                 self.peerConnection = nil
                 self.onFailureHandler?(error)
-                self.onConnectHandler?(error)
+                self.callOnConnectHandler(error)
                 handler(error)
             } else {
                 self.eventLog?.markFormat(type: self.eventType, format: "connect ok")
                 self.internalOnConnect()
-                self.onConnectHandler?(nil)
+                self.callOnConnectHandler()
                 handler(nil)
             }
         }
@@ -146,9 +157,9 @@ public class MediaConnection {
     
     // MARK: イベントハンドラ
     
-    var onConnectHandler: ((ConnectionError?) -> Void)?
-    var onDisconnectHandler: ((ConnectionError?) -> Void)?
-    var onFailureHandler: ((ConnectionError) -> Void)?
+    private var onConnectHandler: ((ConnectionError?) -> Void)?
+    private var onDisconnectHandler: ((ConnectionError?) -> Void)?
+    private var onFailureHandler: ((ConnectionError) -> Void)?
     var onStatisticsHandler: ((Statistics) -> Void)?
     var onNotifyHandler: ((Notification) -> Void)?
 
@@ -156,12 +167,60 @@ public class MediaConnection {
         onConnectHandler = handler
     }
     
+    func callOnConnectHandler(_ error: ConnectionError? = nil) {
+        onConnectHandler?(error)
+        print("send notification")
+        NotificationCenter
+            .default
+            .post(name: Connection.NotificationKey.onConnect,
+                  object: connection,
+                  userInfo:
+                [Connection.NotificationKey.UserInfo.connectionError: error as Any,
+                 Connection.NotificationKey.UserInfo.mediaConnection: self])
+    }
+    
     public func onDisconnect(handler: @escaping (ConnectionError?) -> Void) {
         onDisconnectHandler = handler
     }
     
+    func callOnDisconnectHandler(_ error: ConnectionError?) {
+        onDisconnectHandler?(error)
+        NotificationCenter
+            .default
+            .post(name: Connection.NotificationKey.onDisconnect,
+                  object: connection,
+                  userInfo:
+                [Connection.NotificationKey.UserInfo.connectionError: error as Any,
+                 Connection.NotificationKey.UserInfo.mediaConnection: self])
+        NotificationCenter
+            .default
+            .post(name: MediaConnection.NotificationKey.onDisconnect,
+                  object: self,
+                  userInfo:
+                [MediaConnection.NotificationKey.UserInfo
+                    .connectionError: error as Any])
+    }
+    
     public func onFailure(handler: @escaping (ConnectionError) -> Void) {
         onFailureHandler = handler
+    }
+    
+    func callOnFailureHandler(_ error: ConnectionError) {
+        onFailureHandler?(error)
+        NotificationCenter
+            .default
+            .post(name: Connection.NotificationKey.onFailure,
+                  object: connection,
+                  userInfo:
+                [Connection.NotificationKey.UserInfo.connectionError: error as Any,
+                 Connection.NotificationKey.UserInfo.mediaConnection: self])
+        NotificationCenter
+            .default
+            .post(name: MediaConnection.NotificationKey.onFailure,
+                  object: self,
+                  userInfo:
+                [MediaConnection.NotificationKey.UserInfo
+                    .connectionError: error as Any])
     }
     
     public func onStatistics(handler: @escaping (Statistics) -> Void) {

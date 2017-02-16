@@ -3,6 +3,17 @@ import WebRTC
 
 public class MediaStream {
     
+    public struct NotificationKey {
+        
+        public enum UserInfo: String {
+            case seconds = "Sora.MediaStream.UserInfo.seconds"
+        }
+        
+        public static var onCountUp =
+            Notification.Name("Sora.MediaStream.Notification.onCountUp")
+        
+    }
+    
     static var defaultStreamId: String = "mainStream"
     static var defaultVideoTrackId: String = "mainVideo"
     static var defaultAudioTrackId: String = "mainAudio"
@@ -65,6 +76,7 @@ public class MediaStream {
     
     var connectionTimer: Timer?
     var connectionTimerHandler: ((Int?) -> Void)?
+    var connectionTimerForNotification: Timer?
     
     public func startConnectionTimer(timeInterval: TimeInterval,
                                      handler: @escaping ((Int?) -> Void)) {
@@ -72,6 +84,7 @@ public class MediaStream {
                              format: "start timer (interval %f)",
                              arguments: timeInterval)
         connectionTimerHandler = handler
+        
         connectionTimer?.invalidate()
         connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
             timer in
@@ -79,6 +92,15 @@ public class MediaStream {
         }
         updateConnectionTime(connectionTimer!)
         RunLoop.main.add(connectionTimer!, forMode: .commonModes)
+        
+        connectionTimerForNotification?.invalidate()
+        connectionTimerForNotification = Timer(timeInterval: 1.0, repeats: true) {
+            timer in
+            self.updateConnectionTimeForNotification(
+                self.connectionTimerForNotification!)
+        }
+        updateConnectionTime(connectionTimerForNotification!)
+        RunLoop.main.add(connectionTimerForNotification!, forMode: .commonModes)
     }
     
     func updateConnectionTime(_ timer: Timer) {
@@ -89,6 +111,21 @@ public class MediaStream {
         } else {
             connectionTimerHandler?(nil)
         }
+    }
+    
+    func updateConnectionTimeForNotification(_ timer: Timer) {
+        var seconds: Int?
+        if isAvailable {
+            let diff = Date(timeIntervalSinceNow: 0)
+                .timeIntervalSince(self.creationTime)
+            seconds = Int(diff)
+        }
+        NotificationCenter
+            .default
+            .post(name: MediaStream.NotificationKey.onCountUp,
+                  object: self,
+                  userInfo:
+                [MediaStream.NotificationKey.UserInfo.seconds: seconds as Any])
     }
     
     public func stopConnectionTimer() {
