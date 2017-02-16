@@ -169,7 +169,6 @@ public class MediaConnection {
     
     func callOnConnectHandler(_ error: ConnectionError? = nil) {
         onConnectHandler?(error)
-        print("send notification")
         NotificationCenter
             .default
             .post(name: Connection.NotificationKey.onConnect,
