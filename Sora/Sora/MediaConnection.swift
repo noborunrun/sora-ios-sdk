@@ -145,13 +145,23 @@ public class MediaConnection {
     func addMediaStream(mediaStream: MediaStream) {
         eventLog?.markFormat(type: eventType, format: "add media stream")
         mediaStreams.append(mediaStream)
+        onAddStreamHandler?(mediaStream)
     }
     
     func removeMediaStream(mediaStreamId: String) {
         eventLog?.markFormat(type: eventType, format: "remove media stream")
+        var removed: MediaStream?
         mediaStreams = mediaStreams.filter {
             e in
-            return e.mediaStreamId != mediaStreamId
+            if e.mediaStreamId == mediaStreamId {
+                removed = e
+                return false
+            } else {
+                return true
+            }
+        }
+        if let stream = removed {
+            onRemoveStreamHandler?(stream)
         }
     }
     
@@ -160,6 +170,8 @@ public class MediaConnection {
     private var onConnectHandler: ((ConnectionError?) -> Void)?
     private var onDisconnectHandler: ((ConnectionError?) -> Void)?
     private var onFailureHandler: ((ConnectionError) -> Void)?
+    private var onAddStreamHandler: ((MediaStream) -> Void)?
+    private var onRemoveStreamHandler: ((MediaStream) -> Void)?
     var onStatisticsHandler: ((Statistics) -> Void)?
     var onNotifyHandler: ((Notification) -> Void)?
 
@@ -220,6 +232,14 @@ public class MediaConnection {
                   userInfo:
                 [MediaConnection.NotificationKey.UserInfo
                     .connectionError: error as Any])
+    }
+    
+    public func onAddStream(handler: @escaping (MediaStream) -> Void) {
+        onAddStreamHandler = handler
+    }
+    
+    public func onRemoveStream(handler: @escaping (MediaStream) -> Void) {
+        onRemoveStreamHandler = handler
     }
     
     public func onStatistics(handler: @escaping (Statistics) -> Void) {
