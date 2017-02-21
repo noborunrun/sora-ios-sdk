@@ -7,6 +7,8 @@ public class VideoView: UIView, VideoRenderer {
     // contentView を Nib ファイルでセットせずに遅延プロパティで初期化する
     // "Failed to bind EAGLDrawable: <CAEAGLLayer: ***> to GL_RENDERBUFFER 1"
     // ただし、このエラーは無視しても以降の描画に問題はなく、クラッシュもしない
+    // また、遅延プロパティでもキーウィンドウ外で初期化すれば
+    // エラーが発生するため、根本的な解決策ではないので注意
     lazy var contentView: VideoViewContentView! = {
         guard let topLevel = Bundle(for: VideoView.self)
             .loadNibNamed("VideoView", owner: self, options: nil) else
