@@ -43,25 +43,43 @@ public class MediaStream {
     }
     
     public var videoRenderer: VideoRenderer? {
-        didSet {
-            if let videoTrack = nativeVideoTrack {
-                if let renderer = videoRenderer {
-                    eventLog?.markFormat(type: .VideoRenderer,
-                                         format: "set video renderer")
-                    videoRendererAdapter =
-                        VideoRendererAdapter(videoRenderer: renderer)
-                    videoTrack.add(videoRendererAdapter!)
-                } else if let adapter = videoRendererAdapter {
-                    eventLog?.markFormat(type: .VideoRenderer,
-                                         format: "clear video renderer")
-                    videoTrack.remove(adapter)
-                }
+        
+        get {
+            return videoRendererAdapter?.videoRenderer
+        }
+        
+        set {
+            if let value = newValue {
+                videoRendererAdapter = VideoRendererAdapter(videoRenderer: value)
+            } else {
+                videoRendererAdapter = nil
             }
         }
+        
     }
     
-    var videoRendererAdapter: VideoRendererAdapter?
+    var videoRendererAdapter: VideoRendererAdapter? {
+        
+        willSet {
+            guard let videoTrack = nativeVideoTrack else { return }
+            guard let adapter = videoRendererAdapter else { return }
+            eventLog?.markFormat(type: .VideoRenderer,
+                                 format: "remove old video renderer %@",
+                                 arguments: adapter.videoRenderer as! CVarArg)
+            videoTrack.remove(adapter)
+        }
+        
+        didSet {
+            guard let videoTrack = nativeVideoTrack else { return }
+            guard let adapter = videoRendererAdapter else { return }
+            eventLog?.markFormat(type: .VideoRenderer,
+                                 format: "set video renderer %@",
+                                 arguments: adapter.videoRenderer as! CVarArg)
+            videoTrack.add(adapter)
+        }
     
+    }
+
     init(peerConnection: PeerConnection, nativeMediaStream: RTCMediaStream) {
         self.peerConnection = peerConnection
         self.nativeMediaStream = nativeMediaStream
