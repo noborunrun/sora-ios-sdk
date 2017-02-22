@@ -143,8 +143,30 @@ public class MediaConnection {
     
     // MARK: マルチストリーム
     
+    func hasMediaStream(_ mediaStreamId: String) -> Bool {
+        guard let peerConn = peerConnection else {
+            assertionFailure("peer connection must not be nil")
+            return false
+        }
+        
+        if peerConn.clientId == mediaStreamId {
+            return true
+        } else {
+            return mediaStreams.contains {
+                stream in
+                return stream.mediaStreamId == mediaStreamId
+            }
+        }
+    }
+    
     func addMediaStream(_ mediaStream: MediaStream) {
-        eventLog?.markFormat(type: eventType, format: "add media stream")
+        eventLog?.markFormat(type: eventType,
+                             format: "add media stream '%@'",
+                             arguments: mediaStream.mediaStreamId)
+        if hasMediaStream(mediaStream.mediaStreamId) {
+            assertionFailure("media stream already exists")
+        }
+        
         mediaStreams.append(mediaStream)
         onAddStreamHandler?(mediaStream)
     }

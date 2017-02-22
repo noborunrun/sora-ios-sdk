@@ -675,6 +675,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 return
             }
             
+            peerConnection!.clientId = offer.client_id
+            
             if let config = offer.config {
                 eventLog?.markFormat(type: .Signaling,
                                      format: "configure ICE transport policy")
@@ -890,7 +892,9 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     
     func peerConnection(_ nativePeerConnection: RTCPeerConnection,
                         didAdd stream: RTCMediaStream) {
-        eventLog?.markFormat(type: .PeerConnection, format: "added stream")
+        eventLog?.markFormat(type: .PeerConnection,
+                             format: "added stream '%@'",
+                             arguments: stream.streamId)
         switch state {
         case .disconnected, .terminated:
             break
@@ -899,7 +903,16 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             proceedDisconnecting()
             
         default:
-            guard peerConnection != nil else {
+            guard peerConnection != nil
+                && peerConnection!.mediaConnection != nil else
+            {
+                return
+            }
+            
+            if peerConnection!.mediaConnection!.hasMediaStream(stream.streamId) {
+                eventLog?.markFormat(type: .PeerConnection,
+                                     format: "stream '%@' already exists",
+                                     arguments: stream.streamId)
                 return
             }
             
@@ -907,7 +920,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             nativePeerConnection.add(stream)
             let wrap = MediaStream(peerConnection: peerConnection!,
                                    nativeMediaStream: stream)
-            peerConnection?.mediaConnection?.addMediaStream(wrap)
+            peerConnection!.mediaConnection!.addMediaStream(wrap)
             
         }
     }
