@@ -475,7 +475,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         nativePeerConnection.add(upstream)
         let wrap = MediaStream(peerConnection: peerConnection!,
                                nativeMediaStream: upstream)
-        mediaConnection?.addMediaStream(mediaStream: wrap)
+        mediaConnection?.addMediaStream(wrap)
         return nil
     }
     
@@ -907,7 +907,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             nativePeerConnection.add(stream)
             let wrap = MediaStream(peerConnection: peerConnection!,
                                    nativeMediaStream: stream)
-            peerConnection?.mediaConnection?.addMediaStream(mediaStream: wrap)
+            peerConnection?.mediaConnection?.addMediaStream(wrap)
             
         }
     }
@@ -926,7 +926,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             peerConnectionEventHandlers?
                 .onRemoveStreamHandler?(nativePeerConnection, stream)
             nativePeerConnection.remove(stream)
-            peerConnection?.mediaConnection?.removeMediaStream(mediaStreamId: stream.streamId)
+            peerConnection?.mediaConnection?.removeMediaStream(stream.streamId)
         }
     }
     

@@ -143,13 +143,13 @@ public class MediaConnection {
     
     // MARK: マルチストリーム
     
-    func addMediaStream(mediaStream: MediaStream) {
+    func addMediaStream(_ mediaStream: MediaStream) {
         eventLog?.markFormat(type: eventType, format: "add media stream")
         mediaStreams.append(mediaStream)
         onAddStreamHandler?(mediaStream)
     }
     
-    func removeMediaStream(mediaStreamId: String) {
+    func removeMediaStream(_ mediaStreamId: String) {
         eventLog?.markFormat(type: eventType, format: "remove media stream")
         var removed: MediaStream?
         mediaStreams = mediaStreams.filter {
