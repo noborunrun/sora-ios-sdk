@@ -70,6 +70,16 @@ class VideoViewContentView: UIView, VideoRenderer {
     func setRemoteVideoViewSize(_ size: CGSize) {
         nativeVideoView.setSize(size)
         sizeToChange = nil
+        
+        // 映像の解像度のアスペクト比に合わせて
+        // RTCEAGLVideoView のサイズと位置を変更する
+        let adjustSize = fitSize(from: size, to: frame.size)
+        nativeVideoView.frame =
+            CGRect(x: (frame.size.width - adjustSize.width) / 2,
+                   y: (frame.size.height - adjustSize.height) / 2,
+                   width: adjustSize.width,
+                   height: adjustSize.height)
+        setNeedsDisplay()
     }
     
     public func renderVideoFrame(_ frame: VideoFrame?) {
@@ -108,4 +118,15 @@ class VideoViewContentView: UIView, VideoRenderer {
         }
     }
     
+}
+
+func fitSize(from: CGSize, to: CGSize) -> CGSize {
+    var baseW = CGSize(width: to.width,
+                       height: to.width * (from.height / from.width))
+    var baseH = CGSize(width: to.height * (from.width / from.height),
+                       height: to.height)
+    return ([baseW, baseH].first {
+        size in
+        return size.width <= to.width && size.height <= to.height
+    })!
 }

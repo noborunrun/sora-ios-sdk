@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11762"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,18 +15,13 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qak-TX-EGf" customClass="RTCEAGLVideoView">
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qak-TX-EGf" customClass="RTCEAGLVideoView">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-            <constraints>
-                <constraint firstItem="Qak-TX-EGf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6Ja-By-QIh"/>
-                <constraint firstAttribute="bottom" secondItem="Qak-TX-EGf" secondAttribute="bottom" id="I2K-0H-TcX"/>
-                <constraint firstItem="Qak-TX-EGf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="h8e-bg-8xt"/>
-                <constraint firstAttribute="trailing" secondItem="Qak-TX-EGf" secondAttribute="trailing" id="zhe-H5-Bft"/>
-            </constraints>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="nativeVideoView" destination="Qak-TX-EGf" id="gS7-Ox-9Bu"/>
             </connections>
