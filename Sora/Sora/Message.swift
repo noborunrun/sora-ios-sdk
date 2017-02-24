@@ -13,6 +13,7 @@ public class Message {
         case pong = "pong"
         case stats = "stats"
         case notify = "notify"
+        case update = "update"
     }
     
     public var type: MessageType?
@@ -211,12 +212,14 @@ struct SignalingConnect {
     var channel_id: String
     var access_token: String?
     var mediaOption: MediaOption
+    var multistream: Bool
     
     init(role: SignalingRole, channel_id: String, access_token: String? = nil,
-         mediaOption: MediaOption) {
+         multistream: Bool = false, mediaOption: MediaOption) {
         self.role = role
         self.channel_id = channel_id
         self.access_token = access_token
+        self.multistream = multistream
         self.mediaOption = mediaOption
     }
 
@@ -230,13 +233,17 @@ extension SignalingConnect: Messageable {
         if let value = access_token {
             data["access_token"] = value
         }
+        if multistream {
+            data["multistream"] = true
+            data["plan_b"] = true
+        }
         
         if !mediaOption.videoEnabled {
             data["video"] = false
         } else {
             var video: [String: Any] = [:]
             switch mediaOption.videoCodec {
-            case .unspecified:
+            case .default:
                 break
             case .VP8:
                 video["codec_type"] = SignalingVideoCodec.VP8.rawValue
@@ -260,7 +267,7 @@ extension SignalingConnect: Messageable {
         } else {
             var audio: [String: Any] = [:]
             switch mediaOption.audioCodec {
-            case .unspecified:
+            case .default:
                 break
             case .Opus:
                 audio["codec_type"] = SignalingAudioCodec.Opus.rawValue
@@ -427,6 +434,38 @@ extension SignalingNotify: Unboxable {
     
     public init(unboxer: Unboxer) throws {
         notifyMessage = try unboxer.unbox(key: "message")
+    }
+    
+}
+
+public struct SignalingUpdateOffer {
+    
+    var sdp: String
+ 
+    func sessionDescription() -> RTCSessionDescription {
+        return RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp)
+    }
+    
+}
+
+extension SignalingUpdateOffer: Unboxable {
+    
+    public init(unboxer: Unboxer) throws {
+        sdp = try unboxer.unbox(key: "sdp")
+    }
+    
+}
+
+struct SignalingUpdateAnswer {
+    
+    var sdp: String
+    
+}
+
+extension SignalingUpdateAnswer: Messageable {
+    
+    func message() -> Message {
+        return Message(type: .update, data: ["sdp": sdp as Any])
     }
     
 }

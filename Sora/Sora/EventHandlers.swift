@@ -10,6 +10,8 @@ open class WebSocketEventHandlers {
     var onMessageHandler: ((SRWebSocket, AnyObject) -> ())?
     var onCloseHandler: ((SRWebSocket, Int, String?, Bool) -> ())?
 
+    public init() {}
+    
     public func onOpen(handler: @escaping (SRWebSocket) -> ()) {
         onOpenHandler = handler
     }
@@ -37,11 +39,14 @@ open class SignalingEventHandlers {
     var onReceiveHandler: ((Message) -> Void)?
     var onConnectHandler: ((Void) -> Void)?
     var onDisconnectHandler: ((Void) -> Void)?
-    var onUpdateHandler: ((SignalingStats) -> Void)?
+    var onStatisticsHandler: ((SignalingStats) -> Void)?
     var onFailureHandler: ((ConnectionError) -> Void)?
     var onPingHandler: ((Void) -> Void)?
     var onNotifyHandler: ((SignalingNotify) -> Void)?
-    
+    var onUpdateHandler: ((SignalingUpdateOffer) -> Void)?
+
+    public init() {}
+
     public func onReceive(handler: @escaping ((Message) -> Void)) {
         onReceiveHandler = handler
     }
@@ -54,8 +59,8 @@ open class SignalingEventHandlers {
         onDisconnectHandler = handler
     }
     
-    public func onUpdate(handler: @escaping ((SignalingStats) -> Void)) {
-        onUpdateHandler = handler
+    public func onStatistics(handler: @escaping ((SignalingStats) -> Void)) {
+        onStatisticsHandler = handler
     }
     
     public func onFailure(handler: @escaping ((ConnectionError) -> Void)) {
@@ -68,6 +73,10 @@ open class SignalingEventHandlers {
     
     public func onNotify(handler: @escaping ((SignalingNotify) -> Void)) {
         onNotifyHandler = handler
+    }
+    
+    public func onUpdate(handler: @escaping ((SignalingUpdateOffer) -> Void)) {
+        onUpdateHandler = handler
     }
     
 }
@@ -93,6 +102,8 @@ open class PeerConnectionEventHandlers {
     var onRemoveCandidatesHandler:
     ((RTCPeerConnection, [RTCIceCandidate]) -> Void)?
     
+    public init() {}
+
     public func onConnect(handler: @escaping ((RTCPeerConnection) -> Void)) {
         onConnectHandler = handler
     }

@@ -10,7 +10,7 @@ public enum MediaStreamRole {
 
 public enum VideoCodec {
     
-    case unspecified
+    case `default`
     case VP8
     case VP9
     case H264
@@ -19,7 +19,7 @@ public enum VideoCodec {
 
 public enum AudioCodec {
     
-    case unspecified
+    case `default`
     case Opus
     case PCMU
     
@@ -27,8 +27,8 @@ public enum AudioCodec {
 
 public class MediaOption {
     
-    public var videoCodec: VideoCodec = .unspecified
-    public var audioCodec: AudioCodec = .unspecified
+    public var videoCodec: VideoCodec = .default
+    public var audioCodec: AudioCodec = .default
     public var videoEnabled: Bool = true
     public var audioEnabled: Bool = true
     
@@ -46,8 +46,8 @@ public class MediaOption {
     public var signalingAnswerMediaConstraints: RTCMediaConstraints = defaultMediaConstraints
     public var videoCaptureSourceMediaConstraints: RTCMediaConstraints = defaultMediaConstraints
     public var peerConnectionMediaConstraints: RTCMediaConstraints = defaultMediaConstraints
-    public var videoCaptureTrackId: String = defaultVideoCaptureTrackId
-    public var audioCaptureTrackId: String = defaultAudioCaptureTrackId
+    public lazy var videoCaptureTrackId: String = MediaOption.createCaptureTrackId()
+    public lazy var audioCaptureTrackId: String = MediaOption.createCaptureTrackId()
     
     static var defaultConfiguration: RTCConfiguration = {
         () -> RTCConfiguration in
@@ -61,7 +61,14 @@ public class MediaOption {
     static var defaultMediaConstraints: RTCMediaConstraints =
         RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
     
-    static var defaultVideoCaptureTrackId: String = "mainVideoCaptureTrack"
-    static var defaultAudioCaptureTrackId: String = "mainAudioCaptureTrack"
+    // MARK: - トラック ID
+    
+    static var nextCaptureTrackId: Int = 0
+    
+    public static func createCaptureTrackId() -> String {
+        let id = "capturer_" + MediaOption.nextCaptureTrackId.description
+        MediaOption.nextCaptureTrackId += 1
+        return id
+    }
     
 }

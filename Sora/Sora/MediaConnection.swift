@@ -3,11 +3,19 @@ import WebRTC
 
 public class MediaConnection {
     
-    public enum State {
-        case connected
-        case connecting
-        case disconnected
-        case disconnecting
+    public struct NotificationKey {
+        
+        public enum UserInfo: String {
+            case connectionError = "Sora.MediaConnection.UserInfo.connectionError"
+        }
+        
+        public static var onConnect =
+            Notification.Name("Sora.MediaConnection.Notification.onConnect")
+        public static var onDisconnect =
+            Notification.Name("Sora.MediaConnection.Notification.onDisconnect")
+        public static var onFailure =
+            Notification.Name("Sora.MediaConnection.Notification.onFailure")
+        
     }
     
     public struct Statistics {
@@ -22,35 +30,29 @@ public class MediaConnection {
         
     }
     
-    public enum Notification: String {
-        case disconnectedUpstream = "DISCONNECTED-UPSTREAM"
-    }
-    
     public weak var connection: Connection!
-    public var mediaStream: MediaStream?
+    public var peerConnection: PeerConnection?
     public var mediaOption: MediaOption = MediaOption()
+    public var multistreamEnabled: Bool = false
+    public var mediaStreams: [MediaStream] = []
     
-    public var state: State {
-        willSet {
-            onChangeStateHandler?(newValue)
-        }
+    public var mainMediaStream: MediaStream? {
+        get { return mediaStreams.first }
     }
-    
-    public var webSocketEventHandlers: WebSocketEventHandlers?
-    public var signalingEventHandlers: SignalingEventHandlers?
-    public var peerConnectionEventHandlers: PeerConnectionEventHandlers?
+
+    public var webSocketEventHandlers: WebSocketEventHandlers
+        = WebSocketEventHandlers()
+    public var signalingEventHandlers: SignalingEventHandlers
+        = SignalingEventHandlers()
+    public var peerConnectionEventHandlers: PeerConnectionEventHandlers
+        = PeerConnectionEventHandlers()
     
     public var isAvailable: Bool {
-        get { return state == .connected }
+        get { return peerConnection?.isAvailable ?? false }
     }
     
-    public var videoRenderer: VideoRenderer? {
-        get { return mediaStream?.videoRenderer }
-        set { mediaStream?.videoRenderer = newValue }
-    }
-    
-    var eventLog: EventLog {
-        get { return connection.eventLog }
+    var eventLog: EventLog? {
+        get { return connection?.eventLog }
     }
     
     var eventType: Event.EventType {
@@ -69,7 +71,6 @@ public class MediaConnection {
     
     init(connection: Connection) {
         self.connection = connection
-        state = .disconnected
     }
     
     // MARK: 接続
@@ -77,155 +78,195 @@ public class MediaConnection {
     public func connect(accessToken: String? = nil,
                         timeout: Int = 30,
                         handler: @escaping ((ConnectionError?) -> Void)) {
-        state = .connecting
-        mediaStream = MediaStream(connection: connection,
-                                  mediaConnection: self,
-                                  role: role,
-                                  accessToken: accessToken,
-                                  mediaStreamId: nil,
-                                  mediaOption: mediaOption)
-        mediaStream!.connect(timeout: timeout) {
+        eventLog?.markFormat(type: eventType, format: "try connect")
+        peerConnection = PeerConnection(connection: connection,
+                                        mediaConnection: self,
+                                        role: role,
+                                        accessToken: accessToken,
+                                        mediaStreamId: nil,
+                                        mediaOption: mediaOption)
+        peerConnection!.connect(timeout: timeout) {
             error in
             if let error = error {
-                self.state = .disconnected
-                self.mediaStream = nil
+                self.eventLog?.markFormat(type: self.eventType,
+                                          format: "connect error: %@",
+                                          arguments: error.localizedDescription)
+                self.peerConnection!.terminate()
+                self.peerConnection = nil
                 self.onFailureHandler?(error)
-                self.onConnectHandler?(error)
+                self.callOnConnectHandler(error)
                 handler(error)
             } else {
-                self.state = .connected
-                self.onConnectHandler?(nil)
+                self.eventLog?.markFormat(type: self.eventType, format: "connect ok")
+                self.internalOnConnect()
+                self.callOnConnectHandler()
                 handler(nil)
             }
         }
     }
     
+    // 内部用のコールバック
+    func internalOnConnect() {}
+    
     public func disconnect(handler: @escaping (ConnectionError?) -> Void) {
-        switch state {
-        case .disconnected:
+        eventLog?.markFormat(type: eventType, format: "try disconnect")
+        switch peerConnection?.state {
+        case nil, .disconnected?:
+            eventLog?.markFormat(type: eventType,
+                                 format: "error: already disconnected")
             handler(ConnectionError.connectionDisconnected)
-        case .disconnecting:
+        case .disconnecting?:
+            eventLog?.markFormat(type: eventType,
+                                 format: "error: connection is busy")
             handler(ConnectionError.connectionBusy)
-        case .connected, .connecting:
-            state = .disconnecting
-            stopConnectionTimer()
-            mediaStream!.disconnect {
+        case .connected?, .connecting?:
+            eventLog?.markFormat(type: eventType, format: "disconnect ok")
+            for stream in mediaStreams {
+                stream.terminate()
+            }
+            mediaStreams = []
+            peerConnection!.disconnect {
                 error in
-                self.state = .disconnected
                 handler(error)
             }
         }
     }
     
     public func send(message: Messageable) -> ConnectionError? {
+        eventLog?.markFormat(type: eventType, format: "send message")
         if isAvailable {
-            return mediaStream!.send(message: message)
+            return peerConnection!.send(message: message)
         } else {
             return ConnectionError.connectionDisconnected
         }
     }
     
-    // MARK: タイマー
+    // MARK: マルチストリーム
     
-    var connectionTimer: Timer?
-    var connectionTimerHandler: ((Int?) -> Void)?
+    func hasMediaStream(_ mediaStreamId: String) -> Bool {
+        guard let peerConn = peerConnection else {
+            assertionFailure("peer connection must not be nil")
+            return false
+        }
+        
+        if peerConn.clientId == mediaStreamId {
+            return true
+        } else {
+            return mediaStreams.contains {
+                stream in
+                return stream.mediaStreamId == mediaStreamId
+            }
+        }
+    }
     
-    public func startConnectionTimer(timeInterval: TimeInterval,
-                                     handler: @escaping ((Int?) -> Void)) {
-        eventLog.markFormat(type: eventType,
-                            format: "start timer (interval %f)",
-                            arguments: timeInterval)
-        connectionTimerHandler = handler
-        connectionTimer?.invalidate()
-        connectionTimer = Timer(timeInterval: timeInterval, repeats: true) {
-            timer in
-
-            if let stream = self.mediaStream {
-                if stream.isAvailable {
-                    let diff = Date(timeIntervalSinceNow: 0)
-                        .timeIntervalSince(stream.creationTime!)
-                    handler(Int(diff))
-                } else {
-                    handler(nil)
-                }
+    func addMediaStream(_ mediaStream: MediaStream) {
+        eventLog?.markFormat(type: eventType,
+                             format: "add media stream '%@'",
+                             arguments: mediaStream.mediaStreamId)
+        if hasMediaStream(mediaStream.mediaStreamId) {
+            assertionFailure("media stream already exists")
+        }
+        
+        mediaStreams.append(mediaStream)
+        onAddStreamHandler?(mediaStream)
+    }
+    
+    func removeMediaStream(_ mediaStreamId: String) {
+        eventLog?.markFormat(type: eventType, format: "remove media stream")
+        var removed: MediaStream?
+        mediaStreams = mediaStreams.filter {
+            e in
+            if e.mediaStreamId == mediaStreamId {
+                removed = e
+                return false
             } else {
-                handler(nil)
+                return true
             }
         }
-        RunLoop.main.add(connectionTimer!, forMode: .commonModes)
+        if let stream = removed {
+            onRemoveStreamHandler?(stream)
+        }
     }
     
-    public func stopConnectionTimer() {
-        eventLog.markFormat(type: eventType, format: "stop timer")
-        connectionTimer?.invalidate()
-        connectionTimer = nil
-        connectionTimerHandler = nil
-    }
-    
-    
-    // MARK: 統計情報
-    
-    public func statisticsReports(level: StatisticsReport.Level)
-        -> ([StatisticsReport], [StatisticsReport])
-    {
-        if !isAvailable {
-            return ([], [])
-        }
-        
-        func getReports(track: RTCMediaStreamTrack) -> [StatisticsReport] {
-            var reports: [StatisticsReport] = []
-            mediaStream!.peerConnection!
-                .stats(for: track, statsOutputLevel: level.nativeOutputLevel) {
-                nativeReports in
-                for nativeReport in nativeReports {
-                    if let report = StatisticsReport.parse(report: nativeReport) {
-                        reports.append(report)
-                    }
-                }
-            }
-            return reports
-        }
-        
-        var videoReports: [StatisticsReport] = []
-        if let track = mediaStream!.nativeVideoTrack {
-            videoReports = getReports(track: track)
-        }
-        
-        var audioReports: [StatisticsReport] = []
-        if let track = mediaStream!.nativeAudioTrack {
-            audioReports = getReports(track: track)
-        }
-        
-        return (videoReports, audioReports)
-    }
-
     // MARK: イベントハンドラ
     
-    var onChangeStateHandler: ((State) -> Void)?
-    var onConnectHandler: ((ConnectionError?) -> Void)?
-    var onDisconnectHandler: ((ConnectionError?) -> Void)?
-    var onFailureHandler: ((ConnectionError) -> Void)?
-    var onUpdateHandler: ((Statistics) -> Void)?
+    private var onConnectHandler: ((ConnectionError?) -> Void)?
+    private var onDisconnectHandler: ((ConnectionError?) -> Void)?
+    private var onFailureHandler: ((ConnectionError) -> Void)?
+    private var onAddStreamHandler: ((MediaStream) -> Void)?
+    private var onRemoveStreamHandler: ((MediaStream) -> Void)?
+    var onStatisticsHandler: ((Statistics) -> Void)?
     var onNotifyHandler: ((Notification) -> Void)?
 
-    public func onChangeState(handler: @escaping (State) -> Void) {
-        onChangeStateHandler = handler
-    }
-    
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
         onConnectHandler = handler
+    }
+    
+    func callOnConnectHandler(_ error: ConnectionError? = nil) {
+        onConnectHandler?(error)
+        NotificationCenter
+            .default
+            .post(name: Connection.NotificationKey.onConnect,
+                  object: connection,
+                  userInfo:
+                [Connection.NotificationKey.UserInfo.connectionError: error as Any,
+                 Connection.NotificationKey.UserInfo.mediaConnection: self])
     }
     
     public func onDisconnect(handler: @escaping (ConnectionError?) -> Void) {
         onDisconnectHandler = handler
     }
     
+    func callOnDisconnectHandler(_ error: ConnectionError?) {
+        onDisconnectHandler?(error)
+        NotificationCenter
+            .default
+            .post(name: Connection.NotificationKey.onDisconnect,
+                  object: connection,
+                  userInfo:
+                [Connection.NotificationKey.UserInfo.connectionError: error as Any,
+                 Connection.NotificationKey.UserInfo.mediaConnection: self])
+        NotificationCenter
+            .default
+            .post(name: MediaConnection.NotificationKey.onDisconnect,
+                  object: self,
+                  userInfo:
+                [MediaConnection.NotificationKey.UserInfo
+                    .connectionError: error as Any])
+    }
+    
     public func onFailure(handler: @escaping (ConnectionError) -> Void) {
         onFailureHandler = handler
     }
     
-    public func onUpdate(handler: @escaping ((Statistics) -> Void)) {
-        onUpdateHandler = handler
+    func callOnFailureHandler(_ error: ConnectionError) {
+        onFailureHandler?(error)
+        NotificationCenter
+            .default
+            .post(name: Connection.NotificationKey.onFailure,
+                  object: connection,
+                  userInfo:
+                [Connection.NotificationKey.UserInfo.connectionError: error as Any,
+                 Connection.NotificationKey.UserInfo.mediaConnection: self])
+        NotificationCenter
+            .default
+            .post(name: MediaConnection.NotificationKey.onFailure,
+                  object: self,
+                  userInfo:
+                [MediaConnection.NotificationKey.UserInfo
+                    .connectionError: error as Any])
+    }
+    
+    public func onAddStream(handler: @escaping (MediaStream) -> Void) {
+        onAddStreamHandler = handler
+    }
+    
+    public func onRemoveStream(handler: @escaping (MediaStream) -> Void) {
+        onRemoveStreamHandler = handler
+    }
+    
+    public func onStatistics(handler: @escaping (Statistics) -> Void) {
+        onStatisticsHandler = handler
     }
     
     public func onNotify(handler: @escaping ((Notification) -> Void)) {
@@ -248,10 +289,10 @@ class MediaCapturer {
         videoCaptureTrack = factory
             .videoTrack(with: videoCaptureSource,
                         trackId: mediaOption?.videoCaptureTrackId ??
-                            MediaOption.defaultVideoCaptureTrackId)
+                            MediaOption.createCaptureTrackId())
         audioCaptureTrack = factory
             .audioTrack(withTrackId: mediaOption?.audioCaptureTrackId ??
-                MediaOption.defaultAudioCaptureTrackId)
+                MediaOption.createCaptureTrackId())
     }
     
 }
@@ -278,7 +319,7 @@ public class MediaPublisher: MediaConnection {
     public var captureSession: AVCaptureSession? {
         get { return mediaCapturer?.videoCaptureSource.captureSession }
     }
-    
+
     var _cameraPosition: CameraPosition?
     
     public var cameraPosition: CameraPosition? {
@@ -297,9 +338,9 @@ public class MediaPublisher: MediaConnection {
         set {
             if let capturer = mediaCapturer {
                 if let value = newValue {
-                    eventLog.markFormat(type: eventType,
-                                        format: "switch camera to %@",
-                                        arguments: value.rawValue)
+                    eventLog?.markFormat(type: eventType,
+                                         format: "switch camera to %@",
+                                         arguments: value.rawValue)
                     switch value {
                     case .front:
                         capturer.videoCaptureSource.useBackCamera = false
@@ -313,6 +354,22 @@ public class MediaPublisher: MediaConnection {
         
     }
     
+    public var autofocusEnabled = false {
+        didSet {
+            if let session = captureSession {
+                for input in session.inputs {
+                    if let device = input as? AVCaptureDevice {
+                        if autofocusEnabled {
+                            device.focusMode = .autoFocus
+                        } else {
+                            device.focusMode = .locked
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     override var eventType: Event.EventType {
         get { return .MediaPublisher }
     }
@@ -322,9 +379,13 @@ public class MediaPublisher: MediaConnection {
     }
     
     var mediaCapturer: MediaCapturer? {
-        get { return mediaStream?.mediaCapturer }
+        get { return peerConnection?.mediaCapturer }
     }
 
+    override func internalOnConnect() {
+        autofocusEnabled = false
+    }
+    
     public func flipCameraPosition() {
         cameraPosition = cameraPosition?.flip()
     }
