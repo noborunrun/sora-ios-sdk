@@ -153,40 +153,4 @@ public class MediaStream {
         connectionTimerHandler = nil
     }
     
-    // MARK: 統計情報
-    
-    public func statisticsReports(level: StatisticsReport.Level)
-        -> ([StatisticsReport], [StatisticsReport])
-    {
-        if !isAvailable {
-            return ([], [])
-        }
-        
-        func getReports(track: RTCMediaStreamTrack) -> [StatisticsReport] {
-            var reports: [StatisticsReport] = []
-            peerConnection!.nativePeerConnection!
-                .stats(for: track, statsOutputLevel: level.nativeOutputLevel) {
-                    nativeReports in
-                    for nativeReport in nativeReports {
-                        if let report = StatisticsReport.parse(report: nativeReport) {
-                            reports.append(report)
-                        }
-                    }
-            }
-            return reports
-        }
-        
-        var videoReports: [StatisticsReport] = []
-        if let track = nativeVideoTrack {
-            videoReports = getReports(track: track)
-        }
-        
-        var audioReports: [StatisticsReport] = []
-        if let track = nativeAudioTrack {
-            audioReports = getReports(track: track)
-        }
-        
-        return (videoReports, audioReports)
-    }
-    
 }
