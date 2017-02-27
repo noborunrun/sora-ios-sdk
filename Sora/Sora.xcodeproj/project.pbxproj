@@ -32,7 +32,6 @@
 		91715A861D5DF25B0004C995 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; };
 		918A6DF71DA4DDC800028E3E /* Unbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918A6DF61DA4DDC800028E3E /* Unbox.framework */; };
-		919546E81DD30C5A00AEE6F6 /* StatisticsReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919546E71DD30C5A00AEE6F6 /* StatisticsReport.swift */; };
 		91A2FD551E25421B0081ADF9 /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A2FD541E25421B0081ADF9 /* PeerConnection.swift */; };
 		91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D6451D75E11F00112A4E /* VideoRenderer.swift */; };
 		91C109271E4A3199009F11F7 /* ConnectionController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 91C109201E4A3198009F11F7 /* ConnectionController.storyboard */; };
@@ -88,7 +87,6 @@
 		918201901D58668E00178E2B /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = Carthage/Build/iOS/WebRTC.framework; sourceTree = "<group>"; };
 		918201911D58668E00178E2B /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		918A6DF61DA4DDC800028E3E /* Unbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Unbox.framework; path = Carthage/Build/iOS/Unbox.framework; sourceTree = "<group>"; };
-		919546E71DD30C5A00AEE6F6 /* StatisticsReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsReport.swift; sourceTree = "<group>"; };
 		91A2FD541E25421B0081ADF9 /* PeerConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConnection.swift; sourceTree = "<group>"; };
 		91B1D63F1D756AF800112A4E /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		91B1D6451D75E11F00112A4E /* VideoRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoRenderer.swift; sourceTree = "<group>"; };
@@ -198,7 +196,6 @@
 				91B1D63F1D756AF800112A4E /* Notifications.swift */,
 				91A2FD541E25421B0081ADF9 /* PeerConnection.swift */,
 				91FD95741DCA06F700047BA9 /* RTCExtensions.swift */,
-				919546E71DD30C5A00AEE6F6 /* StatisticsReport.swift */,
 				91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */,
 				91B1D6451D75E11F00112A4E /* VideoRenderer.swift */,
 				9100904F1E58B5450099E00E /* VideoView.swift */,
@@ -366,7 +363,6 @@
 				91E098841D799389004CF024 /* MediaStream.swift in Sources */,
 				9139343A1DD9D9A2002F3F6A /* EventHandlers.swift in Sources */,
 				91E69B671D77536A004124C3 /* Notifications.swift in Sources */,
-				919546E81DD30C5A00AEE6F6 /* StatisticsReport.swift in Sources */,
 				91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */,
 				91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */,
 				91C1092B1E4A3199009F11F7 /* RoleViewController.swift in Sources */,
