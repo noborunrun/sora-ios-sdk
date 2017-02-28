@@ -24,6 +24,7 @@
 		9100904E1E58B4470099E00E /* VideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9100904D1E58B4470099E00E /* VideoView.xib */; };
 		910090501E58B5450099E00E /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9100904F1E58B5450099E00E /* VideoView.swift */; };
 		91192F741D598E4600F92D78 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91192F731D598E4600F92D78 /* Message.swift */; };
+		9138B4D01E655728006A76FB /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9138B4CF1E655728006A76FB /* BuildInfo.swift */; };
 		9139343A1DD9D9A2002F3F6A /* EventHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913934391DD9D9A2002F3F6A /* EventHandlers.swift */; };
 		91577A031D85CB1700A5AF9F /* MediaConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91577A021D85CB1700A5AF9F /* MediaConnection.swift */; };
 		91705B801DED66D300D79306 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
@@ -82,6 +83,7 @@
 		9100904D1E58B4470099E00E /* VideoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoView.xib; sourceTree = "<group>"; };
 		9100904F1E58B5450099E00E /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		91192F731D598E4600F92D78 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		9138B4CF1E655728006A76FB /* BuildInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildInfo.swift; sourceTree = "<group>"; };
 		913934391DD9D9A2002F3F6A /* EventHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandlers.swift; sourceTree = "<group>"; };
 		91577A021D85CB1700A5AF9F /* MediaConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaConnection.swift; sourceTree = "<group>"; };
 		918201901D58668E00178E2B /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = Carthage/Build/iOS/WebRTC.framework; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 			children = (
 				91C7B08C1D54636A006F5FA2 /* Sora.h */,
 				91C7B08E1D54636A006F5FA2 /* Info.plist */,
+				9138B4CF1E655728006A76FB /* BuildInfo.swift */,
 				91DB5E9D1D6F43A5007744BF /* Connection.swift */,
 				91DD141D1DC872F1005881C2 /* Event.swift */,
 				913934391DD9D9A2002F3F6A /* EventHandlers.swift */,
@@ -362,6 +365,7 @@
 				91DD141E1DC872F1005881C2 /* Event.swift in Sources */,
 				91E098841D799389004CF024 /* MediaStream.swift in Sources */,
 				9139343A1DD9D9A2002F3F6A /* EventHandlers.swift in Sources */,
+				9138B4D01E655728006A76FB /* BuildInfo.swift in Sources */,
 				91E69B671D77536A004124C3 /* Notifications.swift in Sources */,
 				91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */,
 				91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */,
