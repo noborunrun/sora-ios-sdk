@@ -24,6 +24,8 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var audioCodecLabel: UILabel!
     @IBOutlet weak var audioCodecCell: UITableViewCell!
     @IBOutlet weak var autofocusLabel: UILabel!
+    @IBOutlet weak var WebRTCVersionLabel: UILabel!
+    @IBOutlet weak var VP9EnabledLabel: UILabel!
     
     @IBOutlet weak var connectionTimeValueLabel: UILabel!
     @IBOutlet weak var URLTextField: UITextField!
@@ -36,6 +38,8 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var enableAudioSwitch: UISwitch!
     @IBOutlet weak var audioCodecValueLabel: UILabel!
     @IBOutlet weak var autofocusSwitch: UISwitch!
+    @IBOutlet weak var WebRTCVersionValueLabel: UILabel!
+    @IBOutlet weak var VP9EnabledValueLabel: UILabel!
     
     weak var touchedField: UITextField?
     
@@ -173,7 +177,9 @@ class ConnectionViewController: UITableViewController {
                                enableVideoLabel, videoCodecLabel,
                                videoCodecValueLabel,
                                enableAudioLabel, audioCodecLabel,
-                               audioCodecValueLabel, autofocusLabel]
+                               audioCodecValueLabel, autofocusLabel,
+                               WebRTCVersionLabel, WebRTCVersionValueLabel,
+                               VP9EnabledLabel, VP9EnabledValueLabel]
         {
             label.font = UIFont.preferredFont(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
@@ -215,6 +221,17 @@ class ConnectionViewController: UITableViewController {
             enableMultistreamSwitch.isEnabled = false
         }
         
+        // build info
+        if let version = BuildInfo.WebRTCVersion {
+            WebRTCVersionValueLabel.text = version
+        } else {
+            WebRTCVersionValueLabel.text = "Unknown"
+        }
+        if let VP9 = BuildInfo.VP9Enabled {
+            VP9EnabledValueLabel.text = VP9 ? "Enabled" : "Disabled"
+        } else {
+            VP9EnabledValueLabel.text = "Unknown"
+        }
     }
     
     func applicationDidEnterBackground(_ notification: Notification) {

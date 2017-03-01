@@ -153,11 +153,11 @@
 			children = (
 				91C109201E4A3198009F11F7 /* ConnectionController.storyboard */,
 				91C109211E4A3199009F11F7 /* AudioCodecViewController.swift */,
-				91C109221E4A3199009F11F7 /* ConnectionViewController.swift */,
 				91C109231E4A3199009F11F7 /* ConnectionController.swift */,
+				91C109261E4A3199009F11F7 /* ConnectionNavigationController.swift */,
+				91C109221E4A3199009F11F7 /* ConnectionViewController.swift */,
 				91C109241E4A3199009F11F7 /* RoleViewController.swift */,
 				91C109251E4A3199009F11F7 /* VideoCodecViewController.swift */,
-				91C109261E4A3199009F11F7 /* ConnectionNavigationController.swift */,
 			);
 			path = ConnectionController;
 			sourceTree = "<group>";

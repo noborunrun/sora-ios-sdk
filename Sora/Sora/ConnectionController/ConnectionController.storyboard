@@ -168,7 +168,7 @@
                                         <rect key="frame" x="0.0" y="319.5" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ARI-yf-RV5" id="SdE-P6-jDR">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="51"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="51.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Role" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wpG-aY-EmM">
@@ -391,6 +391,74 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Build Info" id="Wxg-Vb-2Gi">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ZzL-Eh-yuA">
+                                        <rect key="frame" x="0.0" y="907.5" width="320" height="52"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZzL-Eh-yuA" id="EK4-tb-R6f">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="51"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WebRTC Version" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UXr-Bc-aEt">
+                                                    <rect key="frame" x="20" y="10" width="129" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="78" id="STh-Av-eWF"/>
+                                                        <constraint firstAttribute="height" constant="30" id="hFx-Qq-nro"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ij0-qU-2Y3">
+                                                    <rect key="frame" x="250" y="15" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ij0-qU-2Y3" secondAttribute="trailing" constant="20" id="CUb-Yj-mXZ"/>
+                                                <constraint firstItem="ij0-qU-2Y3" firstAttribute="centerY" secondItem="EK4-tb-R6f" secondAttribute="centerY" id="Vgh-k1-IpK"/>
+                                                <constraint firstItem="UXr-Bc-aEt" firstAttribute="leading" secondItem="EK4-tb-R6f" secondAttribute="leadingMargin" constant="12" id="e6d-lG-tWN"/>
+                                                <constraint firstItem="UXr-Bc-aEt" firstAttribute="centerY" secondItem="EK4-tb-R6f" secondAttribute="centerY" id="j5O-co-WdW"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="yUi-lD-Bfy">
+                                        <rect key="frame" x="0.0" y="959.5" width="320" height="52"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yUi-lD-Bfy" id="AmS-zH-uRa">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="51"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VP9" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RNM-be-A4O">
+                                                    <rect key="frame" x="20" y="10" width="78" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="c3V-I8-HVw"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="78" id="sp5-Lu-0B2"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="deW-V1-ccn">
+                                                    <rect key="frame" x="250" y="15" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="RNM-be-A4O" firstAttribute="centerY" secondItem="AmS-zH-uRa" secondAttribute="centerY" id="KPa-t6-hs4"/>
+                                                <constraint firstItem="RNM-be-A4O" firstAttribute="leading" secondItem="AmS-zH-uRa" secondAttribute="leadingMargin" constant="12" id="gHf-zI-e5I"/>
+                                                <constraint firstItem="deW-V1-ccn" firstAttribute="centerY" secondItem="AmS-zH-uRa" secondAttribute="centerY" id="iAT-Bj-pxa"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="deW-V1-ccn" secondAttribute="trailing" constant="20" id="wce-E8-qPD"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="1nR-he-y4W" id="fP8-FT-WrZ"/>
@@ -409,6 +477,10 @@
                     <connections>
                         <outlet property="URLLabel" destination="EXc-lo-yz9" id="n9x-gv-OtL"/>
                         <outlet property="URLTextField" destination="Sah-Wb-5lg" id="ty8-Vo-aWq"/>
+                        <outlet property="VP9EnabledLabel" destination="RNM-be-A4O" id="Tkb-DX-0cr"/>
+                        <outlet property="VP9EnabledValueLabel" destination="deW-V1-ccn" id="0BB-rA-I3F"/>
+                        <outlet property="WebRTCVersionLabel" destination="UXr-Bc-aEt" id="aPr-0h-Jr0"/>
+                        <outlet property="WebRTCVersionValueLabel" destination="ij0-qU-2Y3" id="BN6-g7-Ep0"/>
                         <outlet property="audioCodecCell" destination="fZ7-UR-oy0" id="Had-jg-wJ5"/>
                         <outlet property="audioCodecLabel" destination="9vO-xJ-7RL" id="82s-Ot-xkr"/>
                         <outlet property="audioCodecValueLabel" destination="CYi-Dj-GI6" id="Ius-nG-WgN"/>
