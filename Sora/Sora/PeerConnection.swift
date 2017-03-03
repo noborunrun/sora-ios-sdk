@@ -574,9 +574,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 case .ping?:
                     receiveSignalingPing()
                     
-                case .stats?:
-                    receiveSignalingStats(json: json)
-                    
                     /*
                      case .notify?:
                      receiveSignalingNotify(json: json)
@@ -604,31 +601,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             if let error = self.send(SignalingPong()) {
                 mediaConnection?.callOnFailureHandler(error)
             }
-            
-        default:
-            break
-        }
-    }
-    
-    func receiveSignalingStats(json: [String: Any]) {
-        switch state {
-        case .connected:
-            var stats: SignalingStats!
-            do {
-                stats = Optional.some(try unbox(dictionary: json))
-            } catch {
-                eventLog?.markFormat(type: .Signaling,
-                                     format: "failed parsing stats: %@",
-                                     arguments: json.description)
-                return
-            }
-            
-            eventLog?.markFormat(type: .Signaling, format: "stats: %@",
-                                 arguments: stats.description)
-            
-            let mediaStats = MediaConnection.Statistics(signalingStats: stats)
-            signalingEventHandlers?.onStatisticsHandler?(stats)
-            mediaConnection?.onStatisticsHandler?(mediaStats)
             
         default:
             break

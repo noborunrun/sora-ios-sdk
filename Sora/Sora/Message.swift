@@ -11,7 +11,6 @@ public class Message {
         case candidate = "candidate"
         case ping = "ping"
         case pong = "pong"
-        case stats = "stats"
         case notify = "notify"
         case update = "update"
     }
@@ -396,38 +395,10 @@ extension SignalingPong: Messageable {
     
 }
 
-public struct SignalingStats {
-    
-    public var numberOfUpstreamConnections: Int?
-    public var numberOfDownstreamConnections: Int?
-    
-    var description: String {
-        get {
-            var s = ""
-            if let n = numberOfUpstreamConnections {
-                s = s.appendingFormat("upstreams=%d ", n)
-            }
-            if let n = numberOfDownstreamConnections {
-                s = s.appendingFormat("downstreams=%d", n)
-            }
-            return s
-        }
-    }
-}
-
-extension SignalingStats: Unboxable {
-    
-    public init(unboxer: Unboxer) throws {
-        numberOfUpstreamConnections = unboxer.unbox(key: "upstream_connections")
-        numberOfDownstreamConnections = unboxer.unbox(key: "downstream_connections")
-    }
-    
-}
-
 public struct SignalingNotify {
     
     public var notifyMessage: String
-    
+
 }
 
 extension SignalingNotify: Unboxable {

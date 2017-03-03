@@ -39,7 +39,6 @@ open class SignalingEventHandlers {
     var onReceiveHandler: ((Message) -> Void)?
     var onConnectHandler: ((Void) -> Void)?
     var onDisconnectHandler: ((Void) -> Void)?
-    var onStatisticsHandler: ((SignalingStats) -> Void)?
     var onFailureHandler: ((ConnectionError) -> Void)?
     var onPingHandler: ((Void) -> Void)?
     var onNotifyHandler: ((SignalingNotify) -> Void)?
@@ -57,10 +56,6 @@ open class SignalingEventHandlers {
     
     public func onDisconnect(handler: @escaping ((Void) -> Void)) {
         onDisconnectHandler = handler
-    }
-    
-    public func onStatistics(handler: @escaping ((SignalingStats) -> Void)) {
-        onStatisticsHandler = handler
     }
     
     public func onFailure(handler: @escaping ((ConnectionError) -> Void)) {

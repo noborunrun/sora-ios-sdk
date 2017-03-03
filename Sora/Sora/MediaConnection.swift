@@ -17,19 +17,7 @@ public class MediaConnection {
             Notification.Name("Sora.MediaConnection.Notification.onFailure")
         
     }
-    
-    public struct Statistics {
-        
-        public var numberOfUpstreamConnections: Int?
-        public var numberOfDownstreamConnections: Int?
-        
-        init(signalingStats: SignalingStats) {
-            self.numberOfUpstreamConnections = signalingStats.numberOfUpstreamConnections
-            self.numberOfDownstreamConnections = signalingStats.numberOfUpstreamConnections
-        }
-        
-    }
-    
+
     public weak var connection: Connection!
     public var peerConnection: PeerConnection?
     public var mediaOption: MediaOption = MediaOption()
@@ -195,7 +183,6 @@ public class MediaConnection {
     private var onFailureHandler: ((ConnectionError) -> Void)?
     private var onAddStreamHandler: ((MediaStream) -> Void)?
     private var onRemoveStreamHandler: ((MediaStream) -> Void)?
-    var onStatisticsHandler: ((Statistics) -> Void)?
     var onNotifyHandler: ((Notification) -> Void)?
 
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
@@ -263,10 +250,6 @@ public class MediaConnection {
     
     public func onRemoveStream(handler: @escaping (MediaStream) -> Void) {
         onRemoveStreamHandler = handler
-    }
-    
-    public func onStatistics(handler: @escaping (Statistics) -> Void) {
-        onStatisticsHandler = handler
     }
     
     public func onNotify(handler: @escaping ((Notification) -> Void)) {
