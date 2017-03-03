@@ -585,10 +585,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 case .ping?:
                     receiveSignalingPing()
                     
-                    /*
-                     case .notify?:
-                     receiveSignalingNotify(json: json)
-                     */
+                case .notify?:
+                    receiveSignalingNotify(json: json)
                     
                 case .offer?:
                     receiveSignalingOffer(json: json)
@@ -618,32 +616,31 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
     
-    /*
-     func receiveSignalingNotify(json: [String: Any]) {
-     switch state {
-     case .connected:
-     var notify: SignalingNotify!
-     do {
-     notify = Optional.some(try unbox(dictionary: json))
-     } catch {
-     eventLog?.markFormat(type: .Signaling,
-     format: "failed parsing notify: %@",
-     arguments: json.description)
-     }
-     
-     eventLog?.markFormat(type: .Signaling, format: "received notify: %@",
-     arguments: notify.notifyMessage)
-     signalingEventHandlers?.onNotifyHandler?(notify)
-     if let notify = MediaConnection
-     .Notification(rawValue: notify.notifyMessage) {
-     mediaConnection?.onNotifyHandler?(notify)
-     }
-     
-     default:
-     break
-     }
-     }
-     */
+    func receiveSignalingNotify(json: [String: Any]) {
+        switch state {
+        case .connected:
+            eventLog?.markFormat(type: .Signaling, format: "received notify")
+            
+            var notify: SignalingNotify!
+            do {
+                notify = Optional.some(try unbox(dictionary: json))
+            } catch {
+                eventLog?.markFormat(type: .Signaling,
+                                     format: "failed parsing notify: %@",
+                                     arguments: json.description)
+            }
+            eventLog?.markFormat(type: .Signaling,
+                                 format: "notify: %@",
+                                 arguments: notify as! CVarArg)
+
+            connection.numberOfConnections =
+                (notify.numberOfUpstreamConnections,
+                 notify.numberOfDownstreamConnections)
+            
+        default:
+            break
+        }
+    }
     
     func receiveSignalingOffer(json: [String: Any]) {
         switch state {

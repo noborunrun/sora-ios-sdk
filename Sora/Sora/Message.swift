@@ -395,16 +395,34 @@ extension SignalingPong: Messageable {
     
 }
 
+enum SignalingEventType: String, UnboxableEnum {
+    
+    case connectionCreated = "connection.created"
+    case connectionUpdated = "connection.updated"
+    case connectionDestroyed = "connection.destroyed"
+    
+}
+
 public struct SignalingNotify {
     
-    public var notifyMessage: String
+    var eventType: SignalingEventType
+    var role: SignalingRole
+    var connectionTime: Int
+    var numberOfChannels: Int
+    var numberOfUpstreamConnections: Int
+    var numberOfDownstreamConnections: Int
 
 }
 
 extension SignalingNotify: Unboxable {
     
     public init(unboxer: Unboxer) throws {
-        notifyMessage = try unboxer.unbox(key: "message")
+        eventType = try unboxer.unbox(key: "event_type")
+        role = try unboxer.unbox(key: "role")
+        connectionTime = try unboxer.unbox(key: "minutes")
+        numberOfChannels = try unboxer.unbox(key: "channel_connections")
+        numberOfUpstreamConnections = try unboxer.unbox(key: "channel_upstream_connections")
+        numberOfDownstreamConnections = try unboxer.unbox(key: "channel_downstream_connections")
     }
     
 }

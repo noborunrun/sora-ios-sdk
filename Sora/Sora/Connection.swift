@@ -43,12 +43,28 @@ public class Connection {
     public var mediaPublisher: MediaPublisher!
     public var mediaSubscriber: MediaSubscriber!
     
+    public var numberOfConnections: (Int, Int) = (0, 0) {
+        willSet {
+            if numberOfConnections != newValue {
+                onChangeNumberOfConnectionsHandler?(newValue.0, newValue.1)
+            }
+        }
+    }
+    
     public init(URL: Foundation.URL, mediaChannelId: String) {
         self.URL = URL
         self.mediaChannelId = mediaChannelId
         eventLog = EventLog(URL: URL, mediaChannelId: mediaChannelId)
         mediaPublisher = MediaPublisher(connection: self)
         mediaSubscriber = MediaSubscriber(connection: self)
+    }
+
+    // MARK: イベントハンドラ
+    
+    var onChangeNumberOfConnectionsHandler: ((Int, Int) -> ())?
+    
+    public func onChangeNumberOfConnections(handler: @escaping (Int, Int) -> ()) {
+        onChangeNumberOfConnectionsHandler = handler
     }
 
 }

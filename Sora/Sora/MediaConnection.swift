@@ -183,7 +183,6 @@ public class MediaConnection {
     private var onFailureHandler: ((ConnectionError) -> Void)?
     private var onAddStreamHandler: ((MediaStream) -> Void)?
     private var onRemoveStreamHandler: ((MediaStream) -> Void)?
-    var onNotifyHandler: ((Notification) -> Void)?
 
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
         onConnectHandler = handler
@@ -250,10 +249,6 @@ public class MediaConnection {
     
     public func onRemoveStream(handler: @escaping (MediaStream) -> Void) {
         onRemoveStreamHandler = handler
-    }
-    
-    public func onNotify(handler: @escaping ((Notification) -> Void)) {
-        onNotifyHandler = handler
     }
     
 }
