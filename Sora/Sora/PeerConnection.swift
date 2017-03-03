@@ -3,6 +3,16 @@ import WebRTC
 import SocketRocket
 import Unbox
 
+fileprivate var WebRTCInitialized: Bool = false
+
+func initializeWebRTC() {
+    guard !WebRTCInitialized else { return }
+    
+    WebRTCInitialized = true
+    RTCInitializeSSL()
+    RTCEnableMetrics()
+}
+
 public class PeerConnection {
     
     public enum State: String {
@@ -190,6 +200,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     private var disconnectCompletionHandler: ((ConnectionError?) -> Void)?
     
     init(peerConnection: PeerConnection, role: MediaStreamRole) {
+        initializeWebRTC()
         self.peerConnection = peerConnection
         self.role = role
         nativePeerConnectionFactory = RTCPeerConnectionFactory()
