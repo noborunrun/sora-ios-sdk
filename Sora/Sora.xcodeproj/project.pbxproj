@@ -49,7 +49,6 @@
 		91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DB5E9D1D6F43A5007744BF /* Connection.swift */; };
 		91DD141E1DC872F1005881C2 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DD141D1DC872F1005881C2 /* Event.swift */; };
 		91E098841D799389004CF024 /* MediaStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E098831D799389004CF024 /* MediaStream.swift */; };
-		91E69B671D77536A004124C3 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1D63F1D756AF800112A4E /* Notifications.swift */; };
 		91F82F751DF04BA600F8D923 /* MediaOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F82F741DF04BA600F8D923 /* MediaOption.swift */; };
 		91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */; };
 		91FD95751DCA06F700047BA9 /* RTCExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FD95741DCA06F700047BA9 /* RTCExtensions.swift */; };
@@ -90,7 +89,6 @@
 		918201911D58668E00178E2B /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		918A6DF61DA4DDC800028E3E /* Unbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Unbox.framework; path = Carthage/Build/iOS/Unbox.framework; sourceTree = "<group>"; };
 		91A2FD541E25421B0081ADF9 /* PeerConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConnection.swift; sourceTree = "<group>"; };
-		91B1D63F1D756AF800112A4E /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		91B1D6451D75E11F00112A4E /* VideoRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoRenderer.swift; sourceTree = "<group>"; };
 		91C109201E4A3198009F11F7 /* ConnectionController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ConnectionController.storyboard; sourceTree = "<group>"; };
 		91C109211E4A3199009F11F7 /* AudioCodecViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioCodecViewController.swift; sourceTree = "<group>"; };
@@ -196,7 +194,6 @@
 				91F82F741DF04BA600F8D923 /* MediaOption.swift */,
 				91E098831D799389004CF024 /* MediaStream.swift */,
 				91192F731D598E4600F92D78 /* Message.swift */,
-				91B1D63F1D756AF800112A4E /* Notifications.swift */,
 				91A2FD541E25421B0081ADF9 /* PeerConnection.swift */,
 				91FD95741DCA06F700047BA9 /* RTCExtensions.swift */,
 				91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */,
@@ -366,7 +363,6 @@
 				91E098841D799389004CF024 /* MediaStream.swift in Sources */,
 				9139343A1DD9D9A2002F3F6A /* EventHandlers.swift in Sources */,
 				9138B4D01E655728006A76FB /* BuildInfo.swift in Sources */,
-				91E69B671D77536A004124C3 /* Notifications.swift in Sources */,
 				91B1D6461D75E11F00112A4E /* VideoRenderer.swift in Sources */,
 				91C4655E1D6376AC00AD9C28 /* JSON.swift in Sources */,
 				91C1092B1E4A3199009F11F7 /* RoleViewController.swift in Sources */,
