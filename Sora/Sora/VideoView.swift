@@ -121,9 +121,9 @@ class VideoViewContentView: UIView, VideoRenderer {
 }
 
 func fitSize(from: CGSize, to: CGSize) -> CGSize {
-    var baseW = CGSize(width: to.width,
+    let baseW = CGSize(width: to.width,
                        height: to.width * (from.height / from.width))
-    var baseH = CGSize(width: to.height * (from.width / from.height),
+    let baseH = CGSize(width: to.height * (from.width / from.height),
                        height: to.height)
     return ([baseW, baseH].first {
         size in
