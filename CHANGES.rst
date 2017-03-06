@@ -20,6 +20,14 @@ FIX
 
 - [CHANGE] マルチストリームに対応した
 
+- [CHANGE] シグナリング: "notify" に対応した
+
+- [CHANGE] シグナリング: Sora の仕様変更に伴い、 "stats" への対応を廃止した
+
+- [CHANGE] API: ArchiveFinished: 削除した
+
+- [CHANGE] API: ArchiveFailed: 削除した
+
 - [CHANGE] API: MediaConnection: MediaStream を複数保持するようにした
 
 - [CHANGE] API: MediaConnection: ``multistreamEnabled`` プロパティを追加した
@@ -52,6 +60,14 @@ FIX
 
 - [CHANGE] API: PeerConnection: RTCPeerConnection のラッパーとして追加した
 
+- [CHANGE] API: SignalingConnected: 削除した
+
+- [CHANGE] API: SignalingCompleted: 削除した
+
+- [CHANGE] API: SignalingDisconnected: 削除した
+
+- [CHANGE] API: SignalingFailed: 削除した
+
 - [CHANGE] API: StatisticsReport: RTCStatsReport の変更 (名前が RTCLegacyStatsReport に変更された) に伴い削除した
 
 - [CHANGE] API: VideoView: 映像のアスペクト比を保持するようにした
@@ -70,6 +86,11 @@ FIX
 
 - [ADD] API: ConnectionController: 追加した
 
+- [ADD] API: Connection: 次の API を追加した
+  
+  - ``var numberOfConnections``
+
+  - ``func onChangeNumberOfConnections(handler:)``
 
 - [ADD] API: Connection, MediaConnection, MediaStream, PeerConnection: 次のイベントで (NotificationCenter による) 通知を行うようにした
 
