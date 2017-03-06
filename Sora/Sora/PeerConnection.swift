@@ -631,7 +631,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             }
             eventLog?.markFormat(type: .Signaling,
                                  format: "notify: %@",
-                                 arguments: notify as! CVarArg)
+                                 arguments: json.description)
 
             connection.numberOfConnections =
                 (notify.numberOfUpstreamConnections,
