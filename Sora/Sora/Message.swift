@@ -403,7 +403,7 @@ enum SignalingEventType: String, UnboxableEnum {
     
 }
 
-public struct SignalingNotify {
+struct SignalingNotify {
     
     var eventType: SignalingEventType
     var role: SignalingRole
@@ -416,7 +416,7 @@ public struct SignalingNotify {
 
 extension SignalingNotify: Unboxable {
     
-    public init(unboxer: Unboxer) throws {
+    init(unboxer: Unboxer) throws {
         eventType = try unboxer.unbox(key: "event_type")
         role = try unboxer.unbox(key: "role")
         connectionTime = try unboxer.unbox(key: "minutes")
@@ -427,7 +427,7 @@ extension SignalingNotify: Unboxable {
     
 }
 
-public struct SignalingUpdateOffer {
+struct SignalingUpdateOffer {
     
     var sdp: String
  

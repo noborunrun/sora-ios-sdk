@@ -41,8 +41,6 @@ open class SignalingEventHandlers {
     var onDisconnectHandler: ((Void) -> Void)?
     var onFailureHandler: ((ConnectionError) -> Void)?
     var onPingHandler: ((Void) -> Void)?
-    var onNotifyHandler: ((SignalingNotify) -> Void)?
-    var onUpdateHandler: ((SignalingUpdateOffer) -> Void)?
 
     public init() {}
 
@@ -64,14 +62,6 @@ open class SignalingEventHandlers {
     
     public func onPing(handler: @escaping ((Void) -> Void)) {
         onPingHandler = handler
-    }
-    
-    public func onNotify(handler: @escaping ((SignalingNotify) -> Void)) {
-        onNotifyHandler = handler
-    }
-    
-    public func onUpdate(handler: @escaping ((SignalingUpdateOffer) -> Void)) {
-        onUpdateHandler = handler
     }
     
 }

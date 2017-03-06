@@ -771,7 +771,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 return
             }
             
-            signalingEventHandlers?.onUpdateHandler?(update)
             createAndSendUpdateAnswer(sdp: update.sessionDescription())
             
         default:
