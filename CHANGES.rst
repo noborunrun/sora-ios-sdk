@@ -30,11 +30,11 @@ FIX
   - ``signalingEventHandlers``: ``SignalingEventHandlers?`` --> ``SignalingEventHandlers``
   - ``peerConnectionEventHandlers``: ``PeerConnectionEventHandlers?`` --> ``PeerConnectionEventHandlers``
 
-- [CHANGE] API: MediaConnection, MediaStream: 次のプロパティとメソッドを MediaStream に移行した
+- [CHANGE] API: MediaConnection, MediaStream: 次の API を MediaStream に移行した
   
-  - ``videoRenderer``
+  - ``var videoRenderer``
 
-  - ``startConnectionTimer(timeInterval:handler:)``
+  - ``func startConnectionTimer(timeInterval:handler:)``
 
 - [CHANGE] API: MediaConnection.State: 削除した
 
@@ -66,9 +66,10 @@ FIX
 
 - [UPDATE] API: VideoView: バックグラウンド (ビューがキーウィンドウに表示されていない) では描画処理を中止するようにした
 
-- [ADD] API: BuildInfo を追加した
+- [ADD] API: BuildInfo: 追加した
 
-- [ADD] API: ConnectionController を追加した
+- [ADD] API: ConnectionController: 追加した
+
 
 - [ADD] API: Connection, MediaConnection, MediaStream, PeerConnection: 次のイベントで (NotificationCenter による) 通知を行うようにした
 
