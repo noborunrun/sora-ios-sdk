@@ -209,15 +209,15 @@ struct SignalingConnect {
     
     var role: SignalingRole
     var channel_id: String
-    var access_token: String?
+    var metadata: String?
     var mediaOption: MediaOption
     var multistream: Bool
     
-    init(role: SignalingRole, channel_id: String, access_token: String? = nil,
+    init(role: SignalingRole, channel_id: String, metadata: String? = nil,
          multistream: Bool = false, mediaOption: MediaOption) {
         self.role = role
         self.channel_id = channel_id
-        self.access_token = access_token
+        self.metadata = metadata
         self.multistream = multistream
         self.mediaOption = mediaOption
     }
@@ -229,8 +229,8 @@ extension SignalingConnect: Messageable {
     func message() -> Message {
         var data: [String : Any] = ["role": role.encode(),
                                     "channel_id": channel_id]
-        if let value = access_token {
-            data["access_token"] = value
+        if let value = metadata {
+            data["metadata"] = value
         }
         if multistream {
             data["multistream"] = true
