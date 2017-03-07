@@ -63,14 +63,14 @@ public class MediaConnection {
     
     // MARK: 接続
     
-    public func connect(accessToken: String? = nil,
+    public func connect(metadata: String? = nil,
                         timeout: Int = 30,
                         handler: @escaping ((ConnectionError?) -> Void)) {
         eventLog?.markFormat(type: eventType, format: "try connect")
         peerConnection = PeerConnection(connection: connection,
                                         mediaConnection: self,
                                         role: role,
-                                        accessToken: accessToken,
+                                        metadata: metadata,
                                         mediaStreamId: nil,
                                         mediaOption: mediaOption)
         peerConnection!.connect(timeout: timeout) {

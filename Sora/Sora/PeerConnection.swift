@@ -25,7 +25,7 @@ public class PeerConnection {
     public weak var connection: Connection?
     public weak var mediaConnection: MediaConnection?
     public var role: MediaStreamRole
-    public var accessToken: String?
+    public var metadata: String?
     var mediaStreamId: String?
     public var mediaOption: MediaOption
     public var clientId: String?
@@ -59,13 +59,13 @@ public class PeerConnection {
     init(connection: Connection,
          mediaConnection: MediaConnection,
          role: MediaStreamRole,
-         accessToken: String? = nil,
+         metadata: String? = nil,
          mediaStreamId: String? = nil,
          mediaOption: MediaOption = MediaOption()) {
         self.connection = connection
         self.mediaConnection = mediaConnection
         self.role = role
-        self.accessToken = accessToken
+        self.metadata = metadata
         self.mediaStreamId = mediaStreamId
         self.mediaOption = mediaOption
         self.state = .disconnected
