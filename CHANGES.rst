@@ -24,6 +24,8 @@ FIX
 
 - [CHANGE] シグナリング: Sora の仕様変更に伴い、 "stats" への対応を廃止した
 
+- [CHANGE] シグナリング: Sora の仕様変更に伴い、 "connect" の "access_token" パラメーターを "metadata" に変更した
+
 - [CHANGE] API: ArchiveFinished: 削除した
 
 - [CHANGE] API: ArchiveFailed: 削除した
@@ -37,6 +39,8 @@ FIX
   - ``webSocketEventHandlers``: ``WebSocketEventHandlers?`` --> ``WebSocketEventHandlers``
   - ``signalingEventHandlers``: ``SignalingEventHandlers?`` --> ``SignalingEventHandlers``
   - ``peerConnectionEventHandlers``: ``PeerConnectionEventHandlers?`` --> ``PeerConnectionEventHandlers``
+
+- [CHANGE] API: MediaConnection: ``connect(accessToken:timeout:handler:)`` メソッドの型を ``connect(metadata:timeout:handler:)`` に変更した
 
 - [CHANGE] API: MediaConnection, MediaStream: 次の API を MediaStream に移行した
   
