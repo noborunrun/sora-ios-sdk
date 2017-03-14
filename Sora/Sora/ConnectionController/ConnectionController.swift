@@ -24,7 +24,8 @@ public class ConnectionController: UIViewController {
         case multiple
     }
     
-    public struct Request {
+    public class Request {
+        
         public var URL: URL
         public var channelId: String
         public var roles: [Role]
@@ -33,6 +34,25 @@ public class ConnectionController: UIViewController {
         public var videoCodec: VideoCodec
         public var audioEnabled: Bool
         public var audioCodec: AudioCodec
+        
+        public init(URL: URL,
+                    channelId: String,
+                    roles: [Role],
+                    multistreamEnabled: Bool,
+                    videoEnabled: Bool,
+                    videoCodec: VideoCodec,
+                    audioEnabled: Bool,
+                    audioCodec: AudioCodec) {
+            self.URL = URL
+            self.channelId = channelId
+            self.roles = roles
+            self.multistreamEnabled = multistreamEnabled
+            self.videoEnabled = videoEnabled
+            self.videoCodec = videoCodec
+            self.audioEnabled = audioEnabled
+            self.audioCodec = audioCodec
+        }
+        
     }
     
     enum UserDefaultsKey: String {
