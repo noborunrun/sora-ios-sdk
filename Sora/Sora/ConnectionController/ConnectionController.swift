@@ -6,9 +6,9 @@ public class ConnectionController: UIViewController {
         case publisher
         case subscriber
         
-        public static var allRoles: [Role] = [.publisher, .subscriber]
+        static var allRoles: [Role] = [.publisher, .subscriber]
         
-        public static func containsAll(_ roles: [Role]) -> Bool {
+        static func containsAll(_ roles: [Role]) -> Bool {
             let allRoles: [Role] = [.publisher, .subscriber]
             for role in roles {
                 if !allRoles.contains(role) {
