@@ -25,6 +25,7 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var audioCodecCell: UITableViewCell!
     @IBOutlet weak var autofocusLabel: UILabel!
     @IBOutlet weak var WebRTCVersionLabel: UILabel!
+    @IBOutlet weak var WebRTCRevisionLabel: UILabel!
     @IBOutlet weak var VP9EnabledLabel: UILabel!
     
     @IBOutlet weak var connectionTimeValueLabel: UILabel!
@@ -39,6 +40,7 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var audioCodecValueLabel: UILabel!
     @IBOutlet weak var autofocusSwitch: UISwitch!
     @IBOutlet weak var WebRTCVersionValueLabel: UILabel!
+    @IBOutlet weak var WebRTCRevisionValueLabel: UILabel!
     @IBOutlet weak var VP9EnabledValueLabel: UILabel!
     
     weak var touchedField: UITextField?
@@ -179,6 +181,7 @@ class ConnectionViewController: UITableViewController {
                                enableAudioLabel, audioCodecLabel,
                                audioCodecValueLabel, autofocusLabel,
                                WebRTCVersionLabel, WebRTCVersionValueLabel,
+                               WebRTCRevisionLabel, WebRTCRevisionValueLabel,
                                VP9EnabledLabel, VP9EnabledValueLabel]
         {
             label.font = UIFont.preferredFont(forTextStyle: .body)
@@ -226,6 +229,11 @@ class ConnectionViewController: UITableViewController {
             WebRTCVersionValueLabel.text = version
         } else {
             WebRTCVersionValueLabel.text = "Unknown"
+        }
+        if let revision = BuildInfo.WebRTCShortRevision {
+            WebRTCRevisionValueLabel.text = revision
+        } else {
+            WebRTCRevisionValueLabel.text = "Unknown"
         }
         if let VP9 = BuildInfo.VP9Enabled {
             VP9EnabledValueLabel.text = VP9 ? "Enabled" : "Disabled"

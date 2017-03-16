@@ -8,6 +8,14 @@ public class BuildInfo {
         get { return shared?.WebRTCVersion }
     }
     
+    public static var WebRTCRevision: String? {
+        get { return shared?.WebRTCRevision }
+    }
+    
+    public static var WebRTCShortRevision: String? {
+        get { return shared?.WebRTCShortRevision }
+    }
+    
     public static var VP9Enabled: Bool? {
         get { return shared?.VP9Enabled }
     }
@@ -15,6 +23,8 @@ public class BuildInfo {
     static var shared: BuildInfo? = BuildInfo()
     
     var WebRTCVersion: String
+    var WebRTCRevision: String
+    var WebRTCShortRevision: String
     var VP9Enabled: Bool
     
     init?() {
@@ -30,6 +40,10 @@ public class BuildInfo {
             let data = try Data(contentsOf: url)
             let file: BuildInfoFile = try unbox(data: data)
             WebRTCVersion = file.WebRTCVersion
+            WebRTCRevision = file.WebRTCRevision
+            WebRTCShortRevision = WebRTCRevision.substring(to:
+                WebRTCRevision.index(WebRTCRevision.startIndex,
+                                     offsetBy: 7))
             VP9Enabled = file.VP9Enabled
         } catch {
             print("Sora: failed to parse 'build_info.json'")
@@ -42,6 +56,7 @@ public class BuildInfo {
 struct BuildInfoFile {
     
     var WebRTCVersion: String
+    var WebRTCRevision: String
     var VP9Enabled: Bool
     
 }
@@ -50,6 +65,7 @@ extension BuildInfoFile: Unboxable {
     
     init(unboxer: Unboxer) throws {
         WebRTCVersion = try unboxer.unbox(key: "webrtc_version")
+        WebRTCRevision = try unboxer.unbox(key: "webrtc_revision")
         VP9Enabled = try unboxer.unbox(key: "vp9")
     }
     
