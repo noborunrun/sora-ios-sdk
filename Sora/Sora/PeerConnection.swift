@@ -3,16 +3,6 @@ import WebRTC
 import SocketRocket
 import Unbox
 
-fileprivate var WebRTCInitialized: Bool = false
-
-func initializeWebRTC() {
-    guard !WebRTCInitialized else { return }
-    
-    WebRTCInitialized = true
-    RTCInitializeSSL()
-    RTCEnableMetrics()
-}
-
 public class PeerConnection {
     
     public enum State: String {
@@ -21,6 +11,12 @@ public class PeerConnection {
         case disconnecting
         case disconnected
     }
+    
+    public static var nativeFactory: RTCPeerConnectionFactory = {
+        RTCInitializeSSL()
+        RTCEnableMetrics()
+        return RTCPeerConnectionFactory()
+    }()
     
     public weak var connection: Connection?
     public weak var mediaConnection: MediaConnection?
@@ -44,10 +40,6 @@ public class PeerConnection {
     
     public var nativePeerConnection: RTCPeerConnection? {
         get { return context?.nativePeerConnection }
-    }
-    
-    public var nativePeerConnectionFactory: RTCPeerConnectionFactory? {
-        get { return context?.nativePeerConnectionFactory }
     }
     
     var context: PeerConnectionContext?
@@ -146,7 +138,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         case disconnected
         case terminated
     }
-    
+
     weak var peerConnection: PeerConnection?
     var role: MediaStreamRole
     
@@ -177,7 +169,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
     
-    var nativePeerConnectionFactory: RTCPeerConnectionFactory!
     var nativePeerConnection: RTCPeerConnection!
     var upstream: RTCMediaStream?
     var mediaCapturer: MediaCapturer?
@@ -200,10 +191,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     private var disconnectCompletionHandler: ((ConnectionError?) -> Void)?
     
     init(peerConnection: PeerConnection, role: MediaStreamRole) {
-        initializeWebRTC()
         self.peerConnection = peerConnection
         self.role = role
-        nativePeerConnectionFactory = RTCPeerConnectionFactory()
     }
     
     // MARK: ピア接続
@@ -327,7 +316,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             mediaCapturer = nil
             nativePeerConnection.delegate = nil
             nativePeerConnection = nil
-            nativePeerConnectionFactory = nil
             webSocket?.delegate = nil
             webSocket = nil
             
@@ -406,10 +394,12 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             // ピア接続オブジェクトを生成する
             eventLog?.markFormat(type: .PeerConnection,
                                  format: "create peer connection")
-            nativePeerConnection = nativePeerConnectionFactory.peerConnection(
-                with: peerConnection!.mediaOption.configuration,
-                constraints: peerConnection!.mediaOption.peerConnectionMediaConstraints,
-                delegate: self)
+            nativePeerConnection = PeerConnection.nativeFactory
+                .peerConnection(
+                    with: peerConnection!.mediaOption.configuration,
+                    constraints: peerConnection!.mediaOption
+                        .peerConnectionMediaConstraints,
+                    delegate: self)
             
             // デバイスの初期化 (Upstream)
             if role == MediaStreamRole.upstream {
@@ -451,20 +441,21 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     func createMediaCapturer() -> ConnectionError? {
         eventLog?.markFormat(type: .PeerConnection, format: "create media capturer")
         if let shared = PeerConnectionContext
-            .sharedMediaCapturers[nativePeerConnectionFactory] {
+            .sharedMediaCapturers[PeerConnection.nativeFactory] {
             eventLog?.markFormat(type: .PeerConnection,
                                  format: "use shared media capturer")
             mediaCapturer = shared
         } else {
-            mediaCapturer = MediaCapturer(factory: nativePeerConnectionFactory,
-                                          mediaOption: peerConnection!.mediaOption)
+            mediaCapturer = MediaCapturer(
+                factory: PeerConnection.nativeFactory,
+                mediaOption: peerConnection!.mediaOption)
             if mediaCapturer == nil {
                 eventLog?.markFormat(type: .PeerConnection,
                                      format: "create media capturer failed")
                 return ConnectionError.mediaCapturerFailed
             }
             PeerConnectionContext
-                .sharedMediaCapturers[nativePeerConnectionFactory] = mediaCapturer
+                .sharedMediaCapturers[PeerConnection.nativeFactory] = mediaCapturer
         }
         
         eventLog?.markFormat(type: .PeerConnection,
@@ -474,7 +465,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                              format: "audio capturer track ID: %@",
                              arguments: mediaCapturer!.audioCaptureTrack.trackId)
         
-        let upstream = nativePeerConnectionFactory.mediaStream(withStreamId:
+        let upstream = PeerConnection.nativeFactory.mediaStream(withStreamId:
             peerConnection!.mediaStreamId ?? MediaStream.defaultStreamId)
         if peerConnection!.mediaOption.videoEnabled {
             upstream.addVideoTrack(mediaCapturer!.videoCaptureTrack)
