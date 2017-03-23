@@ -3,6 +3,12 @@ import WebRTC
 import SocketRocket
 import Unbox
 
+public enum StatusCode: Int {
+    
+    case signalingFailure = 4490
+    
+}
+
 public class PeerConnection {
     
     public enum State: String {
@@ -305,9 +311,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             eventLog?.markFormat(type: .WebSocket,
                                  format: "finish disconnecting")
             
-            var aggregateError: ConnectionError? = nil
-            if !terminationErrors!.isEmpty {
-                aggregateError =
+            var resultError: ConnectionError? = nil
+            if terminationErrors!.count == 1 {
+                resultError = terminationErrors![0]
+            } else if terminationErrors!.count > 1 {
+                resultError =
                     ConnectionError.aggregateError(terminationErrors!)
             }
             peerConnectionEventHandlers?.onDisconnectHandler?(nativePeerConnection)
@@ -321,16 +329,16 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             webSocket = nil
             
             state = .disconnected
-            if let error = aggregateError {
+            if let error = resultError {
                 signalingEventHandlers?.onFailureHandler?(error)
                 mediaConnection?.callOnFailureHandler(error)
             }
             signalingEventHandlers?.onDisconnectHandler?()
-            connectCompletionHandler?(aggregateError)
+            connectCompletionHandler?(resultError)
             connectCompletionHandler = nil
-            disconnectCompletionHandler?(aggregateError)
+            disconnectCompletionHandler?(resultError)
             disconnectCompletionHandler = nil
-            mediaConnection?.callOnDisconnectHandler(aggregateError)
+            mediaConnection?.callOnDisconnectHandler(resultError)
             peerConnection?.terminate()
             peerConnection = nil
         }        
@@ -497,7 +505,12 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         
         var error: ConnectionError? = nil
         if code != SRStatusCodeNormal.rawValue {
-            error = ConnectionError.webSocketClose(code, reason)
+            if code == StatusCode.signalingFailure.rawValue {
+                let reason = reason ?? "Unknown reason"
+                error = ConnectionError.signalingFailure(reason: reason)
+            } else {
+                error = ConnectionError.webSocketClose(code, reason)
+            }
         }
         
         switch state {

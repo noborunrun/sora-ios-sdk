@@ -11,6 +11,7 @@ public indirect enum ConnectionError: Error {
     case connectionBusy
     case webSocketClose(Int, String?)
     case webSocketError(Error)
+    case signalingFailure(reason: String)
     case peerConnectionError(Error)
     case iceConnectionFailed
     case iceConnectionDisconnected
