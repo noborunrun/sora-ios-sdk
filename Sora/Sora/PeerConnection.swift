@@ -297,8 +297,9 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         if let error = error {
             terminationErrors!.append(error)
         }
-        
-        if webSocket?.readyState == SRReadyState.CLOSED &&
+
+        if (webSocket?.readyState == SRReadyState.CLOSING ||
+            webSocket?.readyState == SRReadyState.CLOSED) &&
             nativePeerConnection.signalingState == .closed &&
             nativePeerConnection.iceConnectionState == .closed {
             eventLog?.markFormat(type: .WebSocket,
