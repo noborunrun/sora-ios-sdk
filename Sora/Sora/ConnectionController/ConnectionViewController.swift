@@ -541,7 +541,6 @@ class ConnectionViewController: UITableViewController {
                 UIAlertAction(title: "Cancel", style: .cancel)
                 {
                     _ in
-                    self.connectingAlertController.dismiss(animated: true)
                     self.disconnect()
                 }
             )
@@ -567,8 +566,7 @@ class ConnectionViewController: UITableViewController {
             error in
             DispatchQueue.main.async {
                 if let error = error {
-                    self.failConnection(message: error.localizedDescription,
-                                        error: error)
+                    self.failConnection(error: error)
                     return
                 }
                 
@@ -587,8 +585,7 @@ class ConnectionViewController: UITableViewController {
             error in
             DispatchQueue.main.async {
                 if let error = error {
-                    self.failConnection(message: error.localizedDescription,
-                                        error: error)
+                    self.failConnection(error: error)
                     return
                 }
                 self.finishConnection(self.connection!.mediaSubscriber)
@@ -619,14 +616,28 @@ class ConnectionViewController: UITableViewController {
         
     }
     
-    func failConnection(message: String, error: ConnectionError) {
-        self.presentSimpleAlert(title: "Connection Error",
-                                message: message)
-        dismiss(animated: true) {
-            self.disconnect()
+    func failConnection(error: ConnectionError) {
+        var title = "Connection Error"
+        var message = error.localizedDescription
+        switch error {
+        case .connectionBusy:
+            message = "Connection is busy"
+        case .webSocketClose(let code, let reason):
+            let reason = reason ?? "?"
+            message = String(format: "WebSocket is closed (status code %d, reason %@)",
+                             code, reason)
+        case .signalingFailure(reason: let reason):
+            title = "Signaling Failure"
+            message = reason
+        default:
+            break
         }
-        self.state = .disconnected
-        connectionController?.onConnectHandler?(nil, nil, error)
+        
+        connectingAlertController.dismiss(animated: true) {
+            self.presentSimpleAlert(title: title, message: message)
+            self.state = .disconnected
+            self.connectionController?.onConnectHandler?(nil, nil, error)
+        }
     }
     
     func finishConnection(_ mediaConnection: MediaConnection) {
