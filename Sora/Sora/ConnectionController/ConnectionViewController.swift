@@ -642,9 +642,16 @@ class ConnectionViewController: UITableViewController {
     
     func finishConnection(_ mediaConnection: MediaConnection) {
         if connectingAlertController != nil {
-            dismiss(animated: true)
+            connectingAlertController.dismiss(animated: true) {
+                self.basicFinishConnection(mediaConnection)
+            }
             connectingAlertController = nil
+        } else {
+            basicFinishConnection(mediaConnection)
         }
+    }
+    
+    func basicFinishConnection(_ mediaConnection: MediaConnection) {
         state = .connected
         mediaConnection.mainMediaStream!.startConnectionTimer(timeInterval: 1) {
             seconds in
