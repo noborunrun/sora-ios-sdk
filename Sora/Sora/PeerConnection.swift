@@ -128,6 +128,77 @@ public class PeerConnection {
     
 }
 
+class ConnectionMonitor {
+    
+    enum State {
+        case stop
+        case monitoring
+        case terminating
+        case terminated
+    }
+    
+    weak var context: PeerConnectionContext!
+    var state: State = .stop
+    var error: ConnectionError?
+    var deadline: DispatchTime
+    var handler: (ConnectionError?) -> Void
+    var timeoutWorkItem: DispatchWorkItem!
+    
+    init(context: PeerConnectionContext,
+         timeout: Int,
+         handler: @escaping (ConnectionError?) -> Void) {
+        self.context = context
+        self.deadline = .now() + .seconds(timeout)
+        self.handler = handler
+        timeoutWorkItem = DispatchWorkItem {
+            if self.state == .monitoring {
+                self.terminate(error: ConnectionError.connectionWaitTimeout)
+            }
+        }
+    }
+    
+    func run() {
+        guard state == .stop else { return }
+        
+        state = .monitoring
+        DispatchQueue.global().asyncAfter(deadline: self.deadline,
+                                          execute: timeoutWorkItem)
+    }
+    
+    func stop() {
+        guard state == .monitoring else { return }
+
+        timeoutWorkItem.cancel()
+        state = .terminated
+    }
+    
+    func terminate(error: ConnectionError? = nil) {
+        guard state == .monitoring else { return }
+        
+        self.error = error
+        state = .terminating
+        update()
+    }
+    
+    func update() {
+        guard state == .terminating &&
+            (context.webSocket?.readyState == SRReadyState.CLOSING ||
+                context.webSocket?.readyState == SRReadyState.CLOSED) &&
+            (context.nativePeerConnection == nil ||
+                (context.nativePeerConnection?.signalingState == .closed &&
+                    context.nativePeerConnection?.iceConnectionState == .closed))
+            else
+        {
+            return
+        }
+        
+        timeoutWorkItem.cancel()
+        state = .terminated
+        handler(error)
+    }
+    
+}
+
 class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDelegate {
     
     enum State: String {
@@ -147,8 +218,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
 
     weak var peerConnection: PeerConnection?
     var role: MediaStreamRole
-    
-    var webSocket: SRWebSocket?
     
     private var _state: State = .disconnected
     
@@ -175,9 +244,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
     
-    var nativePeerConnection: RTCPeerConnection!
+    var webSocket: SRWebSocket?
+    var nativePeerConnection: RTCPeerConnection?
     var upstream: RTCMediaStream?
     var mediaCapturer: MediaCapturer?
+    var monitor: ConnectionMonitor?
     
     var connection: Connection! {
         get { return peerConnection?.connection }
@@ -199,6 +270,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     init(peerConnection: PeerConnection, role: MediaStreamRole) {
         self.peerConnection = peerConnection
         self.role = role
+        super.init()
     }
     
     // MARK: ピア接続
@@ -214,23 +286,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                             connection!.URL.description))
         state = .signalingConnecting
         connectCompletionHandler = handler
-        terminationErrors = []
-        
-        startTimeoutTimer(timeout: timeout) {
-            timer in
-            switch self.state {
-            case .connected, .updateOffered, .disconnecting, .disconnected:
-                self.clearTimeoutTimer()
-            default:
-                self.eventLog?.markFormat(type: .PeerConnection,
-                                          format: "timeout connecting")
-                let error = ConnectionError.connectionWaitTimeout
-                self.terminate(error)
-                self.connectCompletionHandler?(error)
-                self.connectCompletionHandler = nil
-            }
+
+        monitor = ConnectionMonitor(context: self, timeout: timeout) { error in
+            self.finishTermination(error: error)
         }
-        
+        monitor!.run()
         webSocket = SRWebSocket(url: connection!.URL)
         webSocket!.delegate = self
         webSocket!.open()
@@ -247,101 +307,67 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             handler(ConnectionError.connectionBusy)
         }
     }
-    
-    // MARK: タイムアウト
-    
-    func startTimeoutTimer(timeout: Int, handler: @escaping ((Timer) -> ())) {
-        timeoutTimer?.invalidate()
-        timeoutTimer = Timer(timeInterval: Double(timeout), repeats: false) {
-            timer in
-            handler(timer)
-        }
-        RunLoop.main.add(timeoutTimer!, forMode: .commonModes)
-    }
-    
-    func clearTimeoutTimer() {
-        timeoutTimer?.invalidate()
-        timeoutTimer = nil
-    }
-    
+
     // MARK: 終了処理
     
-    var terminationErrors: [ConnectionError]?
-    
-    func terminate(_ error: ConnectionError? = nil) {
-        if let error = error {
-            terminationErrors!.append(error)
-        }
-        
-        clearTimeoutTimer()
+    func terminate(error: ConnectionError? = nil) {
         switch state {
-        case .disconnected:
+        case .disconnecting, .disconnected:
             break
             
-        case .disconnecting:
-            proceedDisconnecting()
-            
         default:
-            eventLog?.markFormat(type: .Signaling, format: "terminate all connections")
+            eventLog?.markFormat(type: .Signaling,
+                                 format: "begin terminate all connections")
             state = .disconnecting
-            if let error = error {
-                webSocketEventHandlers?.onFailureHandler?(webSocket!, error)
-            }
-            timeoutTimer?.invalidate()
-            timeoutTimer = nil
             nativePeerConnection?.close()
             webSocket?.close()
+            monitor?.terminate(error: error)
         }
     }
     
-    func terminateByPeerConnection(_ error: Error) {
-        peerConnectionEventHandlers?.onFailureHandler?(nativePeerConnection, error)
-        terminate(ConnectionError.peerConnectionError(error))
+    func terminateByPeerConnection(error: Error) {
+        peerConnectionEventHandlers?
+            .onFailureHandler?(nativePeerConnection!, error)
+        terminate(error: ConnectionError.peerConnectionError(error))
     }
     
-    func proceedDisconnecting(_ error: ConnectionError? = nil) {
+    func finishTermination(error: ConnectionError?) {
+        eventLog?.markFormat(type: .WebSocket,
+                             format: "finish connection")
+        
+        stopMonitor()
+        
+        if nativePeerConnection != nil {
+            peerConnectionEventHandlers?.onDisconnectHandler?(nativePeerConnection!)
+        }
+        
+        // この順にクリアしないと落ちる
+        mediaCapturer = nil
+        if nativePeerConnection != nil {
+            nativePeerConnection!.delegate = nil
+        }
+        nativePeerConnection = nil
+        webSocket?.delegate = nil
+        webSocket = nil
+        
+        state = .disconnected
         if let error = error {
-            terminationErrors!.append(error)
+            signalingEventHandlers?.onFailureHandler?(error)
+            mediaConnection?.callOnFailureHandler(error)
         }
-
-        if (webSocket?.readyState == SRReadyState.CLOSING ||
-            webSocket?.readyState == SRReadyState.CLOSED) &&
-            nativePeerConnection.signalingState == .closed &&
-            nativePeerConnection.iceConnectionState == .closed {
-            eventLog?.markFormat(type: .WebSocket,
-                                 format: "finish disconnecting")
-            
-            var resultError: ConnectionError? = nil
-            if terminationErrors!.count == 1 {
-                resultError = terminationErrors![0]
-            } else if terminationErrors!.count > 1 {
-                resultError =
-                    ConnectionError.aggregateError(terminationErrors!)
-            }
-            peerConnectionEventHandlers?.onDisconnectHandler?(nativePeerConnection)
-            terminationErrors = nil
-            
-            // この順にクリアしないと落ちる
-            mediaCapturer = nil
-            nativePeerConnection.delegate = nil
-            nativePeerConnection = nil
-            webSocket?.delegate = nil
-            webSocket = nil
-            
-            state = .disconnected
-            if let error = resultError {
-                signalingEventHandlers?.onFailureHandler?(error)
-                mediaConnection?.callOnFailureHandler(error)
-            }
-            signalingEventHandlers?.onDisconnectHandler?()
-            connectCompletionHandler?(resultError)
-            connectCompletionHandler = nil
-            disconnectCompletionHandler?(resultError)
-            disconnectCompletionHandler = nil
-            mediaConnection?.callOnDisconnectHandler(resultError)
-            peerConnection?.terminate()
-            peerConnection = nil
-        }        
+        signalingEventHandlers?.onDisconnectHandler?()
+        connectCompletionHandler?(error)
+        connectCompletionHandler = nil
+        disconnectCompletionHandler?(error)
+        disconnectCompletionHandler = nil
+        mediaConnection?.callOnDisconnectHandler(error)
+        peerConnection?.terminate()
+        peerConnection = nil
+    }
+    
+    func stopMonitor() {
+        monitor?.stop()
+        monitor = nil
     }
     
     func send(_ message: Messageable) -> ConnectionError? {
@@ -389,12 +415,9 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .Signaling, format: "connected")
         
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
-            
+
         case .signalingConnecting:
             webSocketEventHandlers?.onOpenHandler?(webSocket)
             state = .signalingConnected
@@ -413,7 +436,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             // デバイスの初期化 (Upstream)
             if role == MediaStreamRole.upstream {
                 if let error = createMediaCapturer() {
-                    terminate(error)
+                    terminate(error: error)
                     return
                 }
             }
@@ -431,7 +454,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                      format: "send connect message failed: %@",
                                      arguments: error.localizedDescription)
                 signalingEventHandlers?.onFailureHandler?(error)
-                terminate(ConnectionError.connectionTerminated)
+                terminate(error: ConnectionError.connectionTerminated)
                 return
             }
             state = .peerConnectionReady
@@ -439,7 +462,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         default:
             eventLog?.markFormat(type: .Signaling,
                                  format: "WebSocket opened in invalid state")
-            terminate(ConnectionError.connectionTerminated)
+            terminate(error: ConnectionError.connectionTerminated)
         }
     }
     
@@ -483,7 +506,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             upstream.addAudioTrack(mediaCapturer!.audioCaptureTrack)
         }
         
-        nativePeerConnection.add(upstream)
+        nativePeerConnection!.add(upstream)
         let wrap = MediaStream(peerConnection: peerConnection!,
                                nativeMediaStream: upstream)
         mediaConnection?.addMediaStream(wrap)
@@ -503,30 +526,25 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                  format: "close: code \(code), clean \(wasClean)")
         }
         
-        var error: ConnectionError? = nil
-        if code != SRStatusCodeNormal.rawValue {
-            if code == StatusCode.signalingFailure.rawValue {
-                let reason = reason ?? "Unknown reason"
-                error = ConnectionError.signalingFailure(reason: reason)
-            } else {
-                error = ConnectionError.webSocketClose(code, reason)
-            }
-        }
-        
+        monitor?.update()
+
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
             
-        case .disconnecting:
-            // ピア接続を解除すると、サーバーからステータスコード 1001 で接続解除される
-            if code == SRStatusCodeGoingAway.rawValue {
-                error = nil
-            }
-            proceedDisconnecting(error)
-            
         default:
+            var error: ConnectionError? = nil
+            if code != SRStatusCodeNormal.rawValue {
+                if code == StatusCode.signalingFailure.rawValue {
+                    let reason = reason ?? "Unknown reason"
+                    error = ConnectionError.signalingFailure(reason: reason)
+                } else {
+                    error = ConnectionError.webSocketClose(code, reason)
+                }
+            }
+            
             webSocketEventHandlers?.onCloseHandler?(webSocket, code, reason, wasClean)
-            terminate(error)
+            terminate(error: error)
         }
     }
     
@@ -534,18 +552,16 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .WebSocket,
                              format: "fail: %@",
                              arguments: error.localizedDescription)
-        let error = ConnectionError.webSocketError(error)
-        
+        monitor?.update()
+
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
             
-        case .disconnecting:
-            proceedDisconnecting(error)
-            
         default:
+            let error = ConnectionError.webSocketError(error)
             webSocketEventHandlers?.onFailureHandler?(webSocket, error)
-            terminate(error)
+            terminate(error: error)
         }
     }
     
@@ -553,12 +569,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .WebSocket,
                              format: "received pong: %@",
                              arguments: pongPayload.description)
+        monitor?.update()
+
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             webSocketEventHandlers?.onPongHandler?(webSocket, pongPayload)
@@ -570,12 +585,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                              format: "received message: %@",
                              arguments: (message as AnyObject).description)
         
+        monitor?.update()
+        
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             webSocketEventHandlers?.onMessageHandler?(webSocket, message as AnyObject)
@@ -684,10 +698,10 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                     peerConfig.iceServers = [server]
                 }
                 
-                if !nativePeerConnection.setConfiguration(peerConfig) {
+                if !nativePeerConnection!.setConfiguration(peerConfig) {
                     eventLog?.markFormat(type: .Signaling,
                                          format: "cannot configure peer connection")
-                    terminate(ConnectionError
+                    terminate(error: ConnectionError
                         .failureSetConfiguration(peerConfig))
                     return
                 }
@@ -699,7 +713,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             eventLog?.markFormat(type: .Signaling,
                                  format: "offer: invalid state %@",
                                  arguments: state.rawValue)
-            terminate(ConnectionError.connectionTerminated)
+            terminate(error: ConnectionError.connectionTerminated)
         }
     }
     
@@ -707,38 +721,38 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         state = .peerConnectionOffered
         eventLog?.markFormat(type: .Signaling,
                              format: "set remote description")
-        nativePeerConnection.setRemoteDescription(sdp) {
+        nativePeerConnection!.setRemoteDescription(sdp) {
             error in
             if let error = error {
                 self.eventLog?.markFormat(type: .Signaling,
                                           format: "set remote description failed")
-                self.terminateByPeerConnection(error)
+                self.terminateByPeerConnection(error: error)
                 return
             }
             
             self.eventLog?.markFormat(type: .Signaling,
                                       format: "create answer")
-            self.nativePeerConnection.answer(for: self
+            self.nativePeerConnection!.answer(for: self
                 .peerConnection!.mediaOption.signalingAnswerMediaConstraints)
             {
                 (sdp, error) in
                 if let error = error {
                     self.eventLog?.markFormat(type: .Signaling,
                                               format: "creating answer failed")
-                    self.terminateByPeerConnection(error)
+                    self.terminateByPeerConnection(error: error)
                     return
                 }
                 self.eventLog?.markFormat(type: .Signaling,
                                           format: "generated answer: %@",
                                           arguments: sdp!)
-                self.nativePeerConnection.setLocalDescription(sdp!) {
+                self.nativePeerConnection!.setLocalDescription(sdp!) {
                     error in
                     if let error = error {
                         self.eventLog?.markFormat(type: .Signaling,
                                                   format: "set local description failed")
                         self.peerConnectionEventHandlers?
-                            .onFailureHandler?(self.nativePeerConnection, error)
-                        self.terminate(ConnectionError.peerConnectionError(error))
+                            .onFailureHandler?(self.nativePeerConnection!, error)
+                        self.terminate(error: ConnectionError.peerConnectionError(error))
                         return
                     }
                     
@@ -746,7 +760,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                               format: "send answer")
                     let answer = SignalingAnswer(sdp: sdp!.sdp).message()
                     if let error = self.send(answer) {
-                        self.terminate(ConnectionError.peerConnectionError(error))
+                        self.terminate(error: ConnectionError.peerConnectionError(error))
                         return
                     }
                     
@@ -788,7 +802,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         state = .updateOffered
         eventLog?.markFormat(type: .Signaling,
                              format: "set remote description to update-offer")
-        nativePeerConnection.setRemoteDescription(sdp) {
+        nativePeerConnection!.setRemoteDescription(sdp) {
             error in
             if let error = error {
                 self.eventLog?.markFormat(type: .Signaling,
@@ -799,7 +813,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             
             self.eventLog?.markFormat(type: .Signaling,
                                       format: "create update-answer")
-            self.nativePeerConnection.answer(for: self
+            self.nativePeerConnection!.answer(for: self
                 .peerConnection!.mediaOption.signalingAnswerMediaConstraints)
             {
                 (sdp, error) in
@@ -812,7 +826,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 self.eventLog?.markFormat(type: .Signaling,
                                           format: "generated update-answer: %@",
                                           arguments: sdp!)
-                self.nativePeerConnection.setLocalDescription(sdp!) {
+                self.nativePeerConnection!.setLocalDescription(sdp!) {
                     error in
                     if let error = error {
                         self.eventLog?.markFormat(type: .Signaling,
@@ -839,12 +853,13 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
 
+    // マルチストリームのシグナリングのエラー
     func terminateUpdate(_ error: Error) {
         state = .connected
         let connError = ConnectionError.peerConnectionError(error)
         let updateError = ConnectionError.updateError(connError)
         peerConnectionEventHandlers?
-            .onFailureHandler?(nativePeerConnection, updateError)
+            .onFailureHandler?(nativePeerConnection!, updateError)
         mediaConnection?.callOnFailureHandler(updateError)
     }
     
@@ -855,19 +870,19 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .PeerConnection,
                              format: "signaling state changed: %@",
                              arguments: stateChanged.description)
+        
+        monitor?.update()
+        
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             peerConnectionEventHandlers?.onChangeSignalingStateHandler?(
                 nativePeerConnection, stateChanged)
             switch stateChanged {
             case .closed:
-                terminate(ConnectionError.connectionTerminated)
+                terminate(error: ConnectionError.connectionTerminated)
             default:
                 break
             }
@@ -879,12 +894,10 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .PeerConnection,
                              format: "added stream '%@'",
                              arguments: stream.streamId)
+        
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             guard peerConnection != nil
@@ -912,12 +925,10 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     func peerConnection(_ nativePeerConnection: RTCPeerConnection,
                         didRemove stream: RTCMediaStream) {
         eventLog?.markFormat(type: .PeerConnection, format: "removed stream")
+        
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             peerConnectionEventHandlers?
@@ -929,13 +940,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     
     func peerConnectionShouldNegotiate(_ nativePeerConnection: RTCPeerConnection) {
         eventLog?.markFormat(type: .PeerConnection, format: "should negatiate")
+        
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
-            
+
         default:
             peerConnectionEventHandlers?.onNegotiateHandler?(nativePeerConnection)
         }
@@ -947,12 +956,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                              format: "ICE connection state changed: %@",
                              arguments: newState.description)
         
+        monitor?.update()
+        
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             peerConnectionEventHandlers?
@@ -970,16 +978,16 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                     eventLog?.markFormat(type: .PeerConnection,
                                          format: "ICE connection completed but invalid state %@",
                                          arguments: newState.description)
-                    terminate(ConnectionError.iceConnectionFailed)
+                    terminate(error: ConnectionError.iceConnectionFailed)
                 }
                 
             case .closed, .disconnected:
-                terminate(ConnectionError.iceConnectionDisconnected)
+                terminate(error: ConnectionError.iceConnectionDisconnected)
                 
             case .failed:
                 let error = ConnectionError.iceConnectionFailed
                 mediaConnection?.callOnFailureHandler(error)
-                terminate(error)
+                terminate(error: error)
                 
             default:
                 break
@@ -988,9 +996,11 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     }
     
     func finishConnection() {
+        stopMonitor()
         state = .connected
-        clearTimeoutTimer()
-        peerConnectionEventHandlers?.onConnectHandler?(nativePeerConnection)
+        if nativePeerConnection != nil {
+            peerConnectionEventHandlers?.onConnectHandler?(nativePeerConnection!)
+        }
         connectCompletionHandler?(nil)
         connectCompletionHandler = nil
     }
@@ -1000,12 +1010,12 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .PeerConnection,
                              format: "ICE gathering state changed: %@",
                              arguments: newState.description)
+        
+        monitor?.update()
+        
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             peerConnectionEventHandlers?
@@ -1015,14 +1025,12 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     
     func peerConnection(_ nativePeerConnection: RTCPeerConnection,
                         didGenerate candidate: RTCIceCandidate) {
-        eventLog?.markFormat(type: .PeerConnection, format: "candidate generated: %@",
+        eventLog?.markFormat(type: .PeerConnection,
+                             format: "candidate generated: %@",
                              arguments: candidate.sdp)
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             peerConnectionEventHandlers?
@@ -1030,7 +1038,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             if let error = send(SignalingICECandidate(candidate: candidate.sdp)) {
                 eventLog?.markFormat(type: .PeerConnection,
                                      format: "send candidate to server failed")
-                terminate(error)
+                terminate(error: error)
             }
         }
     }
@@ -1040,12 +1048,10 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .PeerConnection,
                              format: "candidates %d removed",
                              arguments: candidates.count)
+        
         switch state {
-        case .disconnected, .terminated:
+        case .disconnecting, .disconnected, .terminated:
             break
-            
-        case .disconnecting:
-            proceedDisconnecting()
             
         default:
             peerConnectionEventHandlers?
