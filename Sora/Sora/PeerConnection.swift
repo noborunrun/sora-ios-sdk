@@ -332,8 +332,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     }
     
     func finishTermination(error: ConnectionError?) {
-        eventLog?.markFormat(type: .WebSocket,
-                             format: "finish connection")
+        eventLog?.markFormat(type: .PeerConnection,
+                             format: "finish termination")
         
         stopMonitor()
         
@@ -996,6 +996,16 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     }
     
     func finishConnection() {
+        eventLog?.markFormat(type: .PeerConnection,
+                             format: "finish connection")
+        
+        if mediaConnection!.mediaStreams.isEmpty {
+            eventLog?.markFormat(type: .PeerConnection,
+                                 format: "media stream is not found")
+            terminate(error: .mediaStreamNotFound)
+            return
+        }
+        
         stopMonitor()
         state = .connected
         if nativePeerConnection != nil {

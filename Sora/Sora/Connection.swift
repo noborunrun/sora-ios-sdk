@@ -16,6 +16,7 @@ public indirect enum ConnectionError: Error {
     case iceConnectionFailed
     case iceConnectionDisconnected
     case mediaCapturerFailed
+    case mediaStreamNotFound
     case aggregateError([ConnectionError])
     case updateError(ConnectionError)
 }
