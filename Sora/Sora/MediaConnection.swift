@@ -137,7 +137,8 @@ public class MediaConnection {
             return false
         }
         
-        if peerConn.clientId == mediaStreamId {
+        if multistreamEnabled && !mediaStreams.isEmpty &&
+            peerConn.clientId == mediaStreamId {
             return true
         } else {
             return mediaStreams.contains {
