@@ -12,7 +12,10 @@ class ConnectionViewController: UITableViewController {
     
     @IBOutlet weak var connectionStateCell: UITableViewCell!
     @IBOutlet weak var connectionTimeLabel: UILabel!
-    @IBOutlet weak var URLLabel: UILabel!
+    @IBOutlet weak var enableWebSocketSSLLabel: UILabel!
+    @IBOutlet weak var hostLabel: UILabel!
+    @IBOutlet weak var portLabel: UILabel!
+    @IBOutlet weak var signalingPathLabel: UILabel!
     @IBOutlet weak var channelIdLabel: UILabel!
     @IBOutlet weak var roleLabel: UILabel!
     @IBOutlet weak var roleCell: UITableViewCell!
@@ -29,7 +32,10 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var VP9EnabledLabel: UILabel!
     
     @IBOutlet weak var connectionTimeValueLabel: UILabel!
-    @IBOutlet weak var URLTextField: UITextField!
+    @IBOutlet weak var enableWebSocketSSLSwitch: UISwitch!
+    @IBOutlet weak var hostTextField: UITextField!
+    @IBOutlet weak var portTextField: UITextField!
+    @IBOutlet weak var signalingPathTextField: UITextField!
     @IBOutlet weak var channelIdTextField: UITextField!
     @IBOutlet weak var rollValueLabel: UILabel!
     @IBOutlet weak var enableMultistreamSwitch: UISwitch!
@@ -87,16 +93,6 @@ class ConnectionViewController: UITableViewController {
                 }
             }
         }
-    }
-    
-    var URLString: String? {
-        get { return URLTextField.text }
-        set { URLTextField.text = newValue }
-    }
-    
-    var channelId: String? {
-        get { return channelIdTextField.text }
-        set { channelIdTextField.text = newValue }
     }
     
     var roles: [ConnectionController.Role] = [] {
@@ -172,7 +168,9 @@ class ConnectionViewController: UITableViewController {
         
         for label: UILabel in [connectionTimeLabel,
                                connectionTimeValueLabel,
-                               URLLabel, channelIdLabel,
+                               enableWebSocketSSLLabel,
+                               hostLabel, portLabel, signalingPathLabel,
+                               channelIdLabel,
                                roleLabel, rollValueLabel,
                                enableMultistreamLabel,
                                connectButton.titleLabel!,
@@ -187,7 +185,10 @@ class ConnectionViewController: UITableViewController {
             label.font = UIFont.preferredFont(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
         }
-        for field: UITextField in [URLTextField, channelIdTextField] {
+        for field: UITextField in [hostTextField,
+                                   portTextField,
+                                   signalingPathTextField,
+                                   channelIdTextField] {
             field.font = UIFont.preferredFont(forTextStyle: .body)
             field.adjustsFontForContentSizeCategory = true
         }
@@ -204,8 +205,12 @@ class ConnectionViewController: UITableViewController {
         audioCodec = .default
         autofocusSwitch.setOn(false, animated: false)
         connectionTimeValueLabel.text = nil
-        URLTextField.text = connectionController?.URL
-        URLTextField.placeholder = "www.example.com"
+        hostTextField.text = connectionController?.host
+        hostTextField.placeholder = "www.example.com"
+        portTextField.text = connectionController?.port?.description
+        portTextField.placeholder = "5000"
+        signalingPathTextField.text = connectionController?.signalingPath
+        signalingPathTextField.placeholder = "signaling"
         channelIdTextField.text = connectionController?.channelId
         channelIdTextField.placeholder = "your channel ID"
         
@@ -279,19 +284,22 @@ class ConnectionViewController: UITableViewController {
             return
         }
         
-        if let url = defaults.string(forKey:
-            ConnectionController.UserDefaultsKey.URL.rawValue) {
-            if !url.isEmpty {
-                URLTextField.text = url
-            }
-        }
-        
-        if let channelId = defaults.string(forKey:
-            ConnectionController.UserDefaultsKey.channelId.rawValue) {
-            if !channelId.isEmpty {
-                channelIdTextField.text = channelId
-            }
-        }
+        loadSwitchValue(userDefaults: defaults,
+                        switch: enableWebSocketSSLSwitch,
+                        key: .WebSocketSSLEnabled,
+                        value: true)
+        loadTextFieldValue(userDefaults: defaults,
+                           textField: hostTextField,
+                           forKey: .host)
+        loadTextFieldValue(userDefaults: defaults,
+                           textField: portTextField,
+                           forKey: .port)
+        loadTextFieldValue(userDefaults: defaults,
+                           textField: signalingPathTextField,
+                           forKey: .signalingPath)
+        loadTextFieldValue(userDefaults: defaults,
+                           textField: channelIdTextField,
+                           forKey: .channelId)
         
         roles = [.publisher]
         if let roleValue = defaults.string(forKey:
@@ -305,16 +313,20 @@ class ConnectionViewController: UITableViewController {
             }
         }
         
-        initSwitchValue(switch_: enableMultistreamSwitch,
+        loadSwitchValue(userDefaults: defaults,
+                        switch: enableMultistreamSwitch,
                         key: .multistreamEnabled,
                         value: false)
-        initSwitchValue(switch_: enableVideoSwitch,
+        loadSwitchValue(userDefaults: defaults,
+                        switch: enableVideoSwitch,
                         key: .videoEnabled,
                         value: true)
-        initSwitchValue(switch_: enableAudioSwitch,
+        loadSwitchValue(userDefaults: defaults,
+                        switch: enableAudioSwitch,
                         key: .audioEnabled,
                         value: true)
-        initSwitchValue(switch_: autofocusSwitch,
+        loadSwitchValue(userDefaults: defaults,
+                        switch: autofocusSwitch,
                         key: .autofocusEnabled,
                         value: false)
         
@@ -341,14 +353,25 @@ class ConnectionViewController: UITableViewController {
         }
     }
     
-    func initSwitchValue(switch_: UISwitch!,
+    func loadSwitchValue(userDefaults: UserDefaults,
+                         switch: UISwitch!,
                          key: ConnectionController.UserDefaultsKey,
                          value: Bool) {
         let defaults = UserDefaults.standard
         if let _ = defaults.object(forKey: key.rawValue) {
-            switch_.setOn(defaults.bool(forKey: key.rawValue), animated: false)
+            `switch`.setOn(defaults.bool(forKey: key.rawValue), animated: false)
         } else {
-            switch_.setOn(value, animated: false)
+            `switch`.setOn(value, animated: false)
+        }
+    }
+    
+    func loadTextFieldValue(userDefaults: UserDefaults,
+                            textField: UITextField,
+                            forKey key: ConnectionController.UserDefaultsKey) {
+        if let text = userDefaults.string(forKey: key.rawValue) {
+            if !text.isEmpty {
+                textField.text = text
+            }
         }
     }
     
@@ -356,18 +379,22 @@ class ConnectionViewController: UITableViewController {
         guard let defaults = connectionController!.userDefaults else {
             return
         }
-        
-        if let text = URLTextField.text {
-            defaults.set(text,
-                         forKey:
-                ConnectionController.UserDefaultsKey.URL.rawValue)
-        }
-        
-        if let text = channelIdTextField.text {
-            defaults.set(text,
-                         forKey:
-                ConnectionController.UserDefaultsKey.channelId.rawValue)
-        }
+
+        defaults.set(enableWebSocketSSLSwitch.isOn,
+                     forKey:
+            ConnectionController.UserDefaultsKey.WebSocketSSLEnabled.rawValue)
+        saveTextField(userDefaults: defaults,
+                      textField: hostTextField,
+                      forKey: .host)
+        saveTextField(userDefaults: defaults,
+                      textField: portTextField,
+                      forKey: .port)
+        saveTextField(userDefaults: defaults,
+                      textField: signalingPathTextField,
+                      forKey: .signalingPath)
+        saveTextField(userDefaults: defaults,
+                      textField: channelIdTextField,
+                      forKey: .channelId)
         
         var roleValue = ""
         if roles.contains(.publisher) {
@@ -429,11 +456,20 @@ class ConnectionViewController: UITableViewController {
         defaults.synchronize()
     }
     
+    func saveTextField(userDefaults: UserDefaults,
+                       textField: UITextField,
+                       forKey key: ConnectionController.UserDefaultsKey) {
+        if let text = textField.text {
+            userDefaults.set(text, forKey: key.rawValue)
+        }
+    }
+    
     // MARK: アクション
     
     func enableControls(_ isEnabled: Bool) {
         let labels: [UILabel] = [
-            URLLabel, channelIdLabel, roleLabel,
+            enableWebSocketSSLLabel, hostLabel, portLabel,
+            signalingPathLabel, channelIdLabel, roleLabel,
             enableVideoLabel, videoCodecLabel,
             enableAudioLabel, audioCodecLabel,
             ]
@@ -448,7 +484,10 @@ class ConnectionViewController: UITableViewController {
             enableMultistreamLabel.textColor = nil
         }
         
-        let fields: [UITextField] = [URLTextField, channelIdTextField]
+        let fields: [UITextField] = [hostTextField,
+                                     portTextField,
+                                     signalingPathTextField,
+                                     channelIdTextField]
         for field in fields {
             if isEnabled {
                 field.textColor = nil
@@ -458,7 +497,8 @@ class ConnectionViewController: UITableViewController {
         }
         
         let controls: [UIView] = [
-            URLTextField, channelIdTextField, roleCell,
+            enableWebSocketSSLSwitch, hostTextField, portTextField,
+            signalingPathTextField, channelIdTextField, roleCell,
             enableMultistreamSwitch, enableVideoSwitch, enableAudioSwitch,
             videoCodecCell, audioCodecCell]
         for control: UIView in controls {
@@ -476,8 +516,6 @@ class ConnectionViewController: UITableViewController {
             if isCancel {
                 self.connectionController!.onCancelHandler?()
             }
-            self.connectionController!.URL = self.URLLabel.text
-            self.connectionController!.channelId = self.channelIdLabel.text
         }
     }
     
@@ -494,19 +532,41 @@ class ConnectionViewController: UITableViewController {
             disconnect()
             
         case .disconnected:
-            if URLString == nil || URLString!.isEmpty {
+            guard let host = hostTextField.nonEmptyText() else {
                 presentSimpleAlert(title: "Error",
-                                   message: "Input server URL")
+                                   message: "Input host URL")
                 return
             }
             
-            if channelId == nil || channelId!.isEmpty {
+            var port: UInt?
+            if let text = portTextField.nonEmptyText() {
+                if let num = UInt(text) {
+                    port = num
+                } else {
+                    presentSimpleAlert(title: "Error",
+                                       message: "Invalid port number")
+                    return
+                }
+            }
+            
+            let signalingPath = signalingPathTextField.nonEmptyText() ??
+                signalingPathTextField.placeholder!
+            
+            guard let channelId = channelIdTextField.nonEmptyText() else {
                 presentSimpleAlert(title: "Error",
                                    message: "Input channel ID")
                 return
             }
             
-            guard let URL = URL(string: URLString!) else {
+            var portStr: String = ""
+            if let port = port {
+                portStr = String(format: ":%d", port)
+            }
+            let URLString = String(format: "%@://%@%@/%@",
+                                   enableWebSocketSSLSwitch.isOn ? "wss" : "ws",
+                                   host, portStr, signalingPath)
+            
+            guard let URL = URL(string: URLString) else {
                 presentSimpleAlert(title: "Error",
                                    message: "Invalid server URL")
                 return
@@ -518,10 +578,10 @@ class ConnectionViewController: UITableViewController {
                 return
             }
             
-            connection = Connection(URL: URL, mediaChannelId: channelId!)
+            connection = Connection(URL: URL, mediaChannelId: channelId)
             let request = ConnectionController
                 .Request(URL: URL,
-                         channelId: channelId!,
+                         channelId: channelId,
                          roles: roles,
                          multistreamEnabled: multistreamEnabled,
                          videoEnabled: videoEnabled,
@@ -679,11 +739,27 @@ class ConnectionViewController: UITableViewController {
     
     // MARK: テキストフィールドの編集
     
-    @IBAction func URLTextFieldDidTouchDown(_ sender: AnyObject) {
-        touchedField = URLTextField
+    @IBAction func hostTextFieldDidTouchDown(_ sender: AnyObject) {
+        touchedField = hostTextField
     }
     
-    @IBAction func URLTextFieldEditingDidEndOnExit(_ sender: AnyObject) {
+    @IBAction func hostTextFieldEditingDidEndOnExit(_ sender: AnyObject) {
+        touchedField = nil
+    }
+    
+    @IBAction func portTextFieldDidTouchDown(_ sender: AnyObject) {
+        touchedField = portTextField
+    }
+    
+    @IBAction func portTextFieldEditingDidEndOnExit(_ sender: AnyObject) {
+        touchedField = nil
+    }
+    
+    @IBAction func signalingPathTextFieldDidTouchDown(_ sender: AnyObject) {
+        touchedField = signalingPathTextField
+    }
+    
+    @IBAction func signalingPathTextFieldEditingDidEndOnExit(_ sender: AnyObject) {
         touchedField = nil
     }
     

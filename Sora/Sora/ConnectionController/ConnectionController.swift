@@ -56,7 +56,10 @@ public class ConnectionController: UIViewController {
     }
     
     enum UserDefaultsKey: String {
-        case URL = "SoraConnectionControllerURL"
+        case WebSocketSSLEnabled = "SoraConnectionControllerWebSocketSSLEnabled"
+        case host = "SoraConnectionControllerHost"
+        case port = "SoraConnectionControllerPort"
+        case signalingPath = "SoraConnectionControllerSignalingPath"
         case channelId = "SoraConnectionControllerChannelId"
         case roles = "SoraConnectionControllerRoles"
         case multistreamEnabled = "SoraConnectionControllerMultistreamEnabled"
@@ -72,7 +75,10 @@ public class ConnectionController: UIViewController {
     var connectionControllerStoryboard: UIStoryboard?
     var connectionNavigationController: ConnectionNavigationController!
     
-    public var URL: String?
+    public var WebSocketSSLEnabled: Bool = true
+    public var host: String?
+    public var port: UInt?
+    public var signalingPath: String?
     public var channelId: String?
     public var availableRoles: [Role] = [.publisher, .subscriber]
     public var availableStreamTypes: [StreamType] = [.single, .multiple]
@@ -87,7 +93,10 @@ public class ConnectionController: UIViewController {
         }
     }
     
-    public init(URL: String? = nil,
+    public init(WebSocketSSLEnabled: Bool = true,
+                host: String? = nil,
+                port: UInt? = nil,
+                signalingPath: String? = "signaling",
                 channelId: String? = nil,
                 availableRoles: [Role]? = nil,
                 availableStreamTypes: [StreamType]? = nil) {
@@ -107,7 +116,10 @@ public class ConnectionController: UIViewController {
         view.addSubview(connectionNavigationController.view)
         connectionNavigationController.didMove(toParentViewController: self)
         
-        self.URL = URL
+        self.WebSocketSSLEnabled = WebSocketSSLEnabled
+        self.host = host
+        self.port = port
+        self.signalingPath = signalingPath
         self.channelId = channelId
         if let roles = availableRoles {
             self.availableRoles = roles
