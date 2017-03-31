@@ -88,7 +88,7 @@
                                         <rect key="frame" x="0.0" y="215.5" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zY2-SF-Cxn" id="RR3-Kh-5Ae">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="51"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="51.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WebSocket SSL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EXc-lo-yz9" userLabel="WebSocket SSL Label">
@@ -196,7 +196,7 @@
                                         <rect key="frame" x="0.0" y="371.5" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TId-tH-yF4" id="evB-so-Ip5">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="52"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="51.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signaling Path" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lTd-zh-VBf">
@@ -614,9 +614,9 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="VP9EnabledLabel" destination="RNM-be-A4O" id="Tkb-DX-0cr"/>
+                        <outlet property="VP9EnabledLabel" destination="1aV-js-ccA" id="WnF-T9-eau"/>
                         <outlet property="VP9EnabledValueLabel" destination="vuN-i0-aWu" id="Ozd-C1-b4K"/>
-                        <outlet property="WebRTCRevisionLabel" destination="RNM-be-A4O" id="kqc-Hy-wNm"/>
+                        <outlet property="WebRTCRevisionLabel" destination="RNM-be-A4O" id="LEt-Cq-JcD"/>
                         <outlet property="WebRTCRevisionValueLabel" destination="deW-V1-ccn" id="mdP-5J-s0W"/>
                         <outlet property="WebRTCVersionLabel" destination="UXr-Bc-aEt" id="aPr-0h-Jr0"/>
                         <outlet property="WebRTCVersionValueLabel" destination="ij0-qU-2Y3" id="BN6-g7-Ep0"/>
