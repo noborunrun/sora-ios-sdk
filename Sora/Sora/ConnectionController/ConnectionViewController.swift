@@ -49,6 +49,8 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var WebRTCRevisionValueLabel: UILabel!
     @IBOutlet weak var VP9EnabledValueLabel: UILabel!
     
+    @IBOutlet weak var tapGestureRecognizer: UITapGestureRecognizer!
+    
     weak var touchedField: UITextField?
     
     static var main: ConnectionViewController?
@@ -165,6 +167,7 @@ class ConnectionViewController: UITableViewController {
         // Do any additional setup after loading the view.
         ConnectionViewController.main = self
         indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        tapGestureRecognizer.cancelsTouchesInView = false
         
         for label: UILabel in [connectionTimeLabel,
                                connectionTimeValueLabel,
@@ -769,6 +772,15 @@ class ConnectionViewController: UITableViewController {
     
     @IBAction func channelIdTextFieldEditingDidEndOnExit(_ sender: AnyObject) {
         touchedField = nil
+    }
+    
+    @IBAction func handleTap(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            hostTextField.resignFirstResponder()
+            portTextField.resignFirstResponder()
+            signalingPathTextField.resignFirstResponder()
+            channelIdTextField.resignFirstResponder()
+        }
     }
     
 }

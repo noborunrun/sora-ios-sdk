@@ -602,6 +602,7 @@
                         <connections>
                             <outlet property="dataSource" destination="1nR-he-y4W" id="fP8-FT-WrZ"/>
                             <outlet property="delegate" destination="1nR-he-y4W" id="IyY-7g-Kt9"/>
+                            <outletCollection property="gestureRecognizers" destination="bY2-NN-yoP" appends="YES" id="FfN-S7-A7a"/>
                         </connections>
                     </tableView>
                     <toolbarItems/>
@@ -649,12 +650,19 @@
                         <outlet property="rollValueLabel" destination="guX-OM-hXg" id="Jc3-a2-YDW"/>
                         <outlet property="signalingPathLabel" destination="lTd-zh-VBf" id="fSJ-15-jBS"/>
                         <outlet property="signalingPathTextField" destination="KVI-j8-aal" id="RCS-Jr-ei1"/>
+                        <outlet property="tapGestureRecognizer" destination="bY2-NN-yoP" id="Keb-Hf-duL"/>
                         <outlet property="videoCodecCell" destination="xM0-cG-P5x" id="Nn6-k9-RUr"/>
                         <outlet property="videoCodecLabel" destination="jct-MC-Ao5" id="elj-R5-isQ"/>
                         <outlet property="videoCodecValueLabel" destination="xFX-aC-d6I" id="Hgz-KV-STe"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f1O-UQ-ySb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="bY2-NN-yoP">
+                    <connections>
+                        <action selector="handleTapWithSender:" destination="1nR-he-y4W" id="poa-me-tix"/>
+                        <outlet property="delegate" destination="1nR-he-y4W" id="MTW-Hs-d5G"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1841.25" y="-92.957746478873247"/>
         </scene>
