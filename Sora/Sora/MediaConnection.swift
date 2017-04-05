@@ -349,6 +349,39 @@ public class MediaPublisher: MediaConnection {
         }
     }
     
+    public var microphoneEnabled: Bool? {
+        
+        get {
+            guard let capturer = mediaCapturer else { return nil }
+            guard let stream = mainMediaStream else { return nil }
+            return stream.nativeMediaStream.audioTracks
+                .contains(capturer.audioCaptureTrack)
+        }
+        
+        set {
+            guard let capturer = mediaCapturer else { return }
+            guard let stream = mainMediaStream else { return }
+            
+            let hasTrack = stream.nativeMediaStream.audioTracks
+                .contains(capturer.audioCaptureTrack)
+            switch newValue {
+            case nil:
+                break
+                
+            case true?:
+                if !hasTrack {
+                    stream.nativeMediaStream.addAudioTrack(capturer.audioCaptureTrack)
+                }
+                
+            case false?:
+                if hasTrack {
+                    stream.nativeMediaStream.removeAudioTrack(capturer.audioCaptureTrack)
+                }
+            }
+        }
+        
+    }
+    
     override var eventType: Event.EventType {
         get { return .MediaPublisher }
     }
