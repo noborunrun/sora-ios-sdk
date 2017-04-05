@@ -12,6 +12,7 @@ class ConnectionViewController: UITableViewController {
     
     @IBOutlet weak var connectionStateCell: UITableViewCell!
     @IBOutlet weak var connectionTimeLabel: UILabel!
+    @IBOutlet weak var enableMicrophoneLabel: UILabel!
     @IBOutlet weak var enableWebSocketSSLLabel: UILabel!
     @IBOutlet weak var hostLabel: UILabel!
     @IBOutlet weak var portLabel: UILabel!
@@ -32,6 +33,7 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var VP9EnabledLabel: UILabel!
     
     @IBOutlet weak var connectionTimeValueLabel: UILabel!
+    @IBOutlet weak var enableMicrophoneSwitch: UISwitch!
     @IBOutlet weak var enableWebSocketSSLSwitch: UISwitch!
     @IBOutlet weak var hostTextField: UITextField!
     @IBOutlet weak var portTextField: UITextField!
@@ -171,6 +173,7 @@ class ConnectionViewController: UITableViewController {
         
         for label: UILabel in [connectionTimeLabel,
                                connectionTimeValueLabel,
+                               enableMicrophoneLabel,
                                enableWebSocketSSLLabel,
                                hostLabel, portLabel, signalingPathLabel,
                                channelIdLabel,
@@ -206,6 +209,8 @@ class ConnectionViewController: UITableViewController {
         roles = [.publisher, .subscriber]
         videoCodec = .default
         audioCodec = .default
+        enableLabel(enableMicrophoneLabel, isEnabled: false)
+        enableMicrophoneSwitch.setOn(false, animated: false)
         autofocusSwitch.setOn(false, animated: false)
         connectionTimeValueLabel.text = nil
         hostTextField.text = connectionController?.host
@@ -469,6 +474,10 @@ class ConnectionViewController: UITableViewController {
     
     // MARK: アクション
     
+    func enableLabel(_ label: UILabel, isEnabled: Bool) {
+        label.textColor = isEnabled ? nil : UIColor.lightGray
+    }
+    
     func enableControls(_ isEnabled: Bool) {
         let labels: [UILabel] = [
             enableWebSocketSSLLabel, hostLabel, portLabel,
@@ -477,7 +486,7 @@ class ConnectionViewController: UITableViewController {
             enableAudioLabel, audioCodecLabel,
             ]
         for label in labels {
-            label.textColor = isEnabled ? nil : UIColor.lightGray
+            enableLabel(label, isEnabled: isEnabled)
         }
         
         switch connectionController!.tupleOfAvailableStreamTypes {
@@ -633,6 +642,15 @@ class ConnectionViewController: UITableViewController {
                     return
                 }
                 
+                self.enableLabel(self.enableMicrophoneLabel, isEnabled: true)
+                self.enableMicrophoneSwitch.isEnabled = true
+                self.enableMicrophoneSwitch.setOn(true, animated: true)
+                NotificationCenter.default.addObserver(
+                    self,
+                    selector: #selector(self.connectionOnDisconnect(_:)),
+                    name: MediaConnection.NotificationKey.onDisconnect,
+                    object: self.connection!.mediaPublisher)
+                
                 if self.roles.contains(.subscriber) {
                     self.connectSubscriber()
                 } else {
@@ -640,6 +658,13 @@ class ConnectionViewController: UITableViewController {
                 }
             }
         }
+    }
+    
+    func connectionOnDisconnect(_ notification: Notification) {
+        enableLabel(enableMicrophoneLabel, isEnabled: false)
+        enableMicrophoneSwitch.isEnabled = false
+        enableMicrophoneSwitch.isUserInteractionEnabled = true
+        enableMicrophoneSwitch.setOn(false, animated: true)
     }
     
     func connectSubscriber() {
@@ -738,6 +763,13 @@ class ConnectionViewController: UITableViewController {
             action in return
         })
         present(alert, animated: true) {}
+    }
+    
+    @IBAction func switchMicrophoneEnabled(_ sender: AnyObject) {
+        guard let pub = connection?.mediaPublisher else { return }
+        guard pub.isAvailable else { return }
+        
+        pub.microphoneEnabled = enableMicrophoneSwitch.isOn
     }
     
     // MARK: テキストフィールドの編集
