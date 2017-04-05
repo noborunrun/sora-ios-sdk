@@ -209,11 +209,11 @@ class ConnectionViewController: UITableViewController {
         autofocusSwitch.setOn(false, animated: false)
         connectionTimeValueLabel.text = nil
         hostTextField.text = connectionController?.host
-        hostTextField.placeholder = "www.example.com"
+        hostTextField.placeholder = "ex) www.example.com"
         portTextField.text = connectionController?.port?.description
-        portTextField.placeholder = "5000"
+        portTextField.placeholder = "ex) 5000"
         signalingPathTextField.text = connectionController?.signalingPath
-        signalingPathTextField.placeholder = "signaling"
+        signalingPathTextField.placeholder = "ex) signaling"
         channelIdTextField.text = connectionController?.channelId
         channelIdTextField.placeholder = "your channel ID"
         
