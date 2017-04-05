@@ -167,7 +167,7 @@ class ConnectionMonitor {
         DispatchQueue.global().asyncAfter(deadline: self.deadline,
                                           execute: timeoutWorkItem)
         
-        validationTimer = Timer(timeInterval: 0.5, repeats: true) { timer in
+        validationTimer = Timer(timeInterval: 1.0, repeats: true) { timer in
             self.validate()
         }
         RunLoop.main.add(validationTimer, forMode: .commonModes)
