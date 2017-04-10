@@ -61,6 +61,8 @@ public class EventLog {
     public var limit: Int? = nil
     public var debugMode: Bool = false
     
+    public static var globalDebugMode: Bool = false
+    
     init(URL: URL, mediaChannelId: String) {
         self.URL = URL
         self.mediaChannelId = mediaChannelId
@@ -72,7 +74,7 @@ public class EventLog {
     
     public func mark(event: Event) {
         if isEnabled {
-            if debugMode {
+            if EventLog.globalDebugMode || debugMode {
                 print(event.description)
             }
             if let limit = limit {

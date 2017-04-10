@@ -11,8 +11,8 @@ public class Message {
         case candidate = "candidate"
         case ping = "ping"
         case pong = "pong"
-        case stats = "stats"
         case notify = "notify"
+        case update = "update"
     }
     
     public var type: MessageType?
@@ -160,7 +160,7 @@ enum SignalingVideoCodec: String, UnboxableEnum {
 
 enum SignalingAudioCodec: String, UnboxableEnum {
     
-    case Opus = "Opus"
+    case Opus = "OPUS"
     case PCMU = "PCMU"
     
 }
@@ -209,14 +209,16 @@ struct SignalingConnect {
     
     var role: SignalingRole
     var channel_id: String
-    var access_token: String?
+    var metadata: String?
     var mediaOption: MediaOption
+    var multistream: Bool
     
-    init(role: SignalingRole, channel_id: String, access_token: String? = nil,
-         mediaOption: MediaOption) {
+    init(role: SignalingRole, channel_id: String, metadata: String? = nil,
+         multistream: Bool = false, mediaOption: MediaOption) {
         self.role = role
         self.channel_id = channel_id
-        self.access_token = access_token
+        self.metadata = metadata
+        self.multistream = multistream
         self.mediaOption = mediaOption
     }
 
@@ -227,8 +229,12 @@ extension SignalingConnect: Messageable {
     func message() -> Message {
         var data: [String : Any] = ["role": role.encode(),
                                     "channel_id": channel_id]
-        if let value = access_token {
-            data["access_token"] = value
+        if let value = metadata {
+            data["metadata"] = value
+        }
+        if multistream {
+            data["multistream"] = true
+            data["plan_b"] = true
         }
         
         if !mediaOption.videoEnabled {
@@ -236,7 +242,7 @@ extension SignalingConnect: Messageable {
         } else {
             var video: [String: Any] = [:]
             switch mediaOption.videoCodec {
-            case .unspecified:
+            case .default:
                 break
             case .VP8:
                 video["codec_type"] = SignalingVideoCodec.VP8.rawValue
@@ -260,7 +266,7 @@ extension SignalingConnect: Messageable {
         } else {
             var audio: [String: Any] = [:]
             switch mediaOption.audioCodec {
-            case .unspecified:
+            case .default:
                 break
             case .Opus:
                 audio["codec_type"] = SignalingAudioCodec.Opus.rawValue
@@ -389,44 +395,66 @@ extension SignalingPong: Messageable {
     
 }
 
-public struct SignalingStats {
+enum SignalingEventType: String, UnboxableEnum {
     
-    public var numberOfUpstreamConnections: Int?
-    public var numberOfDownstreamConnections: Int?
-    
-    var description: String {
-        get {
-            var s = ""
-            if let n = numberOfUpstreamConnections {
-                s = s.appendingFormat("upstreams=%d ", n)
-            }
-            if let n = numberOfDownstreamConnections {
-                s = s.appendingFormat("downstreams=%d", n)
-            }
-            return s
-        }
-    }
-}
-
-extension SignalingStats: Unboxable {
-    
-    public init(unboxer: Unboxer) throws {
-        numberOfUpstreamConnections = unboxer.unbox(key: "upstream_connections")
-        numberOfDownstreamConnections = unboxer.unbox(key: "downstream_connections")
-    }
+    case connectionCreated = "connection.created"
+    case connectionUpdated = "connection.updated"
+    case connectionDestroyed = "connection.destroyed"
     
 }
 
-public struct SignalingNotify {
+struct SignalingNotify {
     
-    public var notifyMessage: String
-    
+    var eventType: SignalingEventType
+    var role: SignalingRole
+    var connectionTime: Int
+    var numberOfChannels: Int
+    var numberOfUpstreamConnections: Int
+    var numberOfDownstreamConnections: Int
+
 }
 
 extension SignalingNotify: Unboxable {
     
+    init(unboxer: Unboxer) throws {
+        eventType = try unboxer.unbox(key: "event_type")
+        role = try unboxer.unbox(key: "role")
+        connectionTime = try unboxer.unbox(key: "minutes")
+        numberOfChannels = try unboxer.unbox(key: "channel_connections")
+        numberOfUpstreamConnections = try unboxer.unbox(key: "channel_upstream_connections")
+        numberOfDownstreamConnections = try unboxer.unbox(key: "channel_downstream_connections")
+    }
+    
+}
+
+struct SignalingUpdateOffer {
+    
+    var sdp: String
+ 
+    func sessionDescription() -> RTCSessionDescription {
+        return RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp)
+    }
+    
+}
+
+extension SignalingUpdateOffer: Unboxable {
+    
     public init(unboxer: Unboxer) throws {
-        notifyMessage = try unboxer.unbox(key: "message")
+        sdp = try unboxer.unbox(key: "sdp")
+    }
+    
+}
+
+struct SignalingUpdateAnswer {
+    
+    var sdp: String
+    
+}
+
+extension SignalingUpdateAnswer: Messageable {
+    
+    func message() -> Message {
+        return Message(type: .update, data: ["sdp": sdp as Any])
     }
     
 }
