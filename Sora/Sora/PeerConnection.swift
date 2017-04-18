@@ -330,13 +330,13 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     
     func disconnect(handler: @escaping ((ConnectionError?) -> Void)) {
         switch state {
-        case .disconnected:
+        case .disconnected, .terminated:
             handler(ConnectionError.connectionDisconnected)
-        case .signalingConnected, .connected:
+        case .disconnecting:
+            handler(ConnectionError.connectionBusy)
+        default:
             disconnectCompletionHandler = handler
             terminate()
-        default:
-            handler(ConnectionError.connectionBusy)
         }
     }
 
@@ -387,8 +387,10 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             mediaConnection?.callOnFailureHandler(error)
         }
         signalingEventHandlers?.onDisconnectHandler?()
-        connectCompletionHandler?(error)
-        connectCompletionHandler = nil
+        if let handler = connectCompletionHandler {
+            handler(error ?? .connectionCancelled)
+            connectCompletionHandler = nil
+        }
         disconnectCompletionHandler?(error)
         disconnectCompletionHandler = nil
         mediaConnection?.callOnDisconnectHandler(error)

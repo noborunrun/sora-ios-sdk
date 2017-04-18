@@ -721,11 +721,19 @@ class ConnectionViewController: UITableViewController {
             break
         }
         
-        connectingAlertController.dismiss(animated: true) {
-            self.presentSimpleAlert(title: title, message: message)
-            self.state = .disconnected
-            self.connectionController?.onConnectHandler?(nil, nil, error)
+        if let alert = connectingAlertController {
+            alert.dismiss(animated: true) {
+                self.finishFailure(title: title, message: message, error: error)
+            }
+        } else {
+            finishFailure(title: title, message: message, error: error)
         }
+    }
+    
+    func finishFailure(title: String, message: String, error: ConnectionError) {
+        presentSimpleAlert(title: title, message: message)
+        state = .disconnected
+        connectionController?.onConnectHandler?(nil, nil, error)
     }
     
     func finishConnection(_ mediaConnection: MediaConnection) {
