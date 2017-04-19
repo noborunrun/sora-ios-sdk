@@ -13,6 +13,7 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var connectionStateCell: UITableViewCell!
     @IBOutlet weak var connectionTimeLabel: UILabel!
     @IBOutlet weak var enableMicrophoneLabel: UILabel!
+    @IBOutlet weak var eventLogsLabel: UILabel!
     @IBOutlet weak var enableWebSocketSSLLabel: UILabel!
     @IBOutlet weak var hostLabel: UILabel!
     @IBOutlet weak var portLabel: UILabel!
@@ -174,6 +175,7 @@ class ConnectionViewController: UITableViewController {
         for label: UILabel in [connectionTimeLabel,
                                connectionTimeValueLabel,
                                enableMicrophoneLabel,
+                               eventLogsLabel,
                                enableWebSocketSSLLabel,
                                hostLabel, portLabel, signalingPathLabel,
                                channelIdLabel,
