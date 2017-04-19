@@ -25,6 +25,8 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var enableVideoLabel: UILabel!
     @IBOutlet weak var videoCodecLabel: UILabel!
     @IBOutlet weak var videoCodecCell: UITableViewCell!
+    @IBOutlet weak var bitRateLabel: UILabel!
+    @IBOutlet weak var bitRateCell: UITableViewCell!
     @IBOutlet weak var enableAudioLabel: UILabel!
     @IBOutlet weak var audioCodecLabel: UILabel!
     @IBOutlet weak var audioCodecCell: UITableViewCell!
@@ -35,6 +37,7 @@ class ConnectionViewController: UITableViewController {
     
     @IBOutlet weak var connectionTimeValueLabel: UILabel!
     @IBOutlet weak var enableMicrophoneSwitch: UISwitch!
+    @IBOutlet weak var eventLogsValueLabel: UILabel!
     @IBOutlet weak var enableWebSocketSSLSwitch: UISwitch!
     @IBOutlet weak var hostTextField: UITextField!
     @IBOutlet weak var portTextField: UITextField!
@@ -45,6 +48,7 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var enableVideoSwitch: UISwitch!
     @IBOutlet weak var videoCodecValueLabel: UILabel!
+    @IBOutlet weak var bitRateValueLabel: UILabel!
     @IBOutlet weak var enableAudioSwitch: UISwitch!
     @IBOutlet weak var audioCodecValueLabel: UILabel!
     @IBOutlet weak var autofocusSwitch: UISwitch!
@@ -175,15 +179,15 @@ class ConnectionViewController: UITableViewController {
         for label: UILabel in [connectionTimeLabel,
                                connectionTimeValueLabel,
                                enableMicrophoneLabel,
-                               eventLogsLabel,
+                               eventLogsLabel, eventLogsValueLabel,
                                enableWebSocketSSLLabel,
                                hostLabel, portLabel, signalingPathLabel,
                                channelIdLabel,
                                roleLabel, rollValueLabel,
                                enableMultistreamLabel,
                                connectButton.titleLabel!,
-                               enableVideoLabel, videoCodecLabel,
-                               videoCodecValueLabel,
+                               enableVideoLabel, videoCodecLabel, bitRateLabel,
+                               videoCodecValueLabel, bitRateValueLabel,
                                enableAudioLabel, audioCodecLabel,
                                audioCodecValueLabel, autofocusLabel,
                                WebRTCVersionLabel, WebRTCVersionValueLabel,
@@ -514,7 +518,7 @@ class ConnectionViewController: UITableViewController {
             enableWebSocketSSLSwitch, hostTextField, portTextField,
             signalingPathTextField, channelIdTextField, roleCell,
             enableMultistreamSwitch, enableVideoSwitch, enableAudioSwitch,
-            videoCodecCell, audioCodecCell]
+            videoCodecCell, bitRateCell, audioCodecCell]
         for control: UIView in controls {
             control.isUserInteractionEnabled = isEnabled
         }
