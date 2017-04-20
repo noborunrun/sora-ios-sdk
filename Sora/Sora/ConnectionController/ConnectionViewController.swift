@@ -140,8 +140,8 @@ class ConnectionViewController: UITableViewController {
         }
     }
     
-    var bitRate: UInt {
-        get { return UInt(bitRateValueLabel.text ?? "800")! }
+    var bitRate: Int {
+        get { return Int(bitRateValueLabel.text ?? "800")! }
         set { bitRateValueLabel.text = newValue.description }
     }
     
@@ -617,6 +617,7 @@ class ConnectionViewController: UITableViewController {
                          multistreamEnabled: multistreamEnabled,
                          videoEnabled: videoEnabled,
                          videoCodec: videoCodec ?? .default,
+                         bitRate: bitRate,
                          audioEnabled: audioEnabled,
                          audioCodec: audioCodec ?? .default)
             connectionController?.onRequestHandler?(connection!, request)
@@ -716,6 +717,7 @@ class ConnectionViewController: UITableViewController {
         if let codec = videoCodec {
             mediaConn.mediaOption.videoCodec = codec
         }
+        mediaConn.mediaOption.bitRate = bitRate
         mediaConn.mediaOption.audioEnabled = audioEnabled
         if let codec = audioCodec {
             mediaConn.mediaOption.audioCodec = codec

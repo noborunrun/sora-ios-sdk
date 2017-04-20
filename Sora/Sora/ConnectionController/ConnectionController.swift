@@ -32,6 +32,7 @@ public class ConnectionController: UIViewController {
         public var multistreamEnabled: Bool
         public var videoEnabled: Bool
         public var videoCodec: VideoCodec
+        public var bitRate: Int
         public var audioEnabled: Bool
         public var audioCodec: AudioCodec
         
@@ -41,6 +42,7 @@ public class ConnectionController: UIViewController {
                     multistreamEnabled: Bool,
                     videoEnabled: Bool,
                     videoCodec: VideoCodec,
+                    bitRate: Int,
                     audioEnabled: Bool,
                     audioCodec: AudioCodec) {
             self.URL = URL
@@ -49,6 +51,7 @@ public class ConnectionController: UIViewController {
             self.multistreamEnabled = multistreamEnabled
             self.videoEnabled = videoEnabled
             self.videoCodec = videoCodec
+            self.bitRate = bitRate
             self.audioEnabled = audioEnabled
             self.audioCodec = audioCodec
         }

@@ -65,12 +65,12 @@ class BitRateViewController: UITableViewController {
         setBitRate(ConnectionViewController.main!.bitRate)
     }
 
-    func setBitRate(_ value: UInt) {
+    func setBitRate(_ value: Int) {
         clearCheckmarks()
         cellForBitRate(value).accessoryType = .checkmark
     }
     
-    func cellForBitRate(_ value: UInt) -> UITableViewCell {
+    func cellForBitRate(_ value: Int) -> UITableViewCell {
         switch value {
         case 0...100:
             return value100Cell
@@ -111,7 +111,7 @@ class BitRateViewController: UITableViewController {
         clearCheckmarks()
         let cell = allValueCells[indexPath.row]
         cell.accessoryType = .checkmark
-        ConnectionViewController.main?.bitRate = UInt(allTitleLabels[indexPath.row].text!)!
+        ConnectionViewController.main?.bitRate = Int(allTitleLabels[indexPath.row].text!)!
     }
     
 }
