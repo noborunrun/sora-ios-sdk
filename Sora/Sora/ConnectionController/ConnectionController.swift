@@ -65,6 +65,7 @@ public class ConnectionController: UIViewController {
         case multistreamEnabled = "SoraConnectionControllerMultistreamEnabled"
         case videoEnabled = "SoraConnectionControllerVideoEnabled"
         case videoCodec = "SoraConnectionControllerVideoCodec"
+        case bitRate = "SoraConnectionControllerBitRate"
         case audioEnabled = "SoraConnectionControllerAudioEnabled"
         case audioCodec = "SoraConnectionControllerAudioCodec"
         case autofocusEnabled = "SoraConnectionControllerAutofocusEnabled"

@@ -56,16 +56,45 @@ class BitRateViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Bit rate view controller: viewDidLoad")
         
         for label: UILabel in allTitleLabels {
             label.font = UIFont.preferredFont(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
         }
         
-        clearCheckmarks()
+        setBitRate(ConnectionViewController.main!.bitRate)
     }
 
+    func setBitRate(_ value: UInt) {
+        clearCheckmarks()
+        cellForBitRate(value).accessoryType = .checkmark
+    }
+    
+    func cellForBitRate(_ value: UInt) -> UITableViewCell {
+        switch value {
+        case 0...100:
+            return value100Cell
+        case 100...300:
+            return value300Cell
+        case 300...500:
+            return value500Cell
+        case 500...800:
+            return value800Cell
+        case 800...1000:
+            return value1000Cell
+        case 1000...1500:
+            return value1500Cell
+        case 1500...2000:
+            return value2000Cell
+        case 2000...2500:
+            return value2500Cell
+        case 2500...3000:
+            return value3000Cell
+        default:
+            return value5000Cell
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -82,6 +111,7 @@ class BitRateViewController: UITableViewController {
         clearCheckmarks()
         let cell = allValueCells[indexPath.row]
         cell.accessoryType = .checkmark
+        ConnectionViewController.main?.bitRate = UInt(allTitleLabels[indexPath.row].text!)!
     }
     
 }

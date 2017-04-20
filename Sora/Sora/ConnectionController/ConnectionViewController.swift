@@ -140,6 +140,11 @@ class ConnectionViewController: UITableViewController {
         }
     }
     
+    var bitRate: UInt {
+        get { return UInt(bitRateValueLabel.text ?? "800")! }
+        set { bitRateValueLabel.text = newValue.description }
+    }
+    
     var audioEnabled: Bool {
         get { return enableAudioSwitch.isOn }
     }
@@ -335,6 +340,10 @@ class ConnectionViewController: UITableViewController {
                         switch: enableVideoSwitch,
                         key: .videoEnabled,
                         value: true)
+        
+        bitRateValueLabel.text = defaults.string(forKey:
+            ConnectionController.UserDefaultsKey.bitRate.rawValue) ?? "800"
+        
         loadSwitchValue(userDefaults: defaults,
                         switch: enableAudioSwitch,
                         key: .audioEnabled,
@@ -445,6 +454,10 @@ class ConnectionViewController: UITableViewController {
         defaults.set(videoCodecValue,
                      forKey:
             ConnectionController.UserDefaultsKey.videoCodec.rawValue)
+        
+        defaults.set(bitRate,
+                     forKey:
+            ConnectionController.UserDefaultsKey.bitRate.rawValue)
         
         defaults.set(audioEnabled,
                      forKey:
