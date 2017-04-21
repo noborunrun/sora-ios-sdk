@@ -37,7 +37,6 @@ class ConnectionViewController: UITableViewController {
     
     @IBOutlet weak var connectionTimeValueLabel: UILabel!
     @IBOutlet weak var enableMicrophoneSwitch: UISwitch!
-    @IBOutlet weak var eventLogsValueLabel: UILabel!
     @IBOutlet weak var enableWebSocketSSLSwitch: UISwitch!
     @IBOutlet weak var hostTextField: UITextField!
     @IBOutlet weak var portTextField: UITextField!

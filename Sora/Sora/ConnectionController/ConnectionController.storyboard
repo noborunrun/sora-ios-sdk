@@ -150,18 +150,10 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FsE-IH-5Vp">
-                                                    <rect key="frame" x="245" y="15" width="42" height="21"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="321-Sp-qgI" firstAttribute="leading" secondItem="ejd-ea-6Zd" secondAttribute="leadingMargin" constant="12" id="CwH-5V-KsE"/>
                                                 <constraint firstItem="321-Sp-qgI" firstAttribute="centerY" secondItem="ejd-ea-6Zd" secondAttribute="centerY" id="P1f-Be-q83"/>
-                                                <constraint firstItem="FsE-IH-5Vp" firstAttribute="centerY" secondItem="ejd-ea-6Zd" secondAttribute="centerY" id="ehH-ey-A5X"/>
-                                                <constraint firstAttribute="trailing" secondItem="FsE-IH-5Vp" secondAttribute="trailing" id="rdP-8a-02I"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -733,7 +725,6 @@
                         <outlet property="enableWebSocketSSLLabel" destination="EXc-lo-yz9" id="iC0-br-cGz"/>
                         <outlet property="enableWebSocketSSLSwitch" destination="9Ar-iE-akB" id="68e-F2-Wgy"/>
                         <outlet property="eventLogsLabel" destination="321-Sp-qgI" id="geO-E3-53m"/>
-                        <outlet property="eventLogsValueLabel" destination="FsE-IH-5Vp" id="e3p-gw-Tm0"/>
                         <outlet property="hostLabel" destination="sCU-Iw-t8I" id="0Kx-L8-bBF"/>
                         <outlet property="hostTextField" destination="Vgb-Ih-7zK" id="cf9-Lz-6ua"/>
                         <outlet property="portLabel" destination="tac-eu-RGm" id="90p-8V-uVi"/>
