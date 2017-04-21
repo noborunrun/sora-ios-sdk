@@ -27,6 +27,7 @@
 		9138B4D01E655728006A76FB /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9138B4CF1E655728006A76FB /* BuildInfo.swift */; };
 		9139343A1DD9D9A2002F3F6A /* EventHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913934391DD9D9A2002F3F6A /* EventHandlers.swift */; };
 		913C80651E8D00C200D83864 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913C80641E8D00C200D83864 /* Extensions.swift */; };
+		9143F15E1EA9ED7600525C78 /* EventLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9143F15D1EA9ED7600525C78 /* EventLogViewController.swift */; };
 		91545C0B1EA7AAA900523AAE /* BitRateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91545C0A1EA7AAA900523AAE /* BitRateViewController.swift */; };
 		91577A031D85CB1700A5AF9F /* MediaConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91577A021D85CB1700A5AF9F /* MediaConnection.swift */; };
 		91705B801DED66D300D79306 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
@@ -87,6 +88,7 @@
 		9138B4CF1E655728006A76FB /* BuildInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildInfo.swift; sourceTree = "<group>"; };
 		913934391DD9D9A2002F3F6A /* EventHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandlers.swift; sourceTree = "<group>"; };
 		913C80641E8D00C200D83864 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		9143F15D1EA9ED7600525C78 /* EventLogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventLogViewController.swift; sourceTree = "<group>"; };
 		91545C0A1EA7AAA900523AAE /* BitRateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitRateViewController.swift; sourceTree = "<group>"; };
 		91577A021D85CB1700A5AF9F /* MediaConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaConnection.swift; sourceTree = "<group>"; };
 		918201901D58668E00178E2B /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = Carthage/Build/iOS/WebRTC.framework; sourceTree = "<group>"; };
@@ -155,12 +157,13 @@
 			children = (
 				91C109201E4A3198009F11F7 /* ConnectionController.storyboard */,
 				91C109211E4A3199009F11F7 /* AudioCodecViewController.swift */,
+				91545C0A1EA7AAA900523AAE /* BitRateViewController.swift */,
 				91C109231E4A3199009F11F7 /* ConnectionController.swift */,
 				91C109261E4A3199009F11F7 /* ConnectionNavigationController.swift */,
 				91C109221E4A3199009F11F7 /* ConnectionViewController.swift */,
+				9143F15D1EA9ED7600525C78 /* EventLogViewController.swift */,
 				91C109241E4A3199009F11F7 /* RoleViewController.swift */,
 				91C109251E4A3199009F11F7 /* VideoCodecViewController.swift */,
-				91545C0A1EA7AAA900523AAE /* BitRateViewController.swift */,
 			);
 			path = ConnectionController;
 			sourceTree = "<group>";
@@ -385,6 +388,7 @@
 				91FA6F211D93CA9800D38DB4 /* VideoFrame.swift in Sources */,
 				91C1092C1E4A3199009F11F7 /* VideoCodecViewController.swift in Sources */,
 				91A2FD551E25421B0081ADF9 /* PeerConnection.swift in Sources */,
+				9143F15E1EA9ED7600525C78 /* EventLogViewController.swift in Sources */,
 				91C109281E4A3199009F11F7 /* AudioCodecViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

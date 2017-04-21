@@ -1220,10 +1220,10 @@
             </objects>
             <point key="canvasLocation" x="1086" y="-92"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Event Log View Controller-->
         <scene sceneID="ykK-PX-AMa">
             <objects>
-                <tableViewController id="jtJ-FF-t9W" sceneMemberID="viewController">
+                <tableViewController id="jtJ-FF-t9W" customClass="EventLogViewController" customModule="Sora" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="52" sectionHeaderHeight="18" sectionFooterHeight="18" id="elL-Ub-Jfy">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1667,6 +1667,24 @@
                             <outlet property="delegate" destination="jtJ-FF-t9W" id="45J-p3-vuP"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="enableLoggingSwitch" destination="iV0-Di-GPu" id="1XL-SH-WQx"/>
+                        <outlet property="filterConnectionMonitorSwitch" destination="pC0-eV-aO1" id="27H-lY-Ajm"/>
+                        <outlet property="filterMediaPublisherSwitch" destination="MpS-4i-zMS" id="1d4-uW-Qzk"/>
+                        <outlet property="filterMediaStreamSwitch" destination="KhW-TE-0Oj" id="buY-Lj-bTa"/>
+                        <outlet property="filterMediaSubscriberSwitch" destination="VxU-I4-sB7" id="MGO-OT-jIN"/>
+                        <outlet property="filterPeerConnectionSwitch" destination="HB7-wx-9rB" id="f9K-r5-a1i"/>
+                        <outlet property="filterSignalingSwitch" destination="bEb-f2-Jv5" id="cX9-TJ-Fcd"/>
+                        <outlet property="filterVideoRendererSwitch" destination="pys-JQ-N3f" id="x6C-wH-aLn"/>
+                        <outlet property="filterVideoViewSwitch" destination="il1-dH-qUN" id="xn6-6S-4sX"/>
+                        <outlet property="filterWebSocketSwitch" destination="lJt-jQ-H4l" id="O9k-Sk-Xfx"/>
+                        <outlet property="maxNumberOfLogsTextField" destination="cJy-Qc-w6l" id="EBJ-hV-ChF"/>
+                        <outlet property="showChannelIdSwitch" destination="FNL-ze-VeW" id="fu4-2S-7jh"/>
+                        <outlet property="showCommentSwitch" destination="Ewg-dg-UaJ" id="Gzj-YM-SnX"/>
+                        <outlet property="showDateAndTimeSwitch" destination="LDl-KZ-qIa" id="beT-4k-2zc"/>
+                        <outlet property="showEventTypeSwitch" destination="ibX-mX-pRh" id="IbP-9M-B4O"/>
+                        <outlet property="showURLSwitch" destination="yMz-dw-sHA" id="zOR-yc-b3S"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hui-hN-vJY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
