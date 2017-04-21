@@ -19,8 +19,18 @@ class EventLogViewController: UITableViewController {
     @IBOutlet weak var filterVideoRendererSwitch: UISwitch!
     @IBOutlet weak var filterVideoViewSwitch: UISwitch!
     
+    @IBOutlet weak var tapGestureRecognizer: UITapGestureRecognizer!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tapGestureRecognizer.cancelsTouchesInView = false
+    }
+    
+    @IBAction func handleTap(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            maxNumberOfLogsTextField.resignFirstResponder()
+        }
     }
     
 }
