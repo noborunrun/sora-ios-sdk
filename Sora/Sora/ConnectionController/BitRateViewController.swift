@@ -57,11 +57,6 @@ class BitRateViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        for label: UILabel in allTitleLabels {
-            label.font = UIFont.preferredFont(forTextStyle: .body)
-            label.adjustsFontForContentSizeCategory = true
-        }
-        
         setBitRate(ConnectionViewController.main!.bitRate)
     }
 

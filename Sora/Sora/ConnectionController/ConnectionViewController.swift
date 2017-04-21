@@ -181,35 +181,12 @@ class ConnectionViewController: UITableViewController {
         indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
         tapGestureRecognizer.cancelsTouchesInView = false
         
-        for label: UILabel in [connectionTimeLabel,
-                               connectionTimeValueLabel,
-                               enableMicrophoneLabel,
-                               eventLogsLabel, eventLogsValueLabel,
-                               enableWebSocketSSLLabel,
-                               hostLabel, portLabel, signalingPathLabel,
-                               channelIdLabel,
-                               roleLabel, rollValueLabel,
-                               enableMultistreamLabel,
-                               connectButton.titleLabel!,
-                               enableVideoLabel, videoCodecLabel, bitRateLabel,
-                               videoCodecValueLabel, bitRateValueLabel,
-                               enableAudioLabel, audioCodecLabel,
-                               audioCodecValueLabel, autofocusLabel,
-                               WebRTCVersionLabel, WebRTCVersionValueLabel,
-                               WebRTCRevisionLabel, WebRTCRevisionValueLabel,
-                               VP9EnabledLabel, VP9EnabledValueLabel]
+        for label: UILabel in [connectButton.titleLabel!]
         {
             label.font = UIFont.preferredFont(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
         }
-        for field: UITextField in [hostTextField,
-                                   portTextField,
-                                   signalingPathTextField,
-                                   channelIdTextField] {
-            field.font = UIFont.preferredFont(forTextStyle: .body)
-            field.adjustsFontForContentSizeCategory = true
-        }
-        
+
         NotificationCenter.default
             .addObserver(self,
                          selector: #selector(applicationDidEnterBackground(_:)),

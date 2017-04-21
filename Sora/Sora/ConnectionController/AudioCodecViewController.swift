@@ -12,12 +12,6 @@ class AudioCodecViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        for label: UILabel in [defaultLabel, OpusLabel, PCMULabel] {
-            label.font = UIFont.preferredFont(forTextStyle: .body)
-            label.adjustsFontForContentSizeCategory = true
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
