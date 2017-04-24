@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -692,7 +691,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="VP9EnabledLabel" destination="1aV-js-ccA" id="WnF-T9-eau"/>
                         <outlet property="VP9EnabledValueLabel" destination="vuN-i0-aWu" id="Ozd-C1-b4K"/>
@@ -1207,6 +1205,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="6EY-cI-EDg">
+                        <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="1nR-he-y4W" kind="relationship" relationship="rootViewController" id="rmo-fK-hN7"/>
                     </connections>
@@ -1243,7 +1245,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="wYP-ab-V8f" kind="show" action="showDetailViewController:sender:" id="MLQ-ag-eOt"/>
+                                            <segue destination="wYP-ab-V8f" kind="show" identifier="EventLogs" id="fkU-UE-H8f"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="qSo-ve-JQO">
@@ -1699,7 +1701,7 @@
         <!--Event Logs-->
         <scene sceneID="20R-Tb-3QS">
             <objects>
-                <viewController id="wYP-ab-V8f" customClass="EventLogTextViewController" customModule="Sora" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="wYP-ab-V8f" customClass="EventLogTextViewController" customModule="Sora" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ElT-fF-fY9"/>
                         <viewControllerLayoutGuide type="bottom" id="pGg-vN-eBB"/>
@@ -1709,36 +1711,46 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Huu-Nb-8IY">
-                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="460"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
                                 <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                             </textView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5rR-dT-BSS">
+                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <items>
+                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="Mbq-VP-tPd"/>
+                                    <barButtonItem title="Clear" style="plain" id="qY9-DX-VaR">
+                                        <connections>
+                                            <action selector="clear:" destination="wYP-ab-V8f" id="lpE-hJ-n7h"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="esc-Vf-NR3"/>
+                                    <barButtonItem title="Copy" style="plain" id="DMB-QQ-YX0">
+                                        <connections>
+                                            <action selector="copyToClipboard:" destination="wYP-ab-V8f" id="YMx-JS-PkK"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="Jmv-QZ-Ayr"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Huu-Nb-8IY" secondAttribute="bottom" id="FeZ-dD-XEU"/>
+                            <constraint firstItem="5rR-dT-BSS" firstAttribute="leading" secondItem="W7m-7w-w9F" secondAttribute="leading" id="9TE-gi-wLs"/>
+                            <constraint firstAttribute="trailing" secondItem="5rR-dT-BSS" secondAttribute="trailing" id="ENr-B5-Aj2"/>
                             <constraint firstAttribute="trailing" secondItem="Huu-Nb-8IY" secondAttribute="trailing" id="Vm0-GK-LCf"/>
                             <constraint firstItem="Huu-Nb-8IY" firstAttribute="leading" secondItem="W7m-7w-w9F" secondAttribute="leading" id="a78-d7-hSz"/>
+                            <constraint firstItem="5rR-dT-BSS" firstAttribute="top" secondItem="Huu-Nb-8IY" secondAttribute="bottom" id="m8a-Y8-HG9"/>
                             <constraint firstItem="Huu-Nb-8IY" firstAttribute="top" secondItem="ElT-fF-fY9" secondAttribute="bottom" id="sAp-UB-h4M"/>
+                            <constraint firstAttribute="bottom" secondItem="5rR-dT-BSS" secondAttribute="bottom" id="tiz-EO-XAx"/>
                         </constraints>
                     </view>
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Event Logs" id="1wX-hX-5wb">
-                        <rightBarButtonItems>
-                            <barButtonItem title="Copy" id="DMB-QQ-YX0">
-                                <connections>
-                                    <action selector="copyToClipboard:" destination="wYP-ab-V8f" id="YMx-JS-PkK"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Clear" id="qY9-DX-VaR">
-                                <connections>
-                                    <action selector="clear:" destination="wYP-ab-V8f" id="lpE-hJ-n7h"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
-                    </navigationItem>
+                    <toolbarItems>
+                        <barButtonItem title="Item" id="ALS-9F-AzI"/>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Event Logs" id="1wX-hX-5wb"/>
                     <connections>
                         <outlet property="logTextView" destination="Huu-Nb-8IY" id="Ddh-qP-f0E"/>
                     </connections>

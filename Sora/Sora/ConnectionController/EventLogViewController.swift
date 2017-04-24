@@ -27,6 +27,14 @@ class EventLogViewController: UITableViewController {
         tapGestureRecognizer.cancelsTouchesInView = false
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "EventLogs" {
+            if let nextPage = segue.destination as? EventLogTextViewController {
+                nextPage.update(settings: self)
+            }
+        }
+    }
+    
     @IBAction func handleTap(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             maxNumberOfLogsTextField.resignFirstResponder()

@@ -62,6 +62,7 @@ class ConnectionViewController: UITableViewController {
     static var main: ConnectionViewController?
     
     var indicator: UIActivityIndicatorView?
+    var eventLog: EventLog?
     
     var state: State = .disconnected {
         didSet {
@@ -586,6 +587,7 @@ class ConnectionViewController: UITableViewController {
             }
             
             connection = Connection(URL: URL, mediaChannelId: channelId)
+            eventLog = connection?.eventLog
             let request = ConnectionController
                 .Request(URL: URL,
                          channelId: channelId,

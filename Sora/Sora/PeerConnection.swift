@@ -182,7 +182,7 @@ class ConnectionMonitor {
     }
     
     func validate() {
-        context.eventLog?.markFormat(type: .WebSocket,
+        context.eventLog?.markFormat(type: .ConnectionMonitor,
                                      format: "validate connection state")
 
         guard state == .terminating else { return }
