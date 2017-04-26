@@ -24,6 +24,13 @@ class BitRateViewController: UITableViewController {
     @IBOutlet weak var value3000Cell: UITableViewCell!
     @IBOutlet weak var value5000Cell: UITableViewCell!
     
+    var connectionController: ConnectionController? {
+        get {
+            return (navigationController as! ConnectionNavigationController?)?
+                .connectionController
+        }
+    }
+    
     var allTitleLabels: [UILabel] {
         get {
             return [value100Label,

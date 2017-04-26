@@ -12,6 +12,13 @@ class VideoCodecViewController: UITableViewController {
     @IBOutlet weak var VP9Cell: UITableViewCell!
     @IBOutlet weak var H264Cell: UITableViewCell!
     
+    var connectionController: ConnectionController? {
+        get {
+            return (navigationController as! ConnectionNavigationController?)?
+                .connectionController
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }

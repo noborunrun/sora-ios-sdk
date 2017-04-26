@@ -4,6 +4,13 @@ class EventLogTextViewController: UIViewController {
     
     @IBOutlet weak var logTextView: UITextView!
     
+    var connectionController: ConnectionController? {
+        get {
+            return (navigationController as! ConnectionNavigationController?)?
+                .connectionController
+        }
+    }
+    
     weak var settings: EventLogViewController!
     
     override func viewDidLoad() {

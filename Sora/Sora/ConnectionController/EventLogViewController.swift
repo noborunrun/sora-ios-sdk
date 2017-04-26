@@ -21,6 +21,13 @@ class EventLogViewController: UITableViewController {
     
     @IBOutlet weak var tapGestureRecognizer: UITapGestureRecognizer!
 
+    var connectionController: ConnectionController? {
+        get {
+            return (navigationController as! ConnectionNavigationController?)?
+                .connectionController
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

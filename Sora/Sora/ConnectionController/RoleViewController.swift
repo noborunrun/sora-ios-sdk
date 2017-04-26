@@ -12,6 +12,13 @@ class RoleViewController: UITableViewController {
     @IBOutlet weak var subscriberLabel: UILabel!
     @IBOutlet weak var subscriberCell: UITableViewCell!
 
+    var connectionController: ConnectionController? {
+        get {
+            return (navigationController as! ConnectionNavigationController?)?
+                .connectionController
+        }
+    }
+    
     var main: ConnectionViewController {
         get { return ConnectionViewController.main! }
     }

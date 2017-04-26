@@ -10,6 +10,13 @@ class AudioCodecViewController: UITableViewController {
     @IBOutlet weak var OpusCell: UITableViewCell!
     @IBOutlet weak var PCMUCell: UITableViewCell!
     
+    var connectionController: ConnectionController? {
+        get {
+            return (navigationController as! ConnectionNavigationController?)?
+                .connectionController
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
