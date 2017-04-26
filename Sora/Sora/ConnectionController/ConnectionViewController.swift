@@ -193,6 +193,30 @@ class ConnectionViewController: UITableViewController {
                          name: NSNotification.Name.UIApplicationDidEnterBackground,
                          object: nil)
         
+        if let connectionController = connectionController {
+            hostTextField.addTarget(connectionController,
+                                    action: ConnectionController.Action.updateHost,
+                                    for: .editingChanged)
+            portTextField.addTarget(connectionController,
+                                    action: ConnectionController.Action.updatePort,
+                                    for: .editingChanged)
+            signalingPathTextField.addTarget(connectionController,
+                                             action: ConnectionController.Action.updateSignalingPath,
+                                             for: .editingChanged)
+            channelIdTextField.addTarget(connectionController,
+                                         action: ConnectionController.Action.updateChannelId,
+                                         for: .editingChanged)
+            enableVideoSwitch.addTarget(connectionController,
+                                        action: ConnectionController.Action.updateVideoEnabled,
+                                        for: .valueChanged)
+            enableAudioSwitch.addTarget(connectionController,
+                                        action: ConnectionController.Action.updateAudioEnabled,
+                                        for: .valueChanged)
+            autofocusSwitch.addTarget(connectionController,
+                                      action: ConnectionController.Action.updateAutofocus,
+                                      for: .valueChanged)
+        }
+        
         state = .disconnected
         roles = [.publisher, .subscriber]
         videoCodec = .default

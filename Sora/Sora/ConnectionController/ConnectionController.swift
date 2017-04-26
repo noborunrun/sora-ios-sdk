@@ -74,6 +74,9 @@ public class ConnectionController: UIViewController {
         case autofocusEnabled = "SoraConnectionControllerAutofocusEnabled"
     }
     
+    static var userDefaultsDidLoadNotificationName: Notification.Name
+        = Notification.Name("SoraConnectionControllerUserDefaultsDidLoad")
+    
     public var connection: Connection?
     
     var connectionControllerStoryboard: UIStoryboard?
@@ -86,9 +89,18 @@ public class ConnectionController: UIViewController {
     public var channelId: String?
     public var availableRoles: [Role] = [.publisher, .subscriber]
     public var availableStreamTypes: [StreamType] = [.single, .multiple]
+    public var autofocusEnabled: Bool = false
+    public var multistreamEnabled: Bool = false
+    public var videoEnabled: Bool = true
+    public var videoCodec: VideoCodec = .default
+    public var bitRate: Int? = 800
+    public var audioEnabled: Bool = true
+    public var audioCodec: AudioCodec = .default
+    public var userDefaultsSuiteName: String? = "jp.shiguredo.SoraConnectionController"
     
-    public var userDefaults: UserDefaults? =
-        UserDefaults(suiteName: "jp.shiguredo.SoraConnectionController")
+    public var userDefaults: UserDefaults? {
+        get { return UserDefaults(suiteName: userDefaultsSuiteName) }
+    }
     
     var tupleOfAvailableStreamTypes: (Bool, Bool) {
         get {
@@ -103,7 +115,8 @@ public class ConnectionController: UIViewController {
                 signalingPath: String? = "signaling",
                 channelId: String? = nil,
                 availableRoles: [Role]? = nil,
-                availableStreamTypes: [StreamType]? = nil) {
+                availableStreamTypes: [StreamType]? = nil,
+                userDefaultsSuiteName: String? = nil) {
         super.init(nibName: nil, bundle: nil)
         connectionControllerStoryboard =
             UIStoryboard(name: "ConnectionController",
@@ -131,6 +144,7 @@ public class ConnectionController: UIViewController {
         if let streamTypes = availableStreamTypes {
             self.availableStreamTypes = streamTypes
         }
+        self.userDefaultsSuiteName = userDefaultsSuiteName
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -173,6 +187,111 @@ public class ConnectionController: UIViewController {
     
     public func onCancel(handler: @escaping () -> Void) {
         onCancelHandler = handler
+    }
+    
+    // MARK: - User Defaults
+    
+    func loadFromUserDefaults() {
+        // TODO
+        NotificationCenter.default.post(name: ConnectionController
+            .userDefaultsDidLoadNotificationName, object: self)
+    }
+    
+    func saveToUserDefaults() {
+        // TODO
+    }
+    
+}
+
+extension ConnectionController {
+    
+    struct Action {
+        
+        static let updateWebSocketSSLEnabled =
+            #selector(ConnectionController.updateWebSocketSSLEnabled(_:))
+        static let updateHost =
+            #selector(ConnectionController.updateHost(_:))
+        static let updatePort =
+            #selector(ConnectionController.updatePort(_:))
+        static let updateSignalingPath =
+            #selector(ConnectionController.updateSignalingPath(_:))
+        static let updateChannelId =
+            #selector(ConnectionController.updateChannelId(_:))
+        static let updateMultistreamEnabled =
+            #selector(ConnectionController.updateMultistreamEnabled(_:))
+        static let updateVideoEnabled =
+            #selector(ConnectionController.updateVideoEnabled(_:))
+        static let updateBitRate =
+            #selector(ConnectionController.updateBitRate(_:))
+        static let updateAudioEnabled =
+            #selector(ConnectionController.updateAudioEnabled(_:))
+        static let updateAutofocus =
+            #selector(ConnectionController.updateAutofocus(_:))
+        
+    }
+    
+    func updateWebSocketSSLEnabled(_ sender: AnyObject) {
+        if let control = sender as? UISwitch {
+            WebSocketSSLEnabled = control.isOn
+        }
+    }
+    
+    func updateHost(_ sender: AnyObject) {
+        if let control = sender as? UITextField {
+            host = control.text
+        }
+    }
+    
+    func updatePort(_ sender: AnyObject) {
+        if let control = sender as? UITextField {
+            if let text = control.text {
+                port = UInt(text)
+            }
+        }
+    }
+    
+    func updateSignalingPath(_ sender: AnyObject) {
+        if let control = sender as? UITextField {
+            signalingPath = control.text
+        }
+    }
+    
+    func updateChannelId(_ sender: AnyObject) {
+        if let control = sender as? UITextField {
+            channelId = control.text
+        }
+    }
+    
+    func updateMultistreamEnabled(_ sender: AnyObject) {
+        if let control = sender as? UISwitch {
+            multistreamEnabled = control.isOn
+        }
+    }
+    
+    func updateVideoEnabled(_ sender: AnyObject) {
+        if let control = sender as? UISwitch {
+            videoEnabled = control.isOn
+        }
+    }
+    
+    func updateBitRate(_ sender: AnyObject) {
+        if let control = sender as? UITextField {
+            if let text = control.text {
+                bitRate = Int(text)
+            }
+        }
+    }
+    
+    func updateAudioEnabled(_ sender: AnyObject) {
+        if let control = sender as? UISwitch {
+            audioEnabled = control.isOn
+        }
+    }
+    
+    func updateAutofocus(_ sender: AnyObject) {
+        if let control = sender as? UISwitch {
+            autofocusEnabled = control.isOn
+        }
     }
     
 }
