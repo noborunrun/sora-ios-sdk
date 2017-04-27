@@ -113,7 +113,8 @@ class BitRateViewController: UITableViewController {
         clearCheckmarks()
         let cell = allValueCells[indexPath.row]
         cell.accessoryType = .checkmark
-        ConnectionViewController.main?.bitRate = Int(allTitleLabels[indexPath.row].text!)!
+        let bitRate = Int(allTitleLabels[indexPath.row].text!)!
+        ConnectionViewController.main?.bitRate = bitRate
     }
     
 }

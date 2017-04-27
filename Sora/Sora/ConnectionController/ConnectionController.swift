@@ -84,7 +84,7 @@ public class ConnectionController: UIViewController {
     
     public var WebSocketSSLEnabled: Bool = true
     public var host: String?
-    public var port: UInt?
+    public var port: Int?
     public var signalingPath: String?
     public var channelId: String?
     public var availableRoles: [Role] = [.publisher, .subscriber]
@@ -111,7 +111,7 @@ public class ConnectionController: UIViewController {
     
     public init(WebSocketSSLEnabled: Bool = true,
                 host: String? = nil,
-                port: UInt? = nil,
+                port: Int? = nil,
                 signalingPath: String? = "signaling",
                 channelId: String? = nil,
                 availableRoles: [Role]? = nil,
@@ -245,7 +245,7 @@ extension ConnectionController {
     func updatePort(_ sender: AnyObject) {
         if let control = sender as? UITextField {
             if let text = control.text {
-                port = UInt(text)
+                port = Int(text)
             }
         }
     }
