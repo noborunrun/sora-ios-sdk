@@ -206,6 +206,9 @@ class ConnectionViewController: UITableViewController {
             channelIdTextField.addTarget(connectionController,
                                          action: ConnectionController.Action.updateChannelId,
                                          for: .editingChanged)
+            enableMultistreamSwitch.addTarget(connectionController,
+                                              action: ConnectionController.Action.updateMultistreamEnabled,
+                                              for: .valueChanged)
             enableVideoSwitch.addTarget(connectionController,
                                         action: ConnectionController.Action.updateVideoEnabled,
                                         for: .valueChanged)

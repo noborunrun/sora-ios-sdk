@@ -74,6 +74,8 @@ public class ConnectionController: UIViewController {
         case autofocusEnabled = "SoraConnectionControllerAutofocusEnabled"
     }
     
+    static var defaultBitRate: Int = 800
+    
     static var userDefaultsDidLoadNotificationName: Notification.Name
         = Notification.Name("SoraConnectionControllerUserDefaultsDidLoad")
     
@@ -87,15 +89,17 @@ public class ConnectionController: UIViewController {
     public var port: Int?
     public var signalingPath: String?
     public var channelId: String?
-    public var availableRoles: [Role] = [.publisher, .subscriber]
-    public var availableStreamTypes: [StreamType] = [.single, .multiple]
+    public var roles: [Role] = [.publisher, .subscriber]
     public var autofocusEnabled: Bool = false
     public var multistreamEnabled: Bool = false
     public var videoEnabled: Bool = true
-    public var videoCodec: VideoCodec = .default
+    public var videoCodec: VideoCodec? = .default
     public var bitRate: Int? = 800
     public var audioEnabled: Bool = true
-    public var audioCodec: AudioCodec = .default
+    public var audioCodec: AudioCodec? = .default
+    
+    public var availableRoles: [Role] = [.publisher, .subscriber]
+    public var availableStreamTypes: [StreamType] = [.single, .multiple]
     public var userDefaultsSuiteName: String? = "jp.shiguredo.SoraConnectionController"
     
     public var userDefaults: UserDefaults? {
@@ -192,13 +196,120 @@ public class ConnectionController: UIViewController {
     // MARK: User Defaults
     
     func loadFromUserDefaults() {
-        // TODO
+        guard let defaults = userDefaults else {
+            return
+        }
+        
+        WebSocketSSLEnabled = defaults.bool(forKey: UserDefaultsKey.WebSocketSSLEnabled.rawValue)
+        host = defaults.string(forKey: UserDefaultsKey.host.rawValue)
+        port = defaults.integer(forKey: UserDefaultsKey.port.rawValue)
+        signalingPath = defaults.string(forKey: UserDefaultsKey.signalingPath.rawValue)
+        channelId = defaults.string(forKey: UserDefaultsKey.channelId.rawValue)
+
+        roles = []
+        if let value = defaults.string(forKey:
+            ConnectionController.UserDefaultsKey.roles.rawValue) {
+            if value.contains("p") {
+                roles.append(.publisher)
+            }
+            if value.contains("s") {
+                roles.append(.subscriber)
+            }
+        }
+        if roles.isEmpty {
+            roles = Role.allRoles
+        }
+        
+        multistreamEnabled = defaults.bool(forKey: UserDefaultsKey.multistreamEnabled.rawValue)
+        videoEnabled = defaults.bool(forKey: UserDefaultsKey.videoEnabled.rawValue)
+        bitRate = defaults.integer(forKey: UserDefaultsKey.bitRate.rawValue)
+        if bitRate == 0 {
+            bitRate = ConnectionController.defaultBitRate
+        }
+        audioEnabled = defaults.bool(forKey: UserDefaultsKey.audioEnabled.rawValue)
+        autofocusEnabled = defaults.bool(forKey: UserDefaultsKey.autofocusEnabled.rawValue)
+        
+        switch defaults.string(forKey: UserDefaultsKey.videoCodec.rawValue) {
+        case "VP8"?:
+            videoCodec = .VP8
+        case "VP9"?:
+            videoCodec = .VP9
+        case "H.264"?:
+            videoCodec = .H264
+        default:
+            videoCodec = nil
+        }
+        
+        switch defaults.string(forKey: UserDefaultsKey.audioCodec.rawValue) {
+        case "Opus"?:
+            audioCodec = .Opus
+        case "VP9"?:
+            audioCodec = .PCMU
+        default:
+            audioCodec = nil
+        }
+
         NotificationCenter.default.post(name: ConnectionController
             .userDefaultsDidLoadNotificationName, object: self)
     }
     
     func saveToUserDefaults() {
-        // TODO
+        guard let defaults = userDefaults else {
+            return
+        }
+        
+        defaults.set(WebSocketSSLEnabled,
+                     forKey: UserDefaultsKey.WebSocketSSLEnabled.rawValue)
+        defaults.set(host, forKey: UserDefaultsKey.host.rawValue)
+        defaults.set(port, forKey: UserDefaultsKey.port.rawValue)
+        defaults.set(signalingPath, forKey: UserDefaultsKey.signalingPath.rawValue)
+        defaults.set(channelId, forKey: UserDefaultsKey.channelId.rawValue)
+        
+        var roleValue = ""
+        if roles.contains(.publisher) {
+            roleValue.append("p")
+        }
+        if roles.contains(.subscriber) {
+            roleValue.append("s")
+        }
+        if roleValue.isEmpty {
+            roleValue = "ps"
+        }
+        
+        defaults.set(roleValue, forKey: UserDefaultsKey.roles.rawValue)
+        defaults.set(multistreamEnabled,
+                     forKey: UserDefaultsKey.multistreamEnabled.rawValue)
+        defaults.set(videoEnabled, forKey: UserDefaultsKey.videoEnabled.rawValue)
+        defaults.set(bitRate, forKey: UserDefaultsKey.bitRate.rawValue)
+        defaults.set(audioEnabled, forKey: UserDefaultsKey.audioEnabled.rawValue)
+        defaults.set(autofocusEnabled,
+                     forKey: UserDefaultsKey.autofocusEnabled.rawValue)
+        
+        var videoCodecValue: String?
+        switch videoCodec {
+        case .VP8?:
+            videoCodecValue = "VP8"
+        case .VP9?:
+            videoCodecValue = "VP9"
+        case .H264?:
+            videoCodecValue = "H.264"
+        default:
+            videoCodecValue = nil
+        }
+        defaults.set(videoCodecValue, forKey: UserDefaultsKey.videoCodec.rawValue)
+        
+        var audioCodecValue: String?
+        switch audioCodec {
+        case .Opus?:
+            audioCodecValue = "Opus"
+        case .PCMU?:
+            audioCodecValue = "PCMU"
+        default:
+            audioCodecValue = nil
+        }
+        defaults.set(audioCodecValue, forKey: UserDefaultsKey.audioCodec.rawValue)
+        
+        defaults.synchronize()
     }
     
 }
