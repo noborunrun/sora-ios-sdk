@@ -181,8 +181,7 @@ class ConnectionViewController: UITableViewController {
         indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
         tapGestureRecognizer.cancelsTouchesInView = false
         
-        for label: UILabel in [connectButton.titleLabel!]
-        {
+        for label: UILabel in [connectButton.titleLabel!] {
             label.font = UIFont.preferredFont(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
         }
