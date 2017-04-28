@@ -2,7 +2,7 @@ import UIKit
 
 class ConnectionNavigationController: UINavigationController {
 
-    weak var connectionController: ConnectionController?
+    weak var connectionController: ConnectionController!
     
     override func viewDidLoad() {
         super.viewDidLoad()

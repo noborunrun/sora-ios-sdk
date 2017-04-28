@@ -12,10 +12,10 @@ class RoleViewController: UITableViewController {
     @IBOutlet weak var subscriberLabel: UILabel!
     @IBOutlet weak var subscriberCell: UITableViewCell!
 
-    var connectionController: ConnectionController? {
+    var connectionController: ConnectionController {
         get {
-            return (navigationController as! ConnectionNavigationController?)?
-                .connectionController
+            return (navigationController as! ConnectionNavigationController?)!
+                .connectionController!
         }
     }
     
@@ -89,10 +89,8 @@ class RoleViewController: UITableViewController {
         }
         
         if main.roles.count > 1 && main.roles.contains(role) {
-            main.removeRole(role)
             components[role]?.cell.accessoryType = .none
         } else {
-            main.addRole(role)
             components[role]?.cell.accessoryType = .checkmark
         }
     }

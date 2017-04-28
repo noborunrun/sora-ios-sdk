@@ -113,6 +113,8 @@ public class ConnectionController: UIViewController {
         }
     }
     
+    // MARK: Initialization
+    
     public init(WebSocketSSLEnabled: Bool = true,
                 host: String? = nil,
                 port: Int? = nil,
@@ -120,7 +122,8 @@ public class ConnectionController: UIViewController {
                 channelId: String? = nil,
                 availableRoles: [Role]? = nil,
                 availableStreamTypes: [StreamType]? = nil,
-                userDefaultsSuiteName: String? = nil) {
+                userDefaultsSuiteName: String? = nil,
+                useUserDefaults: Bool = true) {
         super.init(nibName: nil, bundle: nil)
         connectionControllerStoryboard =
             UIStoryboard(name: "ConnectionController",
@@ -149,6 +152,10 @@ public class ConnectionController: UIViewController {
             self.availableStreamTypes = streamTypes
         }
         self.userDefaultsSuiteName = userDefaultsSuiteName
+        
+        if useUserDefaults {
+            loadFromUserDefaults()
+        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -157,8 +164,6 @@ public class ConnectionController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override public func didReceiveMemoryWarning() {
@@ -201,12 +206,21 @@ public class ConnectionController: UIViewController {
         }
         
         WebSocketSSLEnabled = defaults.bool(forKey: UserDefaultsKey.WebSocketSSLEnabled.rawValue)
-        host = defaults.string(forKey: UserDefaultsKey.host.rawValue)
+        if let host = defaults.string(forKey: UserDefaultsKey.host.rawValue) {
+            self.host = host
+        }
         port = defaults.integer(forKey: UserDefaultsKey.port.rawValue)
-        signalingPath = defaults.string(forKey: UserDefaultsKey.signalingPath.rawValue)
-        channelId = defaults.string(forKey: UserDefaultsKey.channelId.rawValue)
+        if port == 0 {
+            port = nil
+        }
+        if let signalingPath = defaults.string(forKey: UserDefaultsKey.signalingPath.rawValue) {
+            self.signalingPath = signalingPath
+        }
+        if let channelId = defaults.string(forKey: UserDefaultsKey.channelId.rawValue) {
+            self.channelId = channelId
+        }
 
-        roles = []
+        var roles: [Role] = []
         if let value = defaults.string(forKey:
             ConnectionController.UserDefaultsKey.roles.rawValue) {
             if value.contains("p") {
@@ -216,8 +230,8 @@ public class ConnectionController: UIViewController {
                 roles.append(.subscriber)
             }
         }
-        if roles.isEmpty {
-            roles = Role.allRoles
+        if !roles.isEmpty {
+            self.roles = roles
         }
         
         multistreamEnabled = defaults.bool(forKey: UserDefaultsKey.multistreamEnabled.rawValue)
@@ -229,26 +243,16 @@ public class ConnectionController: UIViewController {
         audioEnabled = defaults.bool(forKey: UserDefaultsKey.audioEnabled.rawValue)
         autofocusEnabled = defaults.bool(forKey: UserDefaultsKey.autofocusEnabled.rawValue)
         
-        switch defaults.string(forKey: UserDefaultsKey.videoCodec.rawValue) {
-        case "VP8"?:
-            videoCodec = .VP8
-        case "VP9"?:
-            videoCodec = .VP9
-        case "H.264"?:
-            videoCodec = .H264
-        default:
-            videoCodec = nil
-        }
-        
-        switch defaults.string(forKey: UserDefaultsKey.audioCodec.rawValue) {
-        case "Opus"?:
-            audioCodec = .Opus
-        case "VP9"?:
-            audioCodec = .PCMU
-        default:
-            audioCodec = nil
+        videoCodec = nil
+        if let name = defaults.string(forKey: UserDefaultsKey.videoCodec.rawValue) {
+            videoCodec = ConnectionViewController.videoCodecTable.value(text: name)
         }
 
+        audioCodec = nil
+        if let name = defaults.string(forKey: UserDefaultsKey.audioCodec.rawValue) {
+            audioCodec = ConnectionViewController.audioCodecTable.value(text: name)
+        }
+        
         NotificationCenter.default.post(name: ConnectionController
             .userDefaultsDidLoadNotificationName, object: self)
     }

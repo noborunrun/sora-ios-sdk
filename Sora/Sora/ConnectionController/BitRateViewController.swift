@@ -24,9 +24,9 @@ class BitRateViewController: UITableViewController {
     @IBOutlet weak var value3000Cell: UITableViewCell!
     @IBOutlet weak var value5000Cell: UITableViewCell!
     
-    var connectionController: ConnectionController? {
+    var connectionController: ConnectionController {
         get {
-            return (navigationController as! ConnectionNavigationController?)?
+            return (navigationController as! ConnectionNavigationController?)!
                 .connectionController
         }
     }
@@ -64,7 +64,8 @@ class BitRateViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setBitRate(ConnectionViewController.main!.bitRate)
+        setBitRate(ConnectionViewController.main!.bitRate) // deprecated
+        setBitRate(connectionController.bitRate ?? 800)
     }
 
     func setBitRate(_ value: Int) {
@@ -115,6 +116,7 @@ class BitRateViewController: UITableViewController {
         cell.accessoryType = .checkmark
         let bitRate = Int(allTitleLabels[indexPath.row].text!)!
         ConnectionViewController.main?.bitRate = bitRate
+        connectionController.bitRate = bitRate
     }
     
 }

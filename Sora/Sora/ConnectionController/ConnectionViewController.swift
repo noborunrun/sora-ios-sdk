@@ -1,5 +1,29 @@
 import UIKit
 
+struct TextValueTable<Value: Equatable> {
+    
+    var pairs: [(String, Value)]
+    
+    func text(value: Value) -> String? {
+        for (t, v) in pairs {
+            if v == value {
+                return t
+            }
+        }
+        return nil
+    }
+    
+    func value(text: String) -> Value? {
+        for (t, v) in pairs {
+            if t == text {
+                return v
+            }
+        }
+        return nil
+    }
+    
+}
+
 class ConnectionViewController: UITableViewController {
     
     enum State {
@@ -59,7 +83,31 @@ class ConnectionViewController: UITableViewController {
     
     weak var touchedField: UITextField?
     
+    // TODO: deprecated
     static var main: ConnectionViewController?
+    
+    static var videoCodecTable: TextValueTable<VideoCodec> =
+        TextValueTable(pairs: [("Default", .default),
+                               ("VP8", .VP8),
+                               ("VP9", .VP9),
+                               ("H.264", .H264)])
+    
+    static var bitRateTable: TextValueTable<Int> =
+        TextValueTable(pairs: [("100", 100),
+                               ("300", 300),
+                               ("500", 500),
+                               ("800", 800),
+                               ("1000", 1000),
+                               ("1500", 1500),
+                               ("2000", 2000),
+                               ("2500", 2500),
+                               ("3000", 3000),
+                               ("5000", 5000)])
+    
+    static var audioCodecTable: TextValueTable<AudioCodec> =
+        TextValueTable(pairs: [("Default", .default),
+                               ("Opus", .Opus),
+                               ("PCMU", .PCMU)])
     
     var indicator: UIActivityIndicatorView?
     var eventLog: EventLog?
@@ -162,16 +210,16 @@ class ConnectionViewController: UITableViewController {
         }
     }
     
-    var connectionController: ConnectionController? {
+    var connectionController: ConnectionController! {
         get {
-            return (navigationController as! ConnectionNavigationController?)?
-                .connectionController
+            return (navigationController as! ConnectionNavigationController?)!
+                .connectionController!
         }
     }
     
     var connection: Connection?
     
-    // MARK: - View Controller
+    // MARK: View Controller
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -192,32 +240,36 @@ class ConnectionViewController: UITableViewController {
                          name: NSNotification.Name.UIApplicationDidEnterBackground,
                          object: nil)
         
-        if let connectionController = connectionController {
-            hostTextField.addTarget(connectionController,
-                                    action: ConnectionController.Action.updateHost,
-                                    for: .editingChanged)
-            portTextField.addTarget(connectionController,
-                                    action: ConnectionController.Action.updatePort,
-                                    for: .editingChanged)
-            signalingPathTextField.addTarget(connectionController,
-                                             action: ConnectionController.Action.updateSignalingPath,
-                                             for: .editingChanged)
-            channelIdTextField.addTarget(connectionController,
-                                         action: ConnectionController.Action.updateChannelId,
+        hostTextField.addTarget(connectionController,
+                                action: ConnectionController.Action.updateHost,
+                                for: .editingChanged)
+        portTextField.addTarget(connectionController,
+                                action: ConnectionController.Action.updatePort,
+                                for: .editingChanged)
+        signalingPathTextField.addTarget(connectionController,
+                                         action: ConnectionController.Action.updateSignalingPath,
                                          for: .editingChanged)
-            enableMultistreamSwitch.addTarget(connectionController,
-                                              action: ConnectionController.Action.updateMultistreamEnabled,
-                                              for: .valueChanged)
-            enableVideoSwitch.addTarget(connectionController,
-                                        action: ConnectionController.Action.updateVideoEnabled,
-                                        for: .valueChanged)
-            enableAudioSwitch.addTarget(connectionController,
-                                        action: ConnectionController.Action.updateAudioEnabled,
-                                        for: .valueChanged)
-            autofocusSwitch.addTarget(connectionController,
-                                      action: ConnectionController.Action.updateAutofocus,
-                                      for: .valueChanged)
-        }
+        channelIdTextField.addTarget(connectionController,
+                                     action: ConnectionController.Action.updateChannelId,
+                                     for: .editingChanged)
+        enableMultistreamSwitch.addTarget(connectionController,
+                                          action: ConnectionController.Action.updateMultistreamEnabled,
+                                          for: .valueChanged)
+        enableVideoSwitch.addTarget(connectionController,
+                                    action: ConnectionController.Action.updateVideoEnabled,
+                                    for: .valueChanged)
+        enableAudioSwitch.addTarget(connectionController,
+                                    action: ConnectionController.Action.updateAudioEnabled,
+                                    for: .valueChanged)
+        autofocusSwitch.addTarget(connectionController,
+                                  action: ConnectionController.Action.updateAutofocus,
+                                  for: .valueChanged)
+        
+        NotificationCenter.default
+            .addObserver(self,
+                         selector: #selector(userDefaultsDidLoad(_:)),
+                         name: ConnectionController.userDefaultsDidLoadNotificationName,
+                         object: connectionController)
         
         state = .disconnected
         roles = [.publisher, .subscriber]
@@ -236,7 +288,8 @@ class ConnectionViewController: UITableViewController {
         channelIdTextField.text = connectionController?.channelId
         channelIdTextField.placeholder = "your channel ID"
         
-        loadSettings()
+        //loadSettings() // deprecated
+        updateControls()
 
         switch connectionController!.tupleOfAvailableStreamTypes {
         case (true, true), (false, false):
@@ -270,7 +323,6 @@ class ConnectionViewController: UITableViewController {
     }
     
     func applicationDidEnterBackground(_ notification: Notification) {
-        saveSettings()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -279,7 +331,6 @@ class ConnectionViewController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        saveSettings()
     }
     
     override open func didReceiveMemoryWarning() {
@@ -287,211 +338,30 @@ class ConnectionViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func addRole(_ role: ConnectionController.Role) {
-        if !roles.contains(role) {
-            roles.append(role)
-        }
-    }
-    
-    func removeRole(_ role: ConnectionController.Role) {
-        roles = roles.filter {
-            each in return each != role
-        }
-    }
-    
     // MARK: 設定の保存
     
-    func loadSettings() {
-        guard let defaults = connectionController!.userDefaults else {
-            return
-        }
-        
-        loadSwitchValue(userDefaults: defaults,
-                        switch: enableWebSocketSSLSwitch,
-                        key: .WebSocketSSLEnabled,
-                        value: true)
-        loadTextFieldValue(userDefaults: defaults,
-                           textField: hostTextField,
-                           forKey: .host)
-        loadTextFieldValue(userDefaults: defaults,
-                           textField: portTextField,
-                           forKey: .port)
-        loadTextFieldValue(userDefaults: defaults,
-                           textField: signalingPathTextField,
-                           forKey: .signalingPath)
-        loadTextFieldValue(userDefaults: defaults,
-                           textField: channelIdTextField,
-                           forKey: .channelId)
-        
-        roles = [.publisher]
-        if let roleValue = defaults.string(forKey:
-            ConnectionController.UserDefaultsKey.roles.rawValue) {
-            roles = []
-            if roleValue.contains("p") {
-                roles.append(.publisher)
+    func updateControls() {
+        if let connectionController = connectionController {
+            enableWebSocketSSLSwitch.setOn(connectionController.WebSocketSSLEnabled, animated: true)
+            hostTextField.text = connectionController.host
+            portTextField.text = connectionController.port?.description
+            signalingPathTextField.text = connectionController.signalingPath
+            channelIdTextField.text = connectionController.channelId
+            
+            roles = connectionController.roles
+            enableMultistreamSwitch.setOn(connectionController.multistreamEnabled, animated: true)
+            enableVideoSwitch.setOn(connectionController.videoEnabled, animated: true)
+            if let codec = connectionController.videoCodec {
+                videoCodecLabel.text = ConnectionViewController.videoCodecTable.text(value: codec)
             }
-            if roleValue.contains("s") {
-                roles.append(.subscriber)
-            }
-        }
-        
-        loadSwitchValue(userDefaults: defaults,
-                        switch: enableMultistreamSwitch,
-                        key: .multistreamEnabled,
-                        value: false)
-        loadSwitchValue(userDefaults: defaults,
-                        switch: enableVideoSwitch,
-                        key: .videoEnabled,
-                        value: true)
-        
-        bitRateValueLabel.text = defaults.string(forKey:
-            ConnectionController.UserDefaultsKey.bitRate.rawValue) ?? "800"
-        
-        loadSwitchValue(userDefaults: defaults,
-                        switch: enableAudioSwitch,
-                        key: .audioEnabled,
-                        value: true)
-        loadSwitchValue(userDefaults: defaults,
-                        switch: autofocusSwitch,
-                        key: .autofocusEnabled,
-                        value: false)
-        
-        switch defaults.string(forKey:
-            ConnectionController.UserDefaultsKey.videoCodec.rawValue) {
-        case "VP8"?:
-            videoCodec = .VP8
-        case "VP9"?:
-            videoCodec = .VP9
-        case "H.264"?:
-            videoCodec = .H264
-        default:
-            videoCodec = nil
-        }
-        
-        switch defaults.string(forKey:
-            ConnectionController.UserDefaultsKey.audioCodec.rawValue) {
-        case "Opus"?:
-            audioCodec = .Opus
-        case "VP9"?:
-            audioCodec = .PCMU
-        default:
-            audioCodec = nil
+            bitRateValueLabel.text = connectionController.bitRate?.description
+            enableAudioSwitch.setOn(connectionController.audioEnabled, animated: true)
+            
         }
     }
     
-    func loadSwitchValue(userDefaults: UserDefaults,
-                         switch: UISwitch!,
-                         key: ConnectionController.UserDefaultsKey,
-                         value: Bool) {
-        let defaults = UserDefaults.standard
-        if let _ = defaults.object(forKey: key.rawValue) {
-            `switch`.setOn(defaults.bool(forKey: key.rawValue), animated: false)
-        } else {
-            `switch`.setOn(value, animated: false)
-        }
-    }
-    
-    func loadTextFieldValue(userDefaults: UserDefaults,
-                            textField: UITextField,
-                            forKey key: ConnectionController.UserDefaultsKey) {
-        if let text = userDefaults.string(forKey: key.rawValue) {
-            if !text.isEmpty {
-                textField.text = text
-            }
-        }
-    }
-    
-    func saveSettings() {
-        guard let defaults = connectionController!.userDefaults else {
-            return
-        }
-
-        defaults.set(enableWebSocketSSLSwitch.isOn,
-                     forKey:
-            ConnectionController.UserDefaultsKey.WebSocketSSLEnabled.rawValue)
-        saveTextField(userDefaults: defaults,
-                      textField: hostTextField,
-                      forKey: .host)
-        saveTextField(userDefaults: defaults,
-                      textField: portTextField,
-                      forKey: .port)
-        saveTextField(userDefaults: defaults,
-                      textField: signalingPathTextField,
-                      forKey: .signalingPath)
-        saveTextField(userDefaults: defaults,
-                      textField: channelIdTextField,
-                      forKey: .channelId)
-        
-        var roleValue = ""
-        if roles.contains(.publisher) {
-            roleValue.append("p")
-        }
-        if roles.contains(.subscriber) {
-            roleValue.append("s")
-        }
-        if roleValue.isEmpty {
-            roleValue = "ps"
-        }
-        
-        defaults.set(roleValue,
-                     forKey:
-            ConnectionController.UserDefaultsKey.roles.rawValue)
-        defaults.set(multistreamEnabled,
-                     forKey:
-            ConnectionController.UserDefaultsKey.multistreamEnabled.rawValue)
-        defaults.set(videoEnabled,
-                     forKey:
-            ConnectionController.UserDefaultsKey.videoEnabled.rawValue)
-        
-        var videoCodecValue: String?
-        switch videoCodec {
-        case .VP8?:
-            videoCodecValue = "VP8"
-        case .VP9?:
-            videoCodecValue = "VP9"
-        case .H264?:
-            videoCodecValue = "H.264"
-        default:
-            videoCodecValue = nil
-        }
-        defaults.set(videoCodecValue,
-                     forKey:
-            ConnectionController.UserDefaultsKey.videoCodec.rawValue)
-        
-        defaults.set(bitRate,
-                     forKey:
-            ConnectionController.UserDefaultsKey.bitRate.rawValue)
-        
-        defaults.set(audioEnabled,
-                     forKey:
-            ConnectionController.UserDefaultsKey.audioEnabled.rawValue)
-        
-        var audioCodecValue: String?
-        switch audioCodec {
-        case .Opus?:
-            audioCodecValue = "Opus"
-        case .PCMU?:
-            audioCodecValue = "PCMU"
-        default:
-            audioCodecValue = nil
-        }
-        defaults.set(audioCodecValue,
-                     forKey:
-            ConnectionController.UserDefaultsKey.audioCodec.rawValue)
-        
-        defaults.set(autofocusSwitch.isOn,
-                     forKey:
-            ConnectionController.UserDefaultsKey.autofocusEnabled.rawValue)
-        
-        defaults.synchronize()
-    }
-    
-    func saveTextField(userDefaults: UserDefaults,
-                       textField: UITextField,
-                       forKey key: ConnectionController.UserDefaultsKey) {
-        if let text = textField.text {
-            userDefaults.set(text, forKey: key.rawValue)
-        }
+    func userDefaultsDidLoad(_ notification: Notification) {
+        updateControls()
     }
     
     // MARK: アクション
@@ -545,7 +415,7 @@ class ConnectionViewController: UITableViewController {
     }
     
     func back(isCancel: Bool) {
-        saveSettings()
+        connectionController.saveToUserDefaults()
         dismiss(animated: true) {
             if isCancel {
                 self.connectionController!.onCancelHandler?()
@@ -556,7 +426,7 @@ class ConnectionViewController: UITableViewController {
     var connectingAlertController: UIAlertController!
     
     @IBAction func connectOrDisconnect(_ sender: AnyObject) {
-        saveSettings()
+        connectionController.saveToUserDefaults()
         
         switch state {
         case .connecting:
@@ -624,7 +494,7 @@ class ConnectionViewController: UITableViewController {
                          bitRate: bitRate,
                          audioEnabled: audioEnabled,
                          audioCodec: audioCodec ?? .default)
-            connectionController?.onRequestHandler?(connection!, request)
+            connectionController.onRequestHandler?(connection!, request)
             
             connectingAlertController = UIAlertController(
                 title: nil,
