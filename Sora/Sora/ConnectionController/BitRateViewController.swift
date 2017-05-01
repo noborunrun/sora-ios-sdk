@@ -64,13 +64,7 @@ class BitRateViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setBitRate(ConnectionViewController.main!.bitRate) // deprecated
-        setBitRate(connectionController.bitRate ?? 800)
-    }
-
-    func setBitRate(_ value: Int) {
-        clearCheckmarks()
-        cellForBitRate(value).accessoryType = .checkmark
+        selectedBitRate = connectionController.bitRate ?? 800
     }
     
     func cellForBitRate(_ value: Int) -> UITableViewCell {
@@ -103,20 +97,24 @@ class BitRateViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    func clearCheckmarks() {
-        for cell: UITableViewCell in allValueCells {
-            cell.accessoryType = .none
+    override func willMove(toParentViewController parent: UIViewController?) {
+        connectionController.bitRate = selectedBitRate
+    }
+    
+    var selectedBitRate: Int? {
+        didSet {
+            for cell: UITableViewCell in allValueCells {
+                cell.accessoryType = .none
+            }
+            if let bitRate = selectedBitRate {
+                cellForBitRate(bitRate).accessoryType = .checkmark
+            }
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        clearCheckmarks()
-        let cell = allValueCells[indexPath.row]
-        cell.accessoryType = .checkmark
-        let bitRate = Int(allTitleLabels[indexPath.row].text!)!
-        ConnectionViewController.main?.bitRate = bitRate
-        connectionController.bitRate = bitRate
+        selectedBitRate = Int(allTitleLabels[indexPath.row].text!)!
     }
     
 }
