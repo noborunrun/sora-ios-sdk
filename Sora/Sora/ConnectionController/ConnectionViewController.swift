@@ -327,6 +327,7 @@ class ConnectionViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        updateControls()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
