@@ -32,8 +32,6 @@ class ConnectionViewController: UITableViewController {
         case disconnected
     }
     
-    @IBOutlet weak var cancelButtonItem: UIBarButtonItem!
-    
     @IBOutlet weak var connectionStateCell: UITableViewCell!
     @IBOutlet weak var connectionTimeLabel: UILabel!
     @IBOutlet weak var enableMicrophoneLabel: UILabel!
@@ -117,7 +115,6 @@ class ConnectionViewController: UITableViewController {
             DispatchQueue.main.async {
                 switch self.state {
                 case .connected:
-                    self.cancelButtonItem.title = "Back"
                     self.connectButton.setTitle("Disconnect", for: .normal)
                     self.connectButton.isEnabled = true
                     self.connectionStateCell.accessoryView = nil
@@ -127,7 +124,6 @@ class ConnectionViewController: UITableViewController {
                     self.connectionTimeLabel.textColor = nil
                     
                 case .disconnected:
-                    self.cancelButtonItem.title = "Cancel"
                     self.connectButton.setTitle("Connect", for: .normal)
                     self.connectButton.isEnabled = true
                     self.connectionStateCell.accessoryView = nil
@@ -419,18 +415,10 @@ class ConnectionViewController: UITableViewController {
             control.isUserInteractionEnabled = isEnabled
         }
     }
-    
-    @IBAction func cancel(_ sender: AnyObject) {
-        back(isCancel: true)
-    }
-    
-    func back(isCancel: Bool) {
+
+    @IBAction func back(_ sender: AnyObject) {
         connectionController.saveToUserDefaults()
-        dismiss(animated: true) {
-            if isCancel {
-                self.connectionController!.onCancelHandler?()
-            }
-        }
+        dismiss(animated: true)
     }
     
     var connectingAlertController: UIAlertController!
@@ -665,7 +653,7 @@ class ConnectionViewController: UITableViewController {
             }
         }
         connectionController!.onConnectHandler?(connection, roles, nil)
-        back(isCancel: false)
+        back(self)
     }
     
     func presentSimpleAlert(title: String? = nil, message: String? = nil) {

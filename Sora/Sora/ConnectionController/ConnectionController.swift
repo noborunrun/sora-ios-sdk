@@ -183,7 +183,6 @@ public class ConnectionController: UIViewController {
 
     var onRequestHandler: ((Connection, Request) -> Void)?
     var onConnectHandler: ((Connection?, [Role]?, ConnectionError?) -> Void)?
-    var onCancelHandler: (() -> Void)?
 
     public func onRequest(handler: @escaping (Connection, Request) -> Void) {
         onRequestHandler = handler
@@ -192,10 +191,6 @@ public class ConnectionController: UIViewController {
     public func onConnect(handler:
         @escaping (Connection?, [Role]?, ConnectionError?) -> Void) {
         onConnectHandler = handler
-    }
-    
-    public func onCancel(handler: @escaping () -> Void) {
-        onCancelHandler = handler
     }
     
     // MARK: User Defaults

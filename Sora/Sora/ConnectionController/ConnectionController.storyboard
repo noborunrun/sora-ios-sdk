@@ -685,9 +685,9 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Connection" id="CWU-Cr-5dE">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="E6W-nG-aig">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="E6W-nG-aig">
                             <connections>
-                                <action selector="cancel:" destination="1nR-he-y4W" id="Lm5-dD-4aF"/>
+                                <action selector="back:" destination="1nR-he-y4W" id="ftG-n5-Fh1"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -706,7 +706,6 @@
                         <outlet property="bitRateCell" destination="YUH-oD-8dq" id="UPw-lN-YEn"/>
                         <outlet property="bitRateLabel" destination="NJp-kn-ZgP" id="i94-6F-63v"/>
                         <outlet property="bitRateValueLabel" destination="Ouj-vn-QoD" id="5VB-PF-XaK"/>
-                        <outlet property="cancelButtonItem" destination="E6W-nG-aig" id="j4y-rs-1GL"/>
                         <outlet property="channelIdLabel" destination="fHR-0B-Ble" id="4e3-Xy-Txw"/>
                         <outlet property="channelIdTextField" destination="5kr-T1-UcY" id="b49-id-P1u"/>
                         <outlet property="connectButton" destination="7Cs-p5-ILr" id="J9d-qZ-5sA"/>
