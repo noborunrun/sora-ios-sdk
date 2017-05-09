@@ -20,6 +20,54 @@ public indirect enum ConnectionError: Error {
     case mediaStreamNotFound
     case aggregateError([ConnectionError])
     case updateError(ConnectionError)
+    
+    public var description: String {
+        get {
+            switch self {
+            case .failureSetConfiguration(_):
+                return "setting configuration failed"
+            case .connectionWaitTimeout:
+                return "connection timeout"
+            case .connectionDisconnected:
+                return "connection disconnected"
+            case .connectionTerminated:
+                return "connection terminated"
+            case .connectionBusy:
+                return "connection busy"
+            case .connectionCancelled:
+                return "connection cancelled"
+            case .webSocketClose(let code, let reason):
+                return String(format: "WebSocket closed %d (%@)",
+                              code, reason ?? "unknown reason")
+            case .webSocketError(let error):
+                return String(format: "WebSocket error (%@)",
+                              error.localizedDescription)
+            case .signalingFailure(reason: let reason):
+                return String(format: "signaling failed (%@)", reason)
+            case .peerConnectionError(let error):
+                return String(format: "peer connection error (%@)",
+                              error.localizedDescription)
+            case .iceConnectionFailed:
+                return "ICE connection failed"
+            case .iceConnectionDisconnected:
+                return "ICE connection disconnected"
+            case .mediaCapturerFailed:
+                return "media capturer initialization failed"
+            case .mediaStreamNotFound:
+                return "media stream not found"
+            case .updateError(let error):
+                return String(format: "signaling update error (%@)",
+                              error.description)
+            case .aggregateError(let errors):
+                var buf = "aggregate error ("
+                buf.append(errors.map { err in return err.description }
+                    .joined(separator: "; "))
+                buf.append(")")
+                return buf
+            }
+        }
+    }
+    
 }
 
 public class Connection {

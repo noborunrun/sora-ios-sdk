@@ -78,7 +78,7 @@ public class MediaConnection {
             if let error = error {
                 self.eventLog?.markFormat(type: self.eventType,
                                           format: "connect error: %@",
-                                          arguments: error.localizedDescription)
+                                          arguments: error.description)
                 self.peerConnection!.terminate()
                 self.peerConnection = nil
                 self.onFailureHandler?(error)

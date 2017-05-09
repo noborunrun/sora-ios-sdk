@@ -598,22 +598,8 @@ class ConnectionViewController: UITableViewController {
     }
     
     func failConnection(error: ConnectionError) {
-        var title = "Connection Error"
-        var message = error.localizedDescription
-        switch error {
-        case .connectionBusy:
-            message = "Connection is busy"
-        case .webSocketClose(let code, let reason):
-            let reason = reason ?? "?"
-            message = String(format: "WebSocket is closed (status code %d, reason %@)",
-                             code, reason)
-        case .signalingFailure(reason: let reason):
-            title = "Signaling Failure"
-            message = reason
-        default:
-            break
-        }
-        
+        let title = "Connection Error"
+        let message = error.description
         if let alert = connectingAlertController {
             alert.dismiss(animated: true) {
                 self.finishFailure(title: title, message: message, error: error)

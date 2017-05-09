@@ -485,7 +485,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             if let error = send(connect) {
                 eventLog?.markFormat(type: .Signaling,
                                      format: "send connect message failed: %@",
-                                     arguments: error.localizedDescription)
+                                     arguments: error.description)
                 signalingEventHandlers?.onFailureHandler?(error)
                 terminate(error: ConnectionError.connectionTerminated)
                 return
