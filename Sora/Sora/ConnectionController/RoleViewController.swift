@@ -3,6 +3,7 @@ import UIKit
 class RoleViewController: UITableViewController {
 
     struct Component {
+        var role: ConnectionController.Role
         var label: UILabel
         var cell: UITableViewCell
     }
@@ -19,80 +20,53 @@ class RoleViewController: UITableViewController {
         }
     }
     
-    var main: ConnectionViewController {
-        get { return ConnectionViewController.main! }
-    }
-    
-    lazy var components: [ConnectionController.Role: Component] = [
-        .publisher: Component(label: self.publisherLabel, cell: self.publisherCell),
-        .subscriber: Component(label: self.subscriberLabel, cell: self.subscriberCell)
+    lazy var components: [Component] = [
+        Component(role: .publisher, label: self.publisherLabel, cell: self.publisherCell),
+        Component(role: .subscriber, label: self.subscriberLabel, cell: self.subscriberCell)
     ]
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        clearCheckmarks()
-        for role in ConnectionController.Role.allRoles {
-            let comp = components[role]!
-            if main.connectionController!.availableRoles.contains(role) {
-                comp.label.textColor = UIColor.black
-                comp.cell.isUserInteractionEnabled = true
-                if main.roles.contains(role) {
-                    comp.cell.accessoryType = .checkmark
-                }
-            } else {
-                comp.label.textColor = UIColor.lightGray
+    var selectedRoles: [ConnectionController.Role] = [] {
+        didSet {
+            for comp in components {
                 comp.cell.accessoryType = .none
-                comp.cell.isUserInteractionEnabled = false
+                if connectionController.availableRoles.contains(comp.role) {
+                    comp.label.textColor = UIColor.black
+                    comp.cell.isUserInteractionEnabled = true
+                    if selectedRoles.contains(comp.role) {
+                        comp.cell.accessoryType = .checkmark
+                    }
+                } else {
+                    comp.label.textColor = UIColor.lightGray
+                    comp.cell.isUserInteractionEnabled = false
+                }
             }
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        selectedRoles = connectionController.roles
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-    func clearCheckmarks() {
-        publisherCell?.accessoryType = .none
-        subscriberCell?.accessoryType = .none
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        switch indexPath.row {
-        case 0:
-            selectRole(.publisher)
-        case 1:
-            selectRole(.subscriber)
-        default:
-            break
+    override func willMove(toParentViewController parent: UIViewController?) {
+        if parent == nil {
+            connectionController.roles = selectedRoles
         }
     }
     
     func selectRole(_ role: ConnectionController.Role) {
-        guard main.connectionController!.availableRoles.contains(role) else {
-            return
-        }
-        
-        if main.roles.count > 1 && main.roles.contains(role) {
-            components[role]?.cell.accessoryType = .none
+        var roles = selectedRoles
+        if roles.contains(role) {
+            selectedRoles = roles.filter { each in role != each }
         } else {
-            components[role]?.cell.accessoryType = .checkmark
+            roles.append(role)
+            selectedRoles = roles
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        selectRole(components[indexPath.row].role)
     }
     
 }

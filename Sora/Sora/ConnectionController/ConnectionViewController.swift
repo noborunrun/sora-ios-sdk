@@ -356,11 +356,17 @@ class ConnectionViewController: UITableViewController {
             enableMultistreamSwitch.setOn(connectionController.multistreamEnabled, animated: true)
             enableVideoSwitch.setOn(connectionController.videoEnabled, animated: true)
             if let codec = connectionController.videoCodec {
-                videoCodecLabel.text = ConnectionViewController.videoCodecTable.text(value: codec)
+                videoCodecValueLabel.text = ConnectionViewController.videoCodecTable.text(value: codec)
             }
-            bitRateValueLabel.text = connectionController.bitRate?.description
+            if let bitRate = connectionController.bitRate {
+                bitRateValueLabel.text = bitRate.description
+            } else {
+                bitRateValueLabel.text = "Default"
+            }
             enableAudioSwitch.setOn(connectionController.audioEnabled, animated: true)
-            
+            if let codec = connectionController.audioCodec {
+                audioCodecValueLabel.text = ConnectionViewController.audioCodecTable.text(value: codec)
+            }
         }
     }
     

@@ -10,6 +10,10 @@ class AudioCodecViewController: UITableViewController {
     @IBOutlet weak var OpusCell: UITableViewCell!
     @IBOutlet weak var PCMUCell: UITableViewCell!
     
+    lazy var codecCells: [(AudioCodec, UITableViewCell)]! =
+        [(.default, self.defaultCell), (.Opus, self.OpusCell), (.PCMU, self.PCMUCell)]
+
+
     var connectionController: ConnectionController? {
         get {
             return (navigationController as! ConnectionNavigationController?)?
@@ -20,17 +24,13 @@ class AudioCodecViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        selectCodec(codec: ConnectionViewController.main?.audioCodec)
+    
+    override func willMove(toParentViewController parent: UIViewController?) {
+        if parent == nil {
+            connectionController?.audioCodec = selectedCodec
+        }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
     /*
     // MARK: - Navigation
 
@@ -40,36 +40,22 @@ class AudioCodecViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
-    func selectCodec(codec: AudioCodec? = nil) {
-        defaultCell.accessoryType = .none
-        OpusCell.accessoryType = .none
-        PCMUCell.accessoryType = .none
-        switch codec {
-        case .default?, nil:
-            ConnectionViewController.main?.audioCodec = .default
-            defaultCell?.accessoryType = .checkmark
-        case .Opus?:
-            ConnectionViewController.main?.audioCodec = .Opus
-            OpusCell?.accessoryType = .checkmark
-        case .PCMU?:
-            ConnectionViewController.main?.audioCodec = .PCMU
-            PCMUCell?.accessoryType = .checkmark
+    
+    var selectedCodec: AudioCodec? {
+        didSet {
+            for (codec, cell) in codecCells {
+                if codec == selectedCodec {
+                    cell.accessoryType = .checkmark
+                } else {
+                    cell.accessoryType = .none
+                }
+            }
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch indexPath.row {
-        case 0:
-            selectCodec(codec: .default)
-        case 1:
-            selectCodec(codec: .Opus)
-        case 2:
-            selectCodec(codec: .PCMU)
-        default:
-            break
-        }
+        selectedCodec = codecCells[indexPath.row].0
     }
     
 }

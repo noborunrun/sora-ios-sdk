@@ -1,18 +1,8 @@
 import UIKit
 
 class BitRateViewController: UITableViewController {
-
-    @IBOutlet weak var value100Label: UILabel!
-    @IBOutlet weak var value300Label: UILabel!
-    @IBOutlet weak var value500Label: UILabel!
-    @IBOutlet weak var value800Label: UILabel!
-    @IBOutlet weak var value1000Label: UILabel!
-    @IBOutlet weak var value1500Label: UILabel!
-    @IBOutlet weak var value2000Label: UILabel!
-    @IBOutlet weak var value2500Label: UILabel!
-    @IBOutlet weak var value3000Label: UILabel!
-    @IBOutlet weak var value5000Label: UILabel!
-
+    
+    @IBOutlet weak var valueDefaultCell: UITableViewCell!
     @IBOutlet weak var value100Cell: UITableViewCell!
     @IBOutlet weak var value300Cell: UITableViewCell!
     @IBOutlet weak var value500Cell: UITableViewCell!
@@ -24,6 +14,9 @@ class BitRateViewController: UITableViewController {
     @IBOutlet weak var value3000Cell: UITableViewCell!
     @IBOutlet weak var value5000Cell: UITableViewCell!
     
+    static var selectionValues: [Int?] =
+        [nil, 100, 300, 500, 800, 1000, 1500, 2000, 2500, 3000, 5000]
+    
     var connectionController: ConnectionController {
         get {
             return (navigationController as! ConnectionNavigationController?)!
@@ -31,24 +24,10 @@ class BitRateViewController: UITableViewController {
         }
     }
     
-    var allTitleLabels: [UILabel] {
-        get {
-            return [value100Label,
-                    value300Label,
-                    value500Label,
-                    value800Label,
-                    value1000Label,
-                    value1500Label,
-                    value2000Label,
-                    value2500Label,
-                    value3000Label,
-                    value5000Label]
-        }
-    }
-    
     var allValueCells: [UITableViewCell] {
         get {
-            return [value100Cell,
+            return [valueDefaultCell,
+                    value100Cell,
                     value300Cell,
                     value500Cell,
                     value800Cell,
@@ -61,10 +40,22 @@ class BitRateViewController: UITableViewController {
         }
     }
     
+    var selectedBitRate: Int? {
+        didSet {
+            for cell: UITableViewCell in allValueCells {
+                cell.accessoryType = .none
+            }
+            if let bitRate = selectedBitRate {
+                cellForBitRate(bitRate).accessoryType = .checkmark
+            } else {
+                valueDefaultCell.accessoryType = .checkmark
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        selectedBitRate = connectionController.bitRate ?? 800
+        selectedBitRate = connectionController.bitRate
     }
     
     func cellForBitRate(_ value: Int) -> UITableViewCell {
@@ -92,29 +83,15 @@ class BitRateViewController: UITableViewController {
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     override func willMove(toParentViewController parent: UIViewController?) {
-        connectionController.bitRate = selectedBitRate
-    }
-    
-    var selectedBitRate: Int? {
-        didSet {
-            for cell: UITableViewCell in allValueCells {
-                cell.accessoryType = .none
-            }
-            if let bitRate = selectedBitRate {
-                cellForBitRate(bitRate).accessoryType = .checkmark
-            }
+        if parent == nil {
+            connectionController.bitRate = selectedBitRate
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        selectedBitRate = Int(allTitleLabels[indexPath.row].text!)!
+        selectedBitRate = BitRateViewController.selectionValues[indexPath.row]
     }
     
 }
