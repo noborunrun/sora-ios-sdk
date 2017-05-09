@@ -23,7 +23,7 @@ public class ConnectionController: UIViewController {
         case single
         case multiple
     }
-    
+
     public class Request {
         
         public var URL: URL
@@ -336,8 +336,6 @@ extension ConnectionController {
             #selector(ConnectionController.updateMultistreamEnabled(_:))
         static let updateVideoEnabled =
             #selector(ConnectionController.updateVideoEnabled(_:))
-        static let updateBitRate =
-            #selector(ConnectionController.updateBitRate(_:))
         static let updateAudioEnabled =
             #selector(ConnectionController.updateAudioEnabled(_:))
         static let updateAutofocus =
@@ -386,14 +384,6 @@ extension ConnectionController {
     func updateVideoEnabled(_ sender: AnyObject) {
         if let control = sender as? UISwitch {
             videoEnabled = control.isOn
-        }
-    }
-    
-    func updateBitRate(_ sender: AnyObject) {
-        if let control = sender as? UITextField {
-            if let text = control.text {
-                bitRate = Int(text)
-            }
         }
     }
     
