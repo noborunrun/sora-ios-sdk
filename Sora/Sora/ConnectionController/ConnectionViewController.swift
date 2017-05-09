@@ -240,6 +240,9 @@ class ConnectionViewController: UITableViewController {
                          name: NSNotification.Name.UIApplicationDidEnterBackground,
                          object: nil)
         
+        enableWebSocketSSLSwitch.addTarget(connectionController,
+                                           action: ConnectionController.Action.updateWebSocketSSLEnabled,
+                                           for: .valueChanged)
         hostTextField.addTarget(connectionController,
                                 action: ConnectionController.Action.updateHost,
                                 for: .editingChanged)
