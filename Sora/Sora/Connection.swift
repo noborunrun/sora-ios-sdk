@@ -4,6 +4,7 @@ import SocketRocket
 import UIKit
 
 public indirect enum ConnectionError: Error {
+    case invalidProtocol
     case failureSetConfiguration(RTCConfiguration)
     case connectionWaitTimeout
     case connectionDisconnected
@@ -24,6 +25,8 @@ public indirect enum ConnectionError: Error {
     public var description: String {
         get {
             switch self {
+            case .invalidProtocol:
+                return "protocol must be \"ws\" or \"wss\""
             case .failureSetConfiguration(_):
                 return "setting configuration failed"
             case .connectionWaitTimeout:

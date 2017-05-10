@@ -307,14 +307,17 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     // MARK: ピア接続
     
     func connect(timeout: Int, handler: @escaping ((ConnectionError?) -> Void)) {
+        let URL = connection!.URL
         if state != .disconnected {
             handler(ConnectionError.connectionBusy)
+            return
+        } else if URL.scheme != "ws" && URL.scheme != "wss" {
+            handler(ConnectionError.invalidProtocol)
             return
         }
         
         eventLog?.markFormat(type: .WebSocket,
-                             format: String(format: "open %@",
-                                            connection!.URL.description))
+                             format: String(format: "open %@", URL.description))
         state = .signalingConnecting
         connectCompletionHandler = handler
 
@@ -322,7 +325,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             self.finishTermination(error: error)
         }
         monitor!.run()
-        webSocket = SRWebSocket(url: connection!.URL)
+        webSocket = SRWebSocket(url: URL)
         webSocket!.delegate = self
         webSocket!.open()
         webSocketReadyState = SRReadyState.CONNECTING
