@@ -41,6 +41,7 @@ open class SignalingEventHandlers {
     var onDisconnectHandler: ((Void) -> Void)?
     var onFailureHandler: ((ConnectionError) -> Void)?
     var onPingHandler: ((Void) -> Void)?
+    var onNotifyHandler: ((SignalingNotify) -> Void)?
 
     public init() {}
 
@@ -64,6 +65,11 @@ open class SignalingEventHandlers {
         onPingHandler = handler
     }
     
+    public func onNotify(handler: @escaping (SignalingNotify) -> Void) {
+        onNotifyHandler = handler
+    }
+    
+
 }
 
 open class PeerConnectionEventHandlers {

@@ -121,7 +121,7 @@ enum Enable<T: JSONEncodable>: JSONEncodable {
     
 }
 
-enum SignalingRole: String, UnboxableEnum {
+public enum SignalingRole: String, UnboxableEnum {
     
     case upstream
     case downstream
@@ -395,7 +395,7 @@ extension SignalingPong: Messageable {
     
 }
 
-enum SignalingEventType: String, UnboxableEnum {
+public enum SignalingEventType: String, UnboxableEnum {
     
     case connectionCreated = "connection.created"
     case connectionUpdated = "connection.updated"
@@ -403,20 +403,20 @@ enum SignalingEventType: String, UnboxableEnum {
     
 }
 
-struct SignalingNotify {
+public struct SignalingNotify {
     
-    var eventType: SignalingEventType
-    var role: SignalingRole
-    var connectionTime: Int
-    var numberOfChannels: Int
-    var numberOfUpstreamConnections: Int
-    var numberOfDownstreamConnections: Int
+    public var eventType: SignalingEventType
+    public var role: SignalingRole
+    public var connectionTime: Int
+    public var numberOfChannels: Int
+    public var numberOfUpstreamConnections: Int
+    public var numberOfDownstreamConnections: Int
 
 }
 
 extension SignalingNotify: Unboxable {
     
-    init(unboxer: Unboxer) throws {
+    public init(unboxer: Unboxer) throws {
         eventType = try unboxer.unbox(key: "event_type")
         role = try unboxer.unbox(key: "role")
         connectionTime = try unboxer.unbox(key: "minutes")

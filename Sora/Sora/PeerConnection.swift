@@ -684,6 +684,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                  format: "notify: %@",
                                  arguments: json.description)
 
+            signalingEventHandlers?.onNotifyHandler?(notify)
             connection.numberOfConnections =
                 (notify.numberOfUpstreamConnections,
                  notify.numberOfDownstreamConnections)
