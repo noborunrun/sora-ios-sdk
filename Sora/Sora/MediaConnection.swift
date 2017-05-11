@@ -1,6 +1,18 @@
 import Foundation
 import WebRTC
 
+public struct Attendee {
+    
+    public var role: Role
+    public var numberOfPublishers: Int
+    public var numberOfSubscribers: Int
+    
+    public var numberOfAllConnections: Int {
+        get { return numberOfPublishers + numberOfSubscribers }
+    }
+    
+}
+
 public class MediaConnection {
     
     public struct NotificationKey {
@@ -50,10 +62,10 @@ public class MediaConnection {
         }
     }
     
-    var role: MediaStreamRole {
+    var role: Role {
         get {
             assertionFailure("subclass must implement role()")
-            return .upstream
+            return .publisher
         }
     }
     
@@ -184,6 +196,8 @@ public class MediaConnection {
     private var onFailureHandler: ((ConnectionError) -> Void)?
     private var onAddStreamHandler: ((MediaStream) -> Void)?
     private var onRemoveStreamHandler: ((MediaStream) -> Void)?
+    var onAttendeeAddedHandler: ((Attendee) -> Void)?
+    var onAttendeeRemovedHandler: ((Attendee) -> Void)?
 
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
         onConnectHandler = handler
@@ -252,6 +266,14 @@ public class MediaConnection {
         onRemoveStreamHandler = handler
     }
     
+    public func onAttendeeAdded(handler: @escaping (Attendee) -> Void) {
+        onAttendeeAddedHandler = handler
+    }
+    
+    public func onAttendeeRemoved(handler: @escaping (Attendee) -> Void) {
+        onAttendeeRemovedHandler = handler
+    }
+
 }
 
 class MediaCapturer {
@@ -386,8 +408,8 @@ public class MediaPublisher: MediaConnection {
         get { return .MediaPublisher }
     }
     
-    override var role: MediaStreamRole {
-        get { return .upstream }
+    override var role: Role {
+        get { return .publisher }
     }
     
     var mediaCapturer: MediaCapturer? {
@@ -406,8 +428,8 @@ public class MediaPublisher: MediaConnection {
 
 public class MediaSubscriber: MediaConnection {
     
-    override var role: MediaStreamRole {
-        get { return .downstream }
+    override var role: Role {
+        get { return .subscriber }
     }
     
 }

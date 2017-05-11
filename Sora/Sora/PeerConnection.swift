@@ -26,7 +26,7 @@ public class PeerConnection {
     
     public weak var connection: Connection?
     public weak var mediaConnection: MediaConnection?
-    public var role: MediaStreamRole
+    public var role: Role
     public var metadata: String?
     var mediaStreamId: String?
     public var mediaOption: MediaOption
@@ -56,7 +56,7 @@ public class PeerConnection {
     
     init(connection: Connection,
          mediaConnection: MediaConnection,
-         role: MediaStreamRole,
+         role: Role,
          metadata: String? = nil,
          mediaStreamId: String? = nil,
          mediaOption: MediaOption = MediaOption()) {
@@ -238,7 +238,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     }
 
     weak var peerConnection: PeerConnection?
-    var role: MediaStreamRole
+    var role: Role
     
     private var _state: State = .disconnected
     
@@ -298,7 +298,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     private var connectCompletionHandler: ((ConnectionError?) -> Void)?
     private var disconnectCompletionHandler: ((ConnectionError?) -> Void)?
     
-    init(peerConnection: PeerConnection, role: MediaStreamRole) {
+    init(peerConnection: PeerConnection, role: Role) {
         self.peerConnection = peerConnection
         self.role = role
         super.init()
@@ -470,7 +470,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                     delegate: self)
             
             // デバイスの初期化 (Upstream)
-            if role == MediaStreamRole.upstream {
+            if role == Role.publisher {
                 if let error = createMediaCapturer() {
                     terminate(error: error)
                     return
@@ -478,7 +478,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             }
             
             // シグナリング connect を送信する
-            let connect = SignalingConnect(role: SignalingRole.from(role),
+            let connect = SignalingConnect(role: role,
                                            channel_id: connection.mediaChannelId,
                                            multistream: mediaConnection.multistreamEnabled,
                                            mediaOption: peerConnection!.mediaOption)
@@ -685,9 +685,21 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                                  arguments: json.description)
 
             signalingEventHandlers?.onNotifyHandler?(notify)
-            connection.numberOfConnections =
-                (notify.numberOfUpstreamConnections,
-                 notify.numberOfDownstreamConnections)
+            let nums = (notify.numberOfPublishers,
+                        notify.numberOfSubscribers)
+            connection.numberOfConnections = nums
+            let attendee = Attendee(role: notify.role,
+                                    numberOfPublishers: notify.numberOfPublishers,
+                                    numberOfSubscribers: notify.numberOfSubscribers)
+            
+            switch notify.eventType {
+            case .connectionCreated:
+                mediaConnection!.onAttendeeAddedHandler?(attendee)
+            case .connectionDestroyed:
+                mediaConnection!.onAttendeeRemovedHandler?(attendee)
+            default:
+                break
+            }
             
         default:
             break

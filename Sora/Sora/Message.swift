@@ -121,29 +121,13 @@ enum Enable<T: JSONEncodable>: JSONEncodable {
     
 }
 
-public enum SignalingRole: String, UnboxableEnum {
-    
-    case upstream
-    case downstream
-    
-    static func from(_ role: MediaStreamRole) -> SignalingRole {
-        switch role {
-        case .upstream:
-            return upstream
-        case .downstream:
-            return downstream
-        }
-    }
-    
-}
-
-extension SignalingRole: JSONEncodable {
+extension Role: JSONEncodable {
     
     func encode() -> Any {
         switch self {
-        case .upstream:
+        case .publisher:
             return "upstream" as Any
-        case .downstream:
+        case .subscriber:
             return "downstream" as Any
         }
     }
@@ -207,13 +191,13 @@ extension SignalingAudio: JSONEncodable {
 
 struct SignalingConnect {
     
-    var role: SignalingRole
+    var role: Role
     var channel_id: String
     var metadata: String?
     var mediaOption: MediaOption
     var multistream: Bool
     
-    init(role: SignalingRole, channel_id: String, metadata: String? = nil,
+    init(role: Role, channel_id: String, metadata: String? = nil,
          multistream: Bool = false, mediaOption: MediaOption) {
         self.role = role
         self.channel_id = channel_id
@@ -403,14 +387,30 @@ public enum SignalingEventType: String, UnboxableEnum {
     
 }
 
+enum SignalingRole: String, UnboxableEnum {
+    
+    case upstream
+    case downstream
+    
+    func connectionRole() -> Role {
+        switch self {
+        case .upstream:
+            return .publisher
+        case .downstream:
+            return .subscriber
+        }
+    }
+    
+}
+
 public struct SignalingNotify {
     
     public var eventType: SignalingEventType
-    public var role: SignalingRole
+    public var role: Role
     public var connectionTime: Int
     public var numberOfChannels: Int
-    public var numberOfUpstreamConnections: Int
-    public var numberOfDownstreamConnections: Int
+    public var numberOfPublishers: Int
+    public var numberOfSubscribers: Int
 
 }
 
@@ -418,11 +418,12 @@ extension SignalingNotify: Unboxable {
     
     public init(unboxer: Unboxer) throws {
         eventType = try unboxer.unbox(key: "event_type")
-        role = try unboxer.unbox(key: "role")
+        let sigRole: SignalingRole = try unboxer.unbox(key: "role")
+        role = sigRole.connectionRole()
         connectionTime = try unboxer.unbox(key: "minutes")
         numberOfChannels = try unboxer.unbox(key: "channel_connections")
-        numberOfUpstreamConnections = try unboxer.unbox(key: "channel_upstream_connections")
-        numberOfDownstreamConnections = try unboxer.unbox(key: "channel_downstream_connections")
+        numberOfPublishers = try unboxer.unbox(key: "channel_upstream_connections")
+        numberOfSubscribers = try unboxer.unbox(key: "channel_downstream_connections")
     }
     
 }

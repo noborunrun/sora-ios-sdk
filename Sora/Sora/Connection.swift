@@ -2,6 +2,7 @@ import Foundation
 import WebRTC
 import SocketRocket
 import UIKit
+import Unbox
 
 public indirect enum ConnectionError: Error {
     case invalidProtocol
@@ -71,6 +72,11 @@ public indirect enum ConnectionError: Error {
         }
     }
     
+}
+
+public enum Role: String, UnboxableEnum {
+    case publisher
+    case subscriber
 }
 
 public class Connection {

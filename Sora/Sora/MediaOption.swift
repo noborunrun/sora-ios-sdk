@@ -1,13 +1,6 @@
 import Foundation
 import WebRTC
 
-public enum MediaStreamRole {
-    
-    case upstream
-    case downstream
-    
-}
-
 public enum VideoCodec {
     
     case `default`
