@@ -687,7 +687,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             signalingEventHandlers?.onNotifyHandler?(notify)
             let nums = (notify.numberOfPublishers,
                         notify.numberOfSubscribers)
-            connection.numberOfConnections = nums
+            mediaConnection!.numberOfConnections = nums
             let attendee = Attendee(role: notify.role,
                                     numberOfPublishers: notify.numberOfPublishers,
                                     numberOfSubscribers: notify.numberOfSubscribers)

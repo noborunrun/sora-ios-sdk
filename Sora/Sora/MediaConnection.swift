@@ -51,6 +51,14 @@ public class MediaConnection {
         get { return peerConnection?.isAvailable ?? false }
     }
     
+    public var numberOfConnections: (Int, Int) = (0, 0) {
+        willSet {
+            if numberOfConnections != newValue {
+                onChangeNumberOfConnectionsHandler?(newValue.0, newValue.1)
+            }
+        }
+    }
+    
     var eventLog: EventLog? {
         get { return connection?.eventLog }
     }
@@ -198,6 +206,7 @@ public class MediaConnection {
     private var onRemoveStreamHandler: ((MediaStream) -> Void)?
     var onAttendeeAddedHandler: ((Attendee) -> Void)?
     var onAttendeeRemovedHandler: ((Attendee) -> Void)?
+    private var onChangeNumberOfConnectionsHandler: ((Int, Int) -> ())?
 
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
         onConnectHandler = handler
@@ -272,6 +281,10 @@ public class MediaConnection {
     
     public func onAttendeeRemoved(handler: @escaping (Attendee) -> Void) {
         onAttendeeRemovedHandler = handler
+    }
+    
+    public func onChangeNumberOfConnections(handler: @escaping (Int, Int) -> ()) {
+        onChangeNumberOfConnectionsHandler = handler
     }
 
 }
