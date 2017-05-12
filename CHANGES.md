@@ -9,6 +9,56 @@
 - FIX
     - バグ修正
 
+## 1.0.1
+
+- [CHANGE] シグナリング "notify" に対応した
+
+- [CHANGE] Sora サーバーの URL のプロトコルが ws または wss 以外であればエラーにする
+
+- [CHANGE] イベントログに接続エラーの詳細を出力するようにした
+
+- [CHANGE] 次の不要なファイルを削除した
+
+  - ``JSON.swift``
+
+- [CHANGE] API: Attendee: 追加した
+
+- [CHANGE] API: ConnectionError: ``var description`` を追加した
+
+- [CHNAGE] API: ConnectionController: ビットレートの設定項目を追加した
+
+- [CHNAGE] API: ConnectionController: イベントログの画面を追加した
+
+- [CHNAGE] API: ConnectionController: Cancel ボタンを Back ボタンに変更した
+
+- [CHNAGE] API: Event.EventType: ``ConnectionMonitor`` を追加した
+
+- [CHANGE] API: MediaConnection: 次のプロパティとメソッドを追加した
+
+  - ``var numberOfConnections``
+
+  - ``func onAttendeeAdded(handler:)``
+
+  - ``func onAttendeeRemoved(handler:)``
+
+  - ``func onChangeNumberOfConnections(handler:)``
+
+- [CHANGE] API: MediaStreamRole: 削除した
+
+- [CHANGE] API: Role: 追加した
+
+- [CHNAGE] API: SignalingEventHandlers: ``func onNotify(handler:)`` を追加した
+
+- [CHNAGE] API: SignalingEventType: 追加した
+
+- [CHNAGE] API: SignalingNotify: 追加した
+
+- [CHNAGE] API: SignalingRole: 追加した
+
+- [UPDATE] API: ConnectionController: リファクタリングを行った
+
+- [FIX] 接続解除可能な状況でも ``connectionBusy`` のエラーが発生する現象を修正した
+
 ## 1.0.0
 
 - [CHANGE] WebRTC M57 に対応した
