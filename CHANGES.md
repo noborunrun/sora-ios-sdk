@@ -9,7 +9,7 @@
 - FIX
     - バグ修正
 
-## 1.0.1
+## 1.1.0
 
 - [CHANGE] シグナリング "notify" に対応した
 
@@ -22,6 +22,12 @@
   - ``JSON.swift``
 
 - [CHANGE] API: Attendee: 追加した
+
+- [CHANGE] API: Connection: 次のプロパティとメソッドを削除した
+
+  - ``var numberOfConnections``
+
+  - ``func onChangeNumberOfConnections(handler:)``
 
 - [CHANGE] API: ConnectionError: ``var description`` を追加した
 
