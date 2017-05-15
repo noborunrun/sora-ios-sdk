@@ -408,7 +408,7 @@ public struct SignalingNotify {
     public var eventType: SignalingEventType
     public var role: Role
     public var connectionTime: Int
-    public var numberOfChannels: Int
+    public var numberOfConnections: Int
     public var numberOfPublishers: Int
     public var numberOfSubscribers: Int
 
@@ -421,7 +421,7 @@ extension SignalingNotify: Unboxable {
         let sigRole: SignalingRole = try unboxer.unbox(key: "role")
         role = sigRole.connectionRole()
         connectionTime = try unboxer.unbox(key: "minutes")
-        numberOfChannels = try unboxer.unbox(key: "channel_connections")
+        numberOfConnections = try unboxer.unbox(key: "channel_connections")
         numberOfPublishers = try unboxer.unbox(key: "channel_upstream_connections")
         numberOfSubscribers = try unboxer.unbox(key: "channel_downstream_connections")
     }
