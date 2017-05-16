@@ -444,14 +444,14 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
     func webSocketDidOpen(_ webSocket: SRWebSocket!) {
         eventLog?.markFormat(type: .WebSocket, format: "opened")
         eventLog?.markFormat(type: .Signaling, format: "connected")
-        
+        webSocketEventHandlers?.onOpenHandler?(webSocket)
+
         webSocketReadyState = SRReadyState.OPEN
         switch state {
         case .disconnecting, .disconnected, .terminated:
             break
 
         case .signalingConnecting:
-            webSocketEventHandlers?.onOpenHandler?(webSocket)
             state = .signalingConnected
             signalingEventHandlers?.onConnectHandler?()
             
@@ -550,7 +550,8 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                           reason: String?,
                           wasClean: Bool) {
         webSocketReadyState = SRReadyState.CLOSED
-        
+        webSocketEventHandlers?.onCloseHandler?(webSocket, code, reason, wasClean)
+
         if let reason = reason {
             eventLog?.markFormat(type: .WebSocket,
                                  format: "close: code \(code), reason %@, clean \(wasClean)",
@@ -575,7 +576,6 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 }
             }
             
-            webSocketEventHandlers?.onCloseHandler?(webSocket, code, reason, wasClean)
             terminate(error: error)
         }
     }
@@ -584,15 +584,15 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .WebSocket,
                              format: "fail: %@",
                              arguments: error.localizedDescription)
-
+        let error = ConnectionError.webSocketError(error)
+        webSocketEventHandlers?.onFailureHandler?(webSocket, error)
+        
         webSocketReadyState = SRReadyState.CLOSED
         switch state {
         case .disconnecting, .disconnected, .terminated:
             break
             
         default:
-            let error = ConnectionError.webSocketError(error)
-            webSocketEventHandlers?.onFailureHandler?(webSocket, error)
             terminate(error: error)
         }
     }
@@ -601,26 +601,20 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         eventLog?.markFormat(type: .WebSocket,
                              format: "received pong: %@",
                              arguments: pongPayload.description)
-
-        switch state {
-        case .disconnecting, .disconnected, .terminated:
-            break
-            
-        default:
-            webSocketEventHandlers?.onPongHandler?(webSocket, pongPayload)
-        }
+        webSocketEventHandlers?.onPongHandler?(webSocket, pongPayload)
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         eventLog?.markFormat(type: .WebSocket,
                              format: "received message: %@",
                              arguments: (message as AnyObject).description)
+        webSocketEventHandlers?.onMessageHandler?(webSocket, message as AnyObject)
+
         switch state {
         case .disconnecting, .disconnected, .terminated:
             break
             
         default:
-            webSocketEventHandlers?.onMessageHandler?(webSocket, message as AnyObject)
             if let message = Message.fromJSONData(message) {
                 signalingEventHandlers?.onReceiveHandler?(message)
                 eventLog?.markFormat(type: .Signaling,
