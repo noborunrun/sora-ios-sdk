@@ -134,7 +134,6 @@ class ConnectionMonitor {
     enum State {
         case stop
         case monitoring
-        case terminating
         case terminated
     }
     
@@ -177,16 +176,16 @@ class ConnectionMonitor {
         guard state == .monitoring else { return }
         
         self.error = error
-        state = .terminating
-        validate()
+        timeoutWorkItem.cancel()
+        validationTimer.invalidate()
+        state = .terminated
+        handler(error)
     }
     
     func validate() {
         context.eventLog?.markFormat(type: .ConnectionMonitor,
                                      format: "validate connection state")
 
-        guard state == .terminating else { return }
-        
         switch context.webSocketReadyState {
         case nil, SRReadyState.CLOSED?:
             break
@@ -208,10 +207,7 @@ class ConnectionMonitor {
             return
         }
         
-        timeoutWorkItem.cancel()
-        validationTimer.invalidate()
-        state = .terminated
-        handler(error)
+        terminate()
     }
     
     func completeConnection() {
