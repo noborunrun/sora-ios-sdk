@@ -537,11 +537,6 @@ class ConnectionViewController: UITableViewController {
                 self.enableLabel(self.enableMicrophoneLabel, isEnabled: true)
                 self.enableMicrophoneSwitch.isEnabled = true
                 self.enableMicrophoneSwitch.setOn(true, animated: true)
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: #selector(self.connectionOnDisconnect(_:)),
-                    name: MediaConnection.NotificationKey.onDisconnect,
-                    object: self.connection!.mediaPublisher)
                 
                 if self.roles.contains(.subscriber) {
                     self.connectSubscriber()
@@ -550,13 +545,6 @@ class ConnectionViewController: UITableViewController {
                 }
             }
         }
-    }
-    
-    func connectionOnDisconnect(_ notification: Notification) {
-        enableLabel(enableMicrophoneLabel, isEnabled: false)
-        enableMicrophoneSwitch.isEnabled = false
-        enableMicrophoneSwitch.isUserInteractionEnabled = true
-        enableMicrophoneSwitch.setOn(false, animated: true)
     }
     
     func connectSubscriber() {
@@ -576,11 +564,19 @@ class ConnectionViewController: UITableViewController {
     
     func disconnect() {
         if let conn = connection {
-            conn.mediaPublisher.disconnect { _ in () }
-            conn.mediaSubscriber.disconnect { _ in () }
+            if conn.mediaPublisher.isAvailable {
+                conn.mediaPublisher.disconnect { _ in () }
+            }
+            if conn.mediaSubscriber.isAvailable {
+                conn.mediaSubscriber.disconnect { _ in () }
+            }
         }
         state = .disconnected
         connectingAlertController = nil
+        enableLabel(enableMicrophoneLabel, isEnabled: false)
+        enableMicrophoneSwitch.isEnabled = false
+        enableMicrophoneSwitch.isUserInteractionEnabled = true
+        enableMicrophoneSwitch.setOn(false, animated: true)
     }
 
     func setMediaConnectionSettings(_ mediaConn: MediaConnection) {
@@ -628,6 +624,17 @@ class ConnectionViewController: UITableViewController {
     
     func basicFinishConnection(_ mediaConnection: MediaConnection) {
         state = .connected
+        
+        NotificationCenter.default.addObserver(
+            forName: MediaConnection.NotificationKey.onDisconnect,
+            object: mediaConnection,
+            queue: nil)
+        { ntf in
+            if self.state != .disconnected {
+                self.disconnect()
+            }
+        }
+        
         mediaConnection.mainMediaStream!.startConnectionTimer(timeInterval: 1) {
             seconds in
             if let seconds = seconds {
