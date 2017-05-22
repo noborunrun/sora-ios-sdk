@@ -24,6 +24,7 @@ public class MediaOption {
     public var audioCodec: AudioCodec = .default
     public var videoEnabled: Bool = true
     public var audioEnabled: Bool = true
+    public var snapshotEnabled: Bool = false
     
     public static var maxBitRate = 5000
     

@@ -4,7 +4,8 @@ import WebRTC
 public protocol VideoRenderer {
     
     func onChangedSize(_ size: CGSize)
-    func renderVideoFrame(_ videoFrame: VideoFrame?)
+    func render(videoFrame: VideoFrame?)
+    func render(snapshot: Snapshot)
     
 }
 
@@ -34,10 +35,16 @@ class VideoRendererAdapter: NSObject, RTCVideoRenderer {
         DispatchQueue.main.async {
             if let frame = frame {
                 let frame = RemoteVideoFrame(nativeVideoFrame: frame)
-                self.videoRenderer.renderVideoFrame(frame)
+                self.videoRenderer.render(videoFrame: frame)
             } else {
-                self.videoRenderer.renderVideoFrame(nil)
+                self.videoRenderer.render(videoFrame: nil)
             }
+        }
+    }
+    
+    func render(snapshot: Snapshot) {
+        DispatchQueue.main.async {
+            self.videoRenderer.render(snapshot: snapshot)
         }
     }
     

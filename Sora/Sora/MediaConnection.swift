@@ -197,6 +197,14 @@ public class MediaConnection {
         }
     }
     
+    // MARK: スナップショット
+    
+    func render(snapshot: Snapshot) {
+        eventLog?.markFormat(type: .Snapshot, format: "render snapshot")
+        onSnapshotHandler?(snapshot)
+        mainMediaStream?.videoRenderer?.render(snapshot: snapshot)
+    }
+    
     // MARK: イベントハンドラ
     
     private var onConnectHandler: ((ConnectionError?) -> Void)?
@@ -206,7 +214,8 @@ public class MediaConnection {
     private var onRemoveStreamHandler: ((MediaStream) -> Void)?
     var onAttendeeAddedHandler: ((Attendee) -> Void)?
     var onAttendeeRemovedHandler: ((Attendee) -> Void)?
-    private var onChangeNumberOfConnectionsHandler: ((Int, Int) -> ())?
+    private var onChangeNumberOfConnectionsHandler: ((Int, Int) -> Void)?
+    private var onSnapshotHandler: ((Snapshot) -> Void)?
 
     public func onConnect(handler: @escaping (ConnectionError?) -> Void) {
         onConnectHandler = handler
@@ -283,10 +292,14 @@ public class MediaConnection {
         onAttendeeRemovedHandler = handler
     }
     
-    public func onChangeNumberOfConnections(handler: @escaping (Int, Int) -> ()) {
+    public func onChangeNumberOfConnections(handler: @escaping (Int, Int) -> Void) {
         onChangeNumberOfConnectionsHandler = handler
     }
 
+    public func onSnapshot(handler: @escaping (Snapshot) -> Void) {
+        onSnapshotHandler = handler
+    }
+    
 }
 
 class MediaCapturer {

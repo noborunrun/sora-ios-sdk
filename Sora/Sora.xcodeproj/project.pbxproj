@@ -29,12 +29,14 @@
 		913C80651E8D00C200D83864 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913C80641E8D00C200D83864 /* Extensions.swift */; };
 		9143F15E1EA9ED7600525C78 /* EventLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9143F15D1EA9ED7600525C78 /* EventLogViewController.swift */; };
 		9143F1601EAA435F00525C78 /* EventLogTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9143F15F1EAA435F00525C78 /* EventLogTextViewController.swift */; };
+		91447BB01ED16A3A0021E552 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91447BAF1ED16A3A0021E552 /* Snapshot.swift */; };
 		91545C0B1EA7AAA900523AAE /* BitRateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91545C0A1EA7AAA900523AAE /* BitRateViewController.swift */; };
 		91577A031D85CB1700A5AF9F /* MediaConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91577A021D85CB1700A5AF9F /* MediaConnection.swift */; };
 		91705B801DED66D300D79306 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
 		91715A7B1D5DB3B50004C995 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; };
 		91715A851D5DF2570004C995 /* WebRTC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201901D58668E00178E2B /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91715A861D5DF25B0004C995 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		91790BD31ED2C39000F0E950 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91790BD21ED2C39000F0E950 /* WebP.framework */; };
 		918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918201911D58668E00178E2B /* SocketRocket.framework */; };
 		918A6DF71DA4DDC800028E3E /* Unbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 918A6DF61DA4DDC800028E3E /* Unbox.framework */; };
 		91A2FD551E25421B0081ADF9 /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A2FD541E25421B0081ADF9 /* PeerConnection.swift */; };
@@ -90,8 +92,10 @@
 		913C80641E8D00C200D83864 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9143F15D1EA9ED7600525C78 /* EventLogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventLogViewController.swift; sourceTree = "<group>"; };
 		9143F15F1EAA435F00525C78 /* EventLogTextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventLogTextViewController.swift; sourceTree = "<group>"; };
+		91447BAF1ED16A3A0021E552 /* Snapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
 		91545C0A1EA7AAA900523AAE /* BitRateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitRateViewController.swift; sourceTree = "<group>"; };
 		91577A021D85CB1700A5AF9F /* MediaConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaConnection.swift; sourceTree = "<group>"; };
+		91790BD21ED2C39000F0E950 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebP.framework; path = Carthage/Build/iOS/WebP.framework; sourceTree = "<group>"; };
 		918201901D58668E00178E2B /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebRTC.framework; path = Carthage/Build/iOS/WebRTC.framework; sourceTree = "<group>"; };
 		918201911D58668E00178E2B /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		918A6DF61DA4DDC800028E3E /* Unbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Unbox.framework; path = Carthage/Build/iOS/Unbox.framework; sourceTree = "<group>"; };
@@ -124,6 +128,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91790BD31ED2C39000F0E950 /* WebP.framework in Frameworks */,
 				918201941D58668E00178E2B /* SocketRocket.framework in Frameworks */,
 				918A6DF71DA4DDC800028E3E /* Unbox.framework in Frameworks */,
 				91705B801DED66D300D79306 /* WebRTC.framework in Frameworks */,
@@ -145,9 +150,10 @@
 		9182018E1D58667600178E2B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				918A6DF61DA4DDC800028E3E /* Unbox.framework */,
-				918201901D58668E00178E2B /* WebRTC.framework */,
 				918201911D58668E00178E2B /* SocketRocket.framework */,
+				918A6DF61DA4DDC800028E3E /* Unbox.framework */,
+				91790BD21ED2C39000F0E950 /* WebP.framework */,
+				918201901D58668E00178E2B /* WebRTC.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -205,6 +211,7 @@
 				91192F731D598E4600F92D78 /* Message.swift */,
 				91A2FD541E25421B0081ADF9 /* PeerConnection.swift */,
 				91FD95741DCA06F700047BA9 /* RTCExtensions.swift */,
+				91447BAF1ED16A3A0021E552 /* Snapshot.swift */,
 				91FA6F201D93CA9800D38DB4 /* VideoFrame.swift */,
 				91B1D6451D75E11F00112A4E /* VideoRenderer.swift */,
 				9100904F1E58B5450099E00E /* VideoView.swift */,
@@ -376,6 +383,7 @@
 				91C1092B1E4A3199009F11F7 /* RoleViewController.swift in Sources */,
 				91C109291E4A3199009F11F7 /* ConnectionViewController.swift in Sources */,
 				91FD95751DCA06F700047BA9 /* RTCExtensions.swift in Sources */,
+				91447BB01ED16A3A0021E552 /* Snapshot.swift in Sources */,
 				91192F741D598E4600F92D78 /* Message.swift in Sources */,
 				91DB5E9E1D6F43A5007744BF /* Connection.swift in Sources */,
 				91C1092A1E4A3199009F11F7 /* ConnectionController.swift in Sources */,

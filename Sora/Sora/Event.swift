@@ -5,6 +5,7 @@ public class Event {
     public enum EventType: String {
         case WebSocket
         case Signaling
+        case Snapshot
         case PeerConnection
         case ConnectionMonitor
         case MediaPublisher

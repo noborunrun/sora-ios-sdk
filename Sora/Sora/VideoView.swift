@@ -38,8 +38,12 @@ public class VideoView: UIView, VideoRenderer {
         contentView.onChangedSize(size)
     }
     
-    public func renderVideoFrame(_ frame: VideoFrame?) {
-        contentView.renderVideoFrame(frame)
+    public func render(videoFrame: VideoFrame?) {
+        contentView.render(videoFrame: videoFrame)
+    }
+    
+    public func render(snapshot: Snapshot) {
+        contentView.render(snapshot: snapshot)
     }
     
 }
@@ -82,11 +86,11 @@ class VideoViewContentView: UIView, VideoRenderer {
         setNeedsDisplay()
     }
     
-    public func renderVideoFrame(_ frame: VideoFrame?) {
+    public func render(videoFrame: VideoFrame?) {
         guard allowsRender else { return }
         updateSize()
         
-        if let frame = frame {
+        if let frame = videoFrame {
             if let handle = frame.videoFrameHandle {
                 switch handle {
                 case .webRTC(let frame):
@@ -96,6 +100,10 @@ class VideoViewContentView: UIView, VideoRenderer {
         } else {
             nativeVideoView.renderFrame(nil)
         }
+    }
+    
+    public func render(snapshot: Snapshot) {
+        // TODO
     }
     
     public override func draw(_ frame: CGRect) {

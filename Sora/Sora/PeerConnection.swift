@@ -635,6 +635,9 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
                 case .update?:
                     receiveSignalingUpdate(json)
                     
+                case .snapshot?:
+                    receiveSignalingSnapshot(json: json)
+                    
                 default:
                     return
                 }
@@ -888,6 +891,62 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
         }
     }
 
+    func receiveSignalingSnapshot(json: [String: Any]) {
+        eventLog?.markFormat(type: .Signaling, format: "received 'snapshot'")
+        guard peerConnection?.mediaOption.snapshotEnabled ?? false else {
+            eventLog?.markFormat(type: .Snapshot,
+                                 format: "snapshot disabled")
+            return
+        }
+        
+        switch state {
+        case .connected:
+            let sigSnapshot: SignalingSnapshot!
+            do {
+                sigSnapshot = Optional.some(try unbox(dictionary: json))
+            } catch {
+                eventLog?.markFormat(type: .Snapshot,
+                                     format: "parsing 'snapshot' failed")
+                return
+            }
+            guard connection.mediaChannelId == sigSnapshot.mediaChannelId else {
+                eventLog?.markFormat(type: .Snapshot,
+                                     format: "unknown media channel ID: %@",
+                                     arguments: sigSnapshot.mediaChannelId)
+                return
+            }
+            
+            do {
+                eventLog?.markFormat(type: .Snapshot,
+                                     format: "try decode base64 encoded text")
+                let snapshot = try Snapshot(base64Encoded:
+                    sigSnapshot.base64EncodedString)
+                signalingEventHandlers?.onSnapshotHandler?(sigSnapshot)
+                mediaConnection.render(snapshot: snapshot)
+                
+            } catch SnapshotError.invalidBase64Format {
+                eventLog?.markFormat(type: .Snapshot,
+                                     format: "invalid base64 format")
+                return
+            } catch SnapshotError.WebPDecodeFailed {
+                eventLog?.markFormat(type: .Snapshot,
+                                     format: "WebP decode failed")
+                return
+            } catch SnapshotError.dataProviderInitFailed {
+                eventLog?.markFormat(type: .Snapshot,
+                                     format: "snapshot: CGDataProvider initialization failed")
+                return
+            } catch {
+                eventLog?.markFormat(type: .Snapshot,
+                                     format: "snapshot: unknown failure")
+                return
+            }
+
+        default:
+            return
+        }
+    }
+    
     // マルチストリームのシグナリングのエラー
     func terminateUpdate(_ error: Error) {
         state = .connected
