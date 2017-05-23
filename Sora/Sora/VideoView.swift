@@ -51,6 +51,7 @@ public class VideoView: UIView, VideoRenderer {
 class VideoViewContentView: UIView, VideoRenderer {
     
     @IBOutlet weak var nativeVideoView: RTCEAGLVideoView!
+    @IBOutlet weak var snapshotImageView: UIImageView!
     
     var allowsRender: Bool {
         get {
@@ -61,6 +62,11 @@ class VideoViewContentView: UIView, VideoRenderer {
     }
     
     var sizeToChange: CGSize?
+    
+    override func didMoveToSuperview() {
+        // 初回の画像セット時にアスペクト比維持設定が反映されない現象の回避策
+        snapshotImageView.image = nil
+    }
     
     public func onChangedSize(_ size: CGSize) {
         // ここも前述のエラーと同様の理由で処理を後回しにする
@@ -103,12 +109,10 @@ class VideoViewContentView: UIView, VideoRenderer {
     }
     
     public func render(snapshot: Snapshot) {
-        // TODO
-    }
-    
-    public override func draw(_ frame: CGRect) {
-        super.draw(frame)
-        nativeVideoView.draw(frame)
+        guard allowsRender else { return }
+        nativeVideoView.isHidden = true
+        snapshotImageView.isHidden = false
+        snapshotImageView.image = snapshot.drawnImage
     }
     
     public override func didMoveToWindow() {
