@@ -44,6 +44,7 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var roleLabel: UILabel!
     @IBOutlet weak var roleCell: UITableViewCell!
     @IBOutlet weak var enableMultistreamLabel: UILabel!
+    @IBOutlet weak var enableSnapshotLabel: UILabel!
     @IBOutlet weak var enableVideoLabel: UILabel!
     @IBOutlet weak var videoCodecLabel: UILabel!
     @IBOutlet weak var videoCodecCell: UITableViewCell!
@@ -66,6 +67,7 @@ class ConnectionViewController: UITableViewController {
     @IBOutlet weak var channelIdTextField: UITextField!
     @IBOutlet weak var rollValueLabel: UILabel!
     @IBOutlet weak var enableMultistreamSwitch: UISwitch!
+    @IBOutlet weak var enableSnapshotSwitch: UISwitch!
     @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var enableVideoSwitch: UISwitch!
     @IBOutlet weak var videoCodecValueLabel: UILabel!
@@ -163,10 +165,58 @@ class ConnectionViewController: UITableViewController {
     
     var multistreamEnabled: Bool {
         get { return enableMultistreamSwitch.isOn }
+        set { enableSnapshotSwitch.setOn(newValue, animated: true) }
+    }
+    
+    private var snapshotDependentLabels: [UILabel] {
+        get {
+            return [enableMultistreamLabel,
+                    enableVideoLabel,
+                    videoCodecLabel,
+                    enableAudioLabel]
+        }
+    }
+    
+    private var snapshotDependentControls: [UIControl] {
+        get {
+            return [enableMultistreamSwitch,
+                    enableVideoSwitch,
+                    enableAudioSwitch]
+        }
+    }
+    
+    private var snapshotDependentViews: [UIView] {
+        get {
+            return [videoCodecCell]
+        }
+    }
+    
+    var snapshotEnabled: Bool {
+        get { return enableSnapshotSwitch.isOn }
+        
+        set {
+            enableSnapshotSwitch.setOn(newValue, animated: true)
+            
+            if newValue {
+                for label: UILabel in snapshotDependentLabels {
+                    label.textColor = UIColor.lightGray
+                }
+                for control: UIControl in snapshotDependentControls {
+                    control.isEnabled = false
+                }
+                for view: UIView in snapshotDependentViews {
+                    view.isUserInteractionEnabled = false
+                }
+            } else {
+                enableControls(true)
+            }
+        }
+        
     }
     
     var videoEnabled: Bool {
         get { return enableVideoSwitch.isOn }
+        set { enableVideoSwitch.setOn(newValue, animated: true) }
     }
     
     var videoCodec: VideoCodec? {
@@ -191,6 +241,7 @@ class ConnectionViewController: UITableViewController {
     
     var audioEnabled: Bool {
         get { return enableAudioSwitch.isOn }
+        set { enableAudioSwitch.setOn(newValue, animated: true) }
     }
     
     var audioCodec: AudioCodec? {
@@ -254,6 +305,9 @@ class ConnectionViewController: UITableViewController {
         enableMultistreamSwitch.addTarget(connectionController,
                                           action: ConnectionController.Action.updateMultistreamEnabled,
                                           for: .valueChanged)
+        enableSnapshotSwitch.addTarget(connectionController,
+                                       action: ConnectionController.Action.updateSnapshotEnabled,
+                                       for: .valueChanged)
         enableVideoSwitch.addTarget(connectionController,
                                     action: ConnectionController.Action.updateVideoEnabled,
                                     for: .valueChanged)
@@ -286,6 +340,7 @@ class ConnectionViewController: UITableViewController {
         signalingPathTextField.placeholder = "ex) signaling"
         channelIdTextField.text = connectionController?.channelId
         channelIdTextField.placeholder = "your channel ID"
+        enableSnapshotSwitch.setOn(false, animated: false)
         
         //loadSettings() // deprecated
         updateControls()
@@ -363,6 +418,8 @@ class ConnectionViewController: UITableViewController {
             if let codec = connectionController.audioCodec {
                 audioCodecValueLabel.text = ConnectionViewController.audioCodecTable.text(value: codec)
             }
+            
+            snapshotEnabled = connectionController.snapshotEnabled
         }
     }
     
@@ -380,7 +437,7 @@ class ConnectionViewController: UITableViewController {
         let labels: [UILabel] = [
             enableWebSocketSSLLabel, hostLabel, portLabel,
             signalingPathLabel, channelIdLabel, roleLabel,
-            enableVideoLabel, videoCodecLabel,
+            enableSnapshotLabel, enableVideoLabel, videoCodecLabel,
             enableAudioLabel, audioCodecLabel,
             ]
         for label in labels {
@@ -409,7 +466,8 @@ class ConnectionViewController: UITableViewController {
         let controls: [UIView] = [
             enableWebSocketSSLSwitch, hostTextField, portTextField,
             signalingPathTextField, channelIdTextField, roleCell,
-            enableMultistreamSwitch, enableVideoSwitch, enableAudioSwitch,
+            enableMultistreamSwitch, enableSnapshotSwitch,
+            enableVideoSwitch, enableAudioSwitch,
             videoCodecCell, bitRateCell, audioCodecCell]
         for control: UIView in controls {
             control.isUserInteractionEnabled = isEnabled
@@ -487,6 +545,7 @@ class ConnectionViewController: UITableViewController {
                          channelId: channelId,
                          roles: roles,
                          multistreamEnabled: multistreamEnabled,
+                         snapshotEnabled: snapshotEnabled,
                          videoEnabled: videoEnabled,
                          videoCodec: videoCodec ?? .default,
                          bitRate: bitRate,
@@ -581,6 +640,7 @@ class ConnectionViewController: UITableViewController {
 
     func setMediaConnectionSettings(_ mediaConn: MediaConnection) {
         mediaConn.multistreamEnabled = multistreamEnabled
+        mediaConn.snapshotEnabled = snapshotEnabled
         mediaConn.mediaOption.videoEnabled = videoEnabled
         if let codec = videoCodec {
             mediaConn.mediaOption.videoCodec = codec
@@ -664,6 +724,10 @@ class ConnectionViewController: UITableViewController {
         guard pub.isAvailable else { return }
         
         pub.microphoneEnabled = enableMicrophoneSwitch.isOn
+    }
+    
+    @IBAction func switchSnapshotEnabled(_ sender: AnyObject) {
+        snapshotEnabled = enableSnapshotSwitch.isOn
     }
     
     // MARK: テキストフィールドの編集

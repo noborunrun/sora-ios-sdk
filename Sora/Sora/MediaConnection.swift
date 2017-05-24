@@ -34,6 +34,7 @@ public class MediaConnection {
     public var peerConnection: PeerConnection?
     public var mediaOption: MediaOption = MediaOption()
     public var multistreamEnabled: Bool = false
+    public var snapshotEnabled: Bool = false
     public var mediaStreams: [MediaStream] = []
     
     public var mainMediaStream: MediaStream? {

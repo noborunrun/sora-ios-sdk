@@ -197,17 +197,20 @@ struct SignalingConnect {
     var metadata: String?
     var mediaOption: MediaOption
     var multistream: Bool
+    var snapshot: Bool
     
     init(role: Role, channel_id: String, metadata: String? = nil,
-         multistream: Bool = false, mediaOption: MediaOption) {
+         multistream: Bool = false, snapshot: Bool = false,
+         mediaOption: MediaOption) {
         self.role = role
         self.channel_id = channel_id
         self.metadata = metadata
         self.multistream = multistream
+        self.snapshot = snapshot
         self.mediaOption = mediaOption
         
         // スナップショットの設定
-        if mediaOption.snapshotEnabled {
+        if snapshot {
             mediaOption.videoCodec = .VP8
             mediaOption.videoEnabled = true
             mediaOption.audioEnabled = true
@@ -244,7 +247,7 @@ extension SignalingConnect: Messageable {
                 video["codec_type"] = SignalingVideoCodec.H264.rawValue
             }
             
-            if mediaOption.snapshotEnabled {
+            if snapshot {
                 video["snapshot"] = true
             }
             

@@ -477,6 +477,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
             let connect = SignalingConnect(role: role,
                                            channel_id: connection.mediaChannelId,
                                            multistream: mediaConnection.multistreamEnabled,
+                                           snapshot: mediaConnection.snapshotEnabled,
                                            mediaOption: peerConnection!.mediaOption)
             eventLog?.markFormat(type: .Signaling,
                                  format: "send connect message: %@",
@@ -893,7 +894,7 @@ class PeerConnectionContext: NSObject, SRWebSocketDelegate, RTCPeerConnectionDel
 
     func receiveSignalingSnapshot(json: [String: Any]) {
         eventLog?.markFormat(type: .Signaling, format: "received 'snapshot'")
-        guard peerConnection?.mediaOption.snapshotEnabled ?? false else {
+        guard peerConnection?.mediaConnection?.snapshotEnabled ?? false else {
             eventLog?.markFormat(type: .Snapshot,
                                  format: "snapshot disabled")
             return
