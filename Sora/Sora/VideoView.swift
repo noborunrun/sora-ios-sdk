@@ -95,7 +95,9 @@ class VideoViewContentView: UIView, VideoRenderer {
     public func render(videoFrame: VideoFrame?) {
         guard allowsRender else { return }
         updateSize()
-        
+
+        nativeVideoView.isHidden = false
+        snapshotImageView.isHidden = true
         if let frame = videoFrame {
             if let handle = frame.videoFrameHandle {
                 switch handle {
