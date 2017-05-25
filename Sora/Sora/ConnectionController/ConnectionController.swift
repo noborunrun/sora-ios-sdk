@@ -235,6 +235,7 @@ public class ConnectionController: UIViewController {
         }
         
         multistreamEnabled = defaults.bool(forKey: UserDefaultsKey.multistreamEnabled.rawValue)
+        snapshotEnabled = defaults.bool(forKey: UserDefaultsKey.snapshotEnabled.rawValue)
         videoEnabled = defaults.bool(forKey: UserDefaultsKey.videoEnabled.rawValue)
         bitRate = defaults.integer(forKey: UserDefaultsKey.bitRate.rawValue)
         if bitRate == 0 {
