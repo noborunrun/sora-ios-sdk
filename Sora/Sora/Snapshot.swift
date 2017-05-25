@@ -8,6 +8,7 @@ enum SnapshotError: Error {
     case WebPDecodeFailed
     case dataProviderInitFailed
     case bitmapImageCreateFailed
+    case drawnImageCreateFailed
     
 }
 
@@ -74,7 +75,29 @@ public class Snapshot {
         guard let bitmapImage = bitmapImageOpt else {
             throw SnapshotError.bitmapImageCreateFailed
         }
-        return (bitmapImage, UIImage(cgImage: bitmapImage))
+        
+        let image = UIImage(cgImage: bitmapImage)
+        UIGraphicsBeginImageContext(image.size)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            throw SnapshotError.drawnImageCreateFailed
+        }
+        context.translateBy(x: image.size.width/2, y: image.size.height/2)
+        context.scaleBy(x: 1.0, y: -1.0)
+        
+        let radian = 270 * CGFloat.pi / 180
+        context.rotate(by: radian)
+        context.draw(bitmapImage, in:
+            CGRect(x: -image.size.width/2,
+                   y: -image.size.height/2,
+                   width: image.size.width,
+                   height: image.size.height))
+        
+        guard let rotated = UIGraphicsGetImageFromCurrentImageContext() else {
+            throw SnapshotError.drawnImageCreateFailed
+        }
+        UIGraphicsEndImageContext()
+        
+        return (bitmapImage, rotated)
     }
     
 }
