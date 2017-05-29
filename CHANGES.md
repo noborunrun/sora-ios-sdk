@@ -13,6 +13,8 @@
 
 - [CHANGE] シグナリング "notify" に対応した
 
+- [CHANGE] スナップショットに対応した
+
 - [CHANGE] Sora サーバーの URL のプロトコルが ws または wss 以外であればエラーにする
 
 - [CHANGE] イベントログに接続エラーの詳細を出力するようにした
@@ -20,6 +22,10 @@
 - [CHANGE] 次の不要なファイルを削除した
 
   - ``JSON.swift``
+
+- [CHANGE] 次の依存するライブラリを追加した
+
+  - WebP.framework
 
 - [CHANGE] API: Attendee: 追加した
 
@@ -32,6 +38,8 @@
 - [CHANGE] API: ConnectionError: ``var description`` を追加した
 
 - [CHNAGE] API: ConnectionController: ビットレートの設定項目を追加した
+
+- [CHNAGE] API: ConnectionController: スナップショットの設定項目を追加した
 
 - [CHNAGE] API: ConnectionController: イベントログの画面を追加した
 
@@ -53,6 +61,8 @@
 
 - [CHANGE] API: Role: 追加した
 
+- [CHANGE] API: PeerConnection: 接続状態に関わらず WebSocket のイベントハンドラを実行するようにした
+
 - [CHNAGE] API: SignalingEventHandlers: ``func onNotify(handler:)`` を追加した
 
 - [CHNAGE] API: SignalingEventType: 追加した
@@ -61,9 +71,15 @@
 
 - [CHNAGE] API: SignalingRole: 追加した
 
+- [CHNAGE] API: VideoView: スナップショットを描画するようにした
+
 - [UPDATE] API: ConnectionController: リファクタリングを行った
 
 - [FIX] 接続解除可能な状況でも ``connectionBusy`` のエラーが発生する現象を修正した
+
+- [FIX] 接続解除後も内部で接続状態の監視を続ける現象を修正した
+
+- [FIX] API: ConnectionController: 接続画面外で接続が解除されても接続画面では接続状態である現象を修正した
 
 ## 1.0.1
 
