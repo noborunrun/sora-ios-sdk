@@ -26,13 +26,8 @@ Sora iOS SDK に対する有償のサポートについては現在提供して�
 これらの開発環境はメンテナンスバージョンの違いでも Sora iOS SDK の挙動が変わる可能性があります。
 
 - Sora iOS SDK
-
 - Mac OS X
-
 - Xcode
-
 - Swift
-
 - iOS
-
 - Carthage
