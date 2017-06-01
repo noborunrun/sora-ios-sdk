@@ -123,7 +123,6 @@
 		<string>Carthage/Build/iOS/WebRTC.framework</string>
 		<string>Carthage/Build/iOS/WebP.framework</string>
 		<string>Carthage/Build/iOS/SocketRocket.framework</string>
-		<string>Frameworks</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
