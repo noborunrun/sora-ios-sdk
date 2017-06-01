@@ -114,11 +114,12 @@
 	<key>Nodes</key>
 	<array>
 		<string>Cartfile</string>
-		<string>Frameworks/Sora.framework</string>
-		<string>Frameworks/Unbox.framework</string>
-		<string>Frameworks/WebRTC.framework</string>
-		<string>Frameworks/WebP.framework</string>
-		<string>Frameworks/SocketRocket.framework</string>
+		<string>Carthage/Build/iOS/Sora.framework</string>
+		<string>Carthage/Build/iOS/Unbox.framework</string>
+		<string>Carthage/Build/iOS/WebRTC.framework</string>
+		<string>Carthage/Build/iOS/WebP.framework</string>
+		<string>Carthage/Build/iOS/SocketRocket.framework</string>
+		<string>Frameworks</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
@@ -149,6 +150,13 @@
 			<key>TargetIndices</key>
 			<array/>
 		</dict>
+		<key>Carthage/Build/iOS</key>
+		<dict>
+			<key>Path</key>
+			<string>Carthage/Build/iOS</string>
+			<key>SortOrder</key>
+			<string>1006</string>
+		</dict>
 		<key>Frameworks</key>
 		<dict>
 			<key>PathType</key>
@@ -156,58 +164,48 @@
 			<key>SortOrder</key>
 			<integer>1001</integer>
 		</dict>
-		<key>Frameworks/Sora.framework</key>
+		<key>Carthage/Build/iOS/Sora.framework</key>
 		<dict>
 			<key>Group</key>
 			<string>Frameworks</string>
 			<key>Path</key>
 			<string>Carthage/Build/iOS/Sora.framework</string>
-			<key>PathType</key>
-			<string>DeveloperDir</string>
 			<key>SortOrder</key>
 			<integer>105</integer>
 		</dict>
-		<key>Frameworks/SocketRocket.framework</key>
+		<key>Carthage/Build/iOS/SocketRocket.framework</key>
 		<dict>
 			<key>Group</key>
 			<string>Frameworks</string>
 			<key>Path</key>
 			<string>Carthage/Build/iOS/SocketRocket.framework</string>
-			<key>PathType</key>
-			<string>DeveloperDir</string>
 			<key>SortOrder</key>
 			<integer>105</integer>
 		</dict>
-		<key>Frameworks/Unbox.framework</key>
+		<key>Carthage/Build/iOS/Unbox.framework</key>
 		<dict>
 			<key>Group</key>
 			<string>Frameworks</string>
 			<key>Path</key>
 			<string>Carthage/Build/iOS/Unbox.framework</string>
-			<key>PathType</key>
-			<string>DeveloperDir</string>
 			<key>SortOrder</key>
 			<integer>105</integer>
 		</dict>
-		<key>Frameworks/WebP.framework</key>
+		<key>Carthage/Build/iOS/WebP.framework</key>
 		<dict>
 			<key>Group</key>
 			<string>Frameworks</string>
 			<key>Path</key>
 			<string>Carthage/Build/iOS/WebP.framework</string>
-			<key>PathType</key>
-			<string>DeveloperDir</string>
 			<key>SortOrder</key>
 			<integer>105</integer>
 		</dict>
-		<key>Frameworks/WebRTC.framework</key>
+		<key>Carthage/Build/iOS/WebRTC.framework</key>
 		<dict>
 			<key>Group</key>
 			<string>Frameworks</string>
 			<key>Path</key>
 			<string>Carthage/Build/iOS/WebRTC.framework</string>
-			<key>PathType</key>
-			<string>DeveloperDir</string>
 			<key>SortOrder</key>
 			<integer>105</integer>
 		</dict>
