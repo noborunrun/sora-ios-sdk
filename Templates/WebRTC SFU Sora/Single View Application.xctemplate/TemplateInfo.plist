@@ -71,6 +71,10 @@
 	<key>Options</key>
 	<array>
 		<dict>
+			<key>Values</key>
+			<array>
+				<string>Swift</string>
+			</array>
 			<key>Identifier</key>
 			<string>languageChoice</string>
 			<key>Units</key>
