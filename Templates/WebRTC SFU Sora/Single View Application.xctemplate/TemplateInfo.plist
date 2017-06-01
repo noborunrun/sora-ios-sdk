@@ -28,7 +28,7 @@
 			<key>ENABLE_BITCODE</key>
 			<string>NO</string>
 			<key>FRAMEWORK_SEARCH_PATHS</key>
-			<string>$(inherited) $(PROJECT_DIR)/Carthage/Build/iOS</string>
+			<string>$(inherited) $(SRCROOT)/$(PROJECT_NAME)/Carthage/Build/iOS</string>
 			<key>OTHER_LDFLAGS</key>
 			<string>-ObjC</string>
 		</dict>
@@ -62,11 +62,11 @@
 					<string>/usr/local/bin/carthage copy-frameworks</string>
 					<key>InputFiles</key>
 					<array>
-						<string>$(SRCROOT)/Carthage/Build/iOS/Unbox.framework</string>
-						<string>$(SRCROOT)/Carthage/Build/iOS/Sora.framework</string>
-						<string>$(SRCROOT)/Carthage/Build/iOS/SocketRocket.framework</string>
-						<string>$(SRCROOT)/Carthage/Build/iOS/WebRTC.framework</string>
-						<string>$(SRCROOT)/Carthage/Build/iOS/WebP.framework</string>
+						<string>$(SRCROOT)/$(PROJECT_NAME)/Carthage/Build/iOS/Unbox.framework</string>
+						<string>$(SRCROOT)/$(PROJECT_NAME)/Carthage/Build/iOS/Sora.framework</string>
+						<string>$(SRCROOT)/$(PROJECT_NAME)/Carthage/Build/iOS/SocketRocket.framework</string>
+						<string>$(SRCROOT)/$(PROJECT_NAME)/Carthage/Build/iOS/WebRTC.framework</string>
+						<string>$(SRCROOT)/$(PROJECT_NAME)/Carthage/Build/iOS/WebP.framework</string>
 					</array>
 				</dict>
 			</array>
