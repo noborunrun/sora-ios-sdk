@@ -30,7 +30,7 @@
 			<key>FRAMEWORK_SEARCH_PATHS</key>
 			<string>$(inherited) $(SRCROOT)/$(PROJECT_NAME)/Carthage/Build/iOS</string>
 			<key>OTHER_LDFLAGS</key>
-			<string>-ObjC</string>
+			<string>-ObjC -lc++ -lstdc++ -licucore</string>
 		</dict>
 	</dict>
 	<key>Targets</key>
