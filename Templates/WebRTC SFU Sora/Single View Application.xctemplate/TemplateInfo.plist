@@ -117,6 +117,8 @@
 	</array>
 	<key>Nodes</key>
 	<array>
+		<string>Info.plist:NSCameraUsageDescription</string>
+		<string>Info.plist:NSMicrophoneUsageDescription</string>
 		<string>Cartfile</string>
 		<string>Carthage/Build/iOS/Sora.framework</string>
 		<string>Carthage/Build/iOS/Unbox.framework</string>
@@ -126,6 +128,12 @@
 	</array>
 	<key>Definitions</key>
 	<dict>
+		<key>Info.plist:NSCameraUsageDescription</key>
+		<string>&lt;key&gt;NSCameraUsageDescription&lt;/key&gt;
+&lt;string&gt;Real-Time Communication with WebRTC&lt;/string&gt;</string>
+		<key>Info.plist:NSMicrophoneUsageDescription</key>
+		<string>&lt;key&gt;NSMicrophoneUsageDescription&lt;/key&gt;
+&lt;string&gt;Real-Time Communication with WebRTC&lt;/string&gt;</string>
 		<key>Base.lproj/Main.storyboard</key>
 		<dict>
 			<key>Path</key>
