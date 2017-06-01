@@ -21,6 +21,10 @@
 	<dict>
 		<key>SharedSettings</key>
 		<dict>
+			<key>VALID_ARCHS</key>
+			<array>
+				<string>arm64</string>
+			</array>
 			<key>ENABLE_BITCODE</key>
 			<string>NO</string>
 			<key>FRAMEWORK_SEARCH_PATHS</key>
