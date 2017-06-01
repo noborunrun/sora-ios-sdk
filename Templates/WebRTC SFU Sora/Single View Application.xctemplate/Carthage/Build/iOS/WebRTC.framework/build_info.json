@@ -1,0 +1,6 @@
+{
+  "webrtc_version" : "57",
+  "webrtc_revision" : "69c86713301a07683ce23711e2794175f5f0235b",
+  "vp9" : "true",
+  "bitcode" : "true"
+}
